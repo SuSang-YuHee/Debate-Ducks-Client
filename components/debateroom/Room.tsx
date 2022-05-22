@@ -4,6 +4,7 @@ import Peer from "simple-peer";
 
 import { connectHostPeer, connectGuestPeer } from "./utils/simple-peer";
 
+import Canvas from "./Canvas";
 import Buttons from "./Buttons";
 
 interface IRoomProps {
@@ -19,6 +20,8 @@ export default function Room({ debateId, socket }: IRoomProps) {
   const peerVideoRef = useRef<HTMLVideoElement>(null);
   const [isAudioMuted, setIsAudioMuted] = useState<boolean>(false);
   const [isVideoMuted, setIsVideoMuted] = useState<boolean>(false);
+  const recorderRef = useRef<MediaRecorder>();
+  const downRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
     if (debateId && socket) {
@@ -66,11 +69,24 @@ export default function Room({ debateId, socket }: IRoomProps) {
     }
   }, [debateId, socket]);
 
+  function downloadRecord() {
+    downRef.current?.click();
+  }
+
+  function startRecord() {
+    recorderRef.current?.start(1000 / 30);
+  }
+
+  function stopRecord() {
+    recorderRef.current?.stop();
+  }
+
   return (
     <div>
       <h1>Room</h1>
       <video ref={myVideoRef} muted autoPlay playsInline></video>
       <video ref={peerVideoRef} autoPlay playsInline></video>
+      <Canvas recorderRef={recorderRef} downRef={downRef} />
       <Buttons
         peerRef={peerRef}
         myStreamRef={myStreamRef}
@@ -80,6 +96,10 @@ export default function Room({ debateId, socket }: IRoomProps) {
         isVideoMuted={isVideoMuted}
         setIsVideoMuted={setIsVideoMuted}
       />
+      <a ref={downRef} download={`Test`} />
+      <button onClick={startRecord}>start</button>
+      <button onClick={stopRecord}>stop</button>
+      <button onClick={downloadRecord}>down</button>
     </div>
   );
 }
