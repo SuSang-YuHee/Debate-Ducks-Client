@@ -1,9 +1,13 @@
 import { MutableRefObject } from "react";
+import Peer from "simple-peer";
 
 import { toggleAudioMute, toggleVideoMute } from "./utils/toggleMute";
+import { screenShare } from "./utils/screenShare";
 
 interface IButtonsProps {
+  peerRef: MutableRefObject<Peer.Instance | undefined>;
   myStreamRef: MutableRefObject<MediaStream | undefined>;
+  myVideoRef: MutableRefObject<HTMLVideoElement | null>;
   isAudioMuted: boolean;
   setIsAudioMuted: (isMute: boolean) => void;
   isVideoMuted: boolean;
@@ -11,7 +15,9 @@ interface IButtonsProps {
 }
 
 export default function Buttons({
+  peerRef,
   myStreamRef,
+  myVideoRef,
   isAudioMuted,
   setIsAudioMuted,
   isVideoMuted,
@@ -45,6 +51,9 @@ export default function Buttons({
           VideoMuted
         </button>
       )}
+      <button onClick={() => screenShare(peerRef, myStreamRef, myVideoRef)}>
+        ScreenShare
+      </button>
     </div>
   );
 }

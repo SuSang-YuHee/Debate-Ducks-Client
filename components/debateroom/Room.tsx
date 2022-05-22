@@ -72,7 +72,9 @@ export default function Room({ debateId, socket }: IRoomProps) {
       <video ref={myVideoRef} muted autoPlay playsInline></video>
       <video ref={peerVideoRef} autoPlay playsInline></video>
       <Buttons
+        peerRef={peerRef}
         myStreamRef={myStreamRef}
+        myVideoRef={myVideoRef}
         isAudioMuted={isAudioMuted}
         setIsAudioMuted={setIsAudioMuted}
         isVideoMuted={isVideoMuted}
