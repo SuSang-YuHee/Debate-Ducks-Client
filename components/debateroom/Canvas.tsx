@@ -1,13 +1,32 @@
 import { useRef, useEffect, MutableRefObject } from "react";
 
+import { IDummy } from "./types";
+import { drawVideo } from "../debateroom/utils/draw";
+import { useSetInterval } from "../debateroom/utils/useSetInterval";
+
 interface ICanvasProps {
   recorderRef: MutableRefObject<MediaRecorder | undefined>;
   downRef: MutableRefObject<HTMLAnchorElement | null>;
+  videoRef: MutableRefObject<HTMLVideoElement | null>;
+  peerVideoRef: MutableRefObject<HTMLVideoElement | null>;
+  dummy: IDummy;
 }
 
-export default function Canvas({ recorderRef, downRef }: ICanvasProps) {
+export default function Canvas({
+  recorderRef,
+  downRef,
+  videoRef,
+  peerVideoRef,
+  dummy,
+}: ICanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const blobsRef = useRef<Blob[]>([]);
+  const [drawVideoStart] = useSetInterval(
+    () => drawVideo(canvasRef, videoRef, peerVideoRef, dummy),
+    1000 / 30,
+  );
+  // const [drawProsStart, drawProsStop] = useSetInterval(() => drawPros(), 1000 / 30);
+  // const [drawConsStart, drawConsStop] = useSetInterval(() => drawCons(), 1000 / 30);
 
   useEffect(() => {
     let mergedTracks, mergedStream, blob, url;
@@ -32,13 +51,11 @@ export default function Canvas({ recorderRef, downRef }: ICanvasProps) {
     }
 
     console.log(recorderRef.current); //*
-
-    const EraserCtx = canvasRef.current?.getContext("2d");
-    if (EraserCtx) {
-      EraserCtx.fillStyle = "red";
-      EraserCtx.fillRect(0, 0, 1280, 100);
-    }
   }, [recorderRef, downRef]);
+
+  useEffect(() => {
+    drawVideoStart();
+  });
 
   return (
     <div>
@@ -47,7 +64,7 @@ export default function Canvas({ recorderRef, downRef }: ICanvasProps) {
         ref={canvasRef}
         width="1280px"
         height="720px"
-        style={{ border: "2px solid red", width: "100vw", height: "100wh" }}
+        style={{ border: "2px solid red", width: "100vw" }}
       ></canvas>
     </div>
   );
