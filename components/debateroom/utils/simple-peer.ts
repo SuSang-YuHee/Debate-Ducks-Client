@@ -6,7 +6,7 @@ export const connectHostPeer = (
   debateId: string | string[],
   socket: Socket,
   peerRef: MutableRefObject<Peer.Instance | undefined>,
-  myStreamRef: MutableRefObject<MediaStream | undefined>,
+  streamRef: MutableRefObject<MediaStream | undefined>,
   peerStreamRef: MutableRefObject<MediaStream | undefined>,
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
 ) => {
@@ -23,7 +23,7 @@ export const connectHostPeer = (
         { urls: "stun:stun.nextcloud.com:443" },
       ],
     },
-    stream: myStreamRef.current,
+    stream: streamRef.current,
   });
 
   peerRef.current = simplePeer;
@@ -52,7 +52,7 @@ export const connectGuestPeer = (
   debateId: string | string[],
   socket: Socket,
   peerRef: MutableRefObject<Peer.Instance | undefined>,
-  myStreamRef: MutableRefObject<MediaStream | undefined>,
+  streamRef: MutableRefObject<MediaStream | undefined>,
   peerStreamRef: MutableRefObject<MediaStream | undefined>,
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
   signal: Peer.SignalData,
@@ -60,7 +60,7 @@ export const connectGuestPeer = (
   const simplePeer = new Peer({
     initiator: false,
     trickle: false,
-    stream: myStreamRef.current,
+    stream: streamRef.current,
   });
 
   peerRef.current = simplePeer;

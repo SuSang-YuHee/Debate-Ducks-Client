@@ -3,8 +3,8 @@ import Peer from "simple-peer";
 
 export const screenShare = async (
   peerRef: MutableRefObject<Peer.Instance | undefined>,
-  myStreamRef: MutableRefObject<MediaStream | undefined>,
-  myVideoRef: MutableRefObject<HTMLVideoElement | null>,
+  streamRef: MutableRefObject<MediaStream | undefined>,
+  videoRef: MutableRefObject<HTMLVideoElement | null>,
 ) => {
   try {
     const screenStream = await navigator.mediaDevices.getDisplayMedia({
@@ -12,27 +12,27 @@ export const screenShare = async (
       audio: false,
     });
 
-    if (myStreamRef.current && myVideoRef.current) {
+    if (streamRef.current && videoRef.current) {
       if (peerRef.current) {
         peerRef.current.replaceTrack(
-          myStreamRef.current.getVideoTracks()[0],
+          streamRef.current.getVideoTracks()[0],
           screenStream.getVideoTracks()[0],
-          myStreamRef.current,
+          streamRef.current,
         );
       }
-      myVideoRef.current.srcObject = screenStream;
+      videoRef.current.srcObject = screenStream;
     }
 
     screenStream.getTracks()[0].onended = () => {
-      if (myStreamRef.current && myVideoRef.current) {
+      if (streamRef.current && videoRef.current) {
         if (peerRef.current) {
           peerRef.current.replaceTrack(
             screenStream.getVideoTracks()[0],
-            myStreamRef.current.getVideoTracks()[0],
-            myStreamRef.current,
+            streamRef.current.getVideoTracks()[0],
+            streamRef.current,
           );
         }
-        myVideoRef.current.srcObject = myStreamRef.current;
+        videoRef.current.srcObject = streamRef.current;
       }
     };
   } catch (err) {

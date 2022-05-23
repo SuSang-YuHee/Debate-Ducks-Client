@@ -6,8 +6,8 @@ import { screenShare } from "./utils/screenShare";
 
 interface IButtonsProps {
   peerRef: MutableRefObject<Peer.Instance | undefined>;
-  myStreamRef: MutableRefObject<MediaStream | undefined>;
-  myVideoRef: MutableRefObject<HTMLVideoElement | null>;
+  streamRef: MutableRefObject<MediaStream | undefined>;
+  videoRef: MutableRefObject<HTMLVideoElement | null>;
   isAudioMuted: boolean;
   setIsAudioMuted: (isMute: boolean) => void;
   isVideoMuted: boolean;
@@ -16,8 +16,8 @@ interface IButtonsProps {
 
 export default function Buttons({
   peerRef,
-  myStreamRef,
-  myVideoRef,
+  streamRef,
+  videoRef,
   isAudioMuted,
   setIsAudioMuted,
   isVideoMuted,
@@ -27,31 +27,31 @@ export default function Buttons({
     <div>
       {isAudioMuted ? (
         <button
-          onClick={() => toggleAudioMute(myStreamRef, setIsAudioMuted, false)}
+          onClick={() => toggleAudioMute(streamRef, setIsAudioMuted, false)}
         >
           AudioUnmuted
         </button>
       ) : (
         <button
-          onClick={() => toggleAudioMute(myStreamRef, setIsAudioMuted, true)}
+          onClick={() => toggleAudioMute(streamRef, setIsAudioMuted, true)}
         >
           AudioMuted
         </button>
       )}
       {isVideoMuted ? (
         <button
-          onClick={() => toggleVideoMute(myStreamRef, setIsVideoMuted, false)}
+          onClick={() => toggleVideoMute(streamRef, setIsVideoMuted, false)}
         >
           VideoUnmuted
         </button>
       ) : (
         <button
-          onClick={() => toggleVideoMute(myStreamRef, setIsVideoMuted, true)}
+          onClick={() => toggleVideoMute(streamRef, setIsVideoMuted, true)}
         >
           VideoMuted
         </button>
       )}
-      <button onClick={() => screenShare(peerRef, myStreamRef, myVideoRef)}>
+      <button onClick={() => screenShare(peerRef, streamRef, videoRef)}>
         ScreenShare
       </button>
     </div>

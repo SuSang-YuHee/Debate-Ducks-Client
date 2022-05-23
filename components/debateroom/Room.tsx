@@ -14,9 +14,9 @@ interface IRoomProps {
 
 export default function Room({ debateId, socket }: IRoomProps) {
   const peerRef = useRef<Peer.Instance>();
-  const myStreamRef = useRef<MediaStream>();
+  const streamRef = useRef<MediaStream>();
   const peerStreamRef = useRef<MediaStream>();
-  const myVideoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const peerVideoRef = useRef<HTMLVideoElement>(null);
   const [isAudioMuted, setIsAudioMuted] = useState<boolean>(false);
   const [isVideoMuted, setIsVideoMuted] = useState<boolean>(false);
@@ -31,9 +31,9 @@ export default function Room({ debateId, socket }: IRoomProps) {
           audio: { echoCancellation: true, noiseSuppression: true },
         })
         .then((stream) => {
-          myStreamRef.current = stream;
-          if (myVideoRef.current) {
-            myVideoRef.current.srcObject = stream;
+          streamRef.current = stream;
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
           }
         });
 
@@ -49,7 +49,7 @@ export default function Room({ debateId, socket }: IRoomProps) {
           debateId,
           socket,
           peerRef,
-          myStreamRef,
+          streamRef,
           peerStreamRef,
           peerVideoRef,
         );
@@ -60,7 +60,7 @@ export default function Room({ debateId, socket }: IRoomProps) {
           debateId,
           socket,
           peerRef,
-          myStreamRef,
+          streamRef,
           peerStreamRef,
           peerVideoRef,
           signal,
@@ -84,13 +84,13 @@ export default function Room({ debateId, socket }: IRoomProps) {
   return (
     <div>
       <h1>Room</h1>
-      <video ref={myVideoRef} muted autoPlay playsInline></video>
+      <video ref={videoRef} muted autoPlay playsInline></video>
       <video ref={peerVideoRef} autoPlay playsInline></video>
       <Canvas recorderRef={recorderRef} downRef={downRef} />
       <Buttons
         peerRef={peerRef}
-        myStreamRef={myStreamRef}
-        myVideoRef={myVideoRef}
+        streamRef={streamRef}
+        videoRef={videoRef}
         isAudioMuted={isAudioMuted}
         setIsAudioMuted={setIsAudioMuted}
         isVideoMuted={isVideoMuted}
