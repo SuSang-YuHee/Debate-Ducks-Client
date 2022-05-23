@@ -11,10 +11,10 @@ interface IButtonsProps {
   peerRef: MutableRefObject<Peer.Instance | undefined>;
   streamRef: MutableRefObject<MediaStream | undefined>;
   videoRef: MutableRefObject<HTMLVideoElement | null>;
-  isAudioMuted: boolean;
-  setIsAudioMuted: (isMute: boolean) => void;
-  isVideoMuted: boolean;
-  setIsVideoMuted: (isMute: boolean) => void;
+  isAudioOn: boolean;
+  setIsAudioOn: (isOn: boolean) => void;
+  isVideoOn: boolean;
+  setIsVideoOn: (isOn: boolean) => void;
   setIsScreenOn: (isOn: boolean) => void;
 }
 
@@ -24,10 +24,10 @@ export default function Buttons({
   peerRef,
   streamRef,
   videoRef,
-  isAudioMuted,
-  setIsAudioMuted,
-  isVideoMuted,
-  setIsVideoMuted,
+  isAudioOn,
+  setIsAudioOn,
+  isVideoOn,
+  setIsVideoOn,
   setIsScreenOn,
 }: IButtonsProps) {
   return (
@@ -38,12 +38,12 @@ export default function Buttons({
             debateId,
             socket,
             streamRef,
-            setIsAudioMuted,
-            isAudioMuted ? false : true,
+            setIsAudioOn,
+            isAudioOn ? true : false,
           )
         }
       >
-        {isAudioMuted ? "AudioUnmuted" : "AudioMuted"}
+        {isAudioOn ? "AudioOn" : "AudioOff"}
       </button>
       <button
         onClick={() =>
@@ -51,12 +51,12 @@ export default function Buttons({
             debateId,
             socket,
             streamRef,
-            setIsVideoMuted,
-            isVideoMuted ? false : true,
+            setIsVideoOn,
+            isVideoOn ? true : false,
           )
         }
       >
-        {isVideoMuted ? "VideoUnmuted" : "VideoMuted"}
+        {isVideoOn ? "VideoOn" : "VideoOff"}
       </button>
       <button
         onClick={() =>

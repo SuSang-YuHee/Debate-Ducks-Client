@@ -5,12 +5,12 @@ export const toggleAudioMute = (
   debateId: string | string[] | undefined,
   socket: Socket | undefined,
   streamRef: MutableRefObject<MediaStream | undefined>,
-  setIsAudioMuted: (isMute: boolean) => void,
-  isMute: boolean,
+  setIsAudioOn: (isMute: boolean) => void,
+  isOn: boolean,
 ) => {
   if (streamRef.current) {
-    streamRef.current.getAudioTracks()[0].enabled = !isMute;
-    setIsAudioMuted(isMute);
+    streamRef.current.getAudioTracks()[0].enabled = isOn;
+    setIsAudioOn(isOn);
   }
 };
 
@@ -18,11 +18,11 @@ export const toggleVideoMute = (
   debateId: string | string[] | undefined,
   socket: Socket | undefined,
   streamRef: MutableRefObject<MediaStream | undefined>,
-  setIsVideoMuted: (isMute: boolean) => void,
-  isMute: boolean,
+  setIsVideoOn: (isOn: boolean) => void,
+  isOn: boolean,
 ) => {
   if (streamRef.current) {
-    streamRef.current.getVideoTracks()[0].enabled = !isMute;
-    setIsVideoMuted(isMute);
+    streamRef.current.getVideoTracks()[0].enabled = isOn;
+    setIsVideoOn(isOn);
   }
 };

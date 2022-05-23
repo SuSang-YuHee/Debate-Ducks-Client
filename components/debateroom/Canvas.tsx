@@ -1,8 +1,9 @@
 import { useRef, useEffect, MutableRefObject } from "react";
 
-import { IDummy } from "./types";
 import { drawVideo } from "../debateroom/utils/draw";
 import { useSetInterval } from "../debateroom/utils/useSetInterval";
+
+import { IDummy } from "./types";
 
 interface ICanvasProps {
   recorderRef: MutableRefObject<MediaRecorder | undefined>;

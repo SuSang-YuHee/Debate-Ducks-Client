@@ -26,7 +26,7 @@ export const screenShare = async (
       }
       videoRef.current.srcObject = screenStream;
       setIsScreenOn(true);
-      //! 소켓 추가 필요
+      socket?.emit("peerScreen", { debateId, isPeerScreenOn: true });
     }
 
     screenStream.getTracks()[0].onended = () => {
@@ -40,7 +40,7 @@ export const screenShare = async (
         }
         videoRef.current.srcObject = streamRef.current;
         setIsScreenOn(false);
-        //! 소켓 추가 필요
+        socket?.emit("peerScreen", { debateId, isPeerScreenOn: false });
       }
     };
   } catch (err) {

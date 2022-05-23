@@ -19,15 +19,11 @@ export default function Room({ debateId, socket }: IRoomProps) {
   const peerStreamRef = useRef<MediaStream>();
   const videoRef = useRef<HTMLVideoElement>(null);
   const peerVideoRef = useRef<HTMLVideoElement>(null);
-  const [isAudioMuted, setIsAudioMuted] = useState<boolean>(false);
-  const [isVideoMuted, setIsVideoMuted] = useState<boolean>(false);
-  const [
-    /*isPeerVideoMuted, setIsPeerVideoMuted*/
-  ] = useState<boolean>(false);
+  const [isAudioOn, setIsAudioOn] = useState<boolean>(true);
+  const [isVideoOn, setIsVideoOn] = useState<boolean>(true);
+  // const [isPeerVideoOn, setIsPeerVideoOn] = useState<boolean>(true);
   const [, /*isScreenOn*/ setIsScreenOn] = useState<boolean>(false);
-  const [
-    /*isPeerScreenOn, setIsPeerScreenOn*/
-  ] = useState<boolean>(false);
+  // const [isPeerScreenOn, setIsPeerScreenOn] = useState<boolean>(false);
 
   const recorderRef = useRef<MediaRecorder>();
   const downRef = useRef<HTMLAnchorElement>(null);
@@ -135,10 +131,10 @@ export default function Room({ debateId, socket }: IRoomProps) {
         peerRef={peerRef}
         streamRef={streamRef}
         videoRef={videoRef}
-        isAudioMuted={isAudioMuted}
-        setIsAudioMuted={setIsAudioMuted}
-        isVideoMuted={isVideoMuted}
-        setIsVideoMuted={setIsVideoMuted}
+        isAudioOn={isAudioOn}
+        setIsAudioOn={setIsAudioOn}
+        isVideoOn={isVideoOn}
+        setIsVideoOn={setIsVideoOn}
         setIsScreenOn={setIsScreenOn}
       />
       <a ref={downRef} download={`Test`} />
