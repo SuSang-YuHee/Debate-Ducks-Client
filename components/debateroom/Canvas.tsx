@@ -1,17 +1,9 @@
-import { useRef, useEffect, MutableRefObject } from "react";
+import { useRef, useEffect } from "react";
 
 import { drawVideo } from "../debateroom/utils/draw";
 import { useSetInterval } from "../debateroom/utils/useSetInterval";
 
-import { IDummy } from "./types";
-
-interface ICanvasProps {
-  recorderRef: MutableRefObject<MediaRecorder | undefined>;
-  downRef: MutableRefObject<HTMLAnchorElement | null>;
-  videoRef: MutableRefObject<HTMLVideoElement | null>;
-  peerVideoRef: MutableRefObject<HTMLVideoElement | null>;
-  dummy: IDummy;
-}
+import { IDebateroomProps } from "./types";
 
 export default function Canvas({
   recorderRef,
@@ -19,7 +11,10 @@ export default function Canvas({
   videoRef,
   peerVideoRef,
   dummy,
-}: ICanvasProps) {
+}: Pick<
+  IDebateroomProps,
+  "recorderRef" | "downRef" | "videoRef" | "peerVideoRef" | "dummy"
+>) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const blobsRef = useRef<Blob[]>([]);
   const [drawVideoStart] = useSetInterval(
