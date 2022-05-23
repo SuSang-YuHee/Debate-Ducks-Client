@@ -1,8 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
-import { connectHostPeer, connectGuestPeer } from "./simple-peer";
+import { connectHostPeer, connectGuestPeer } from "./utils/simple-peer";
+
+import Buttons from "./Buttons";
 
 interface IRoomProps {
   debateId: string | string[] | undefined;
@@ -10,16 +12,21 @@ interface IRoomProps {
 }
 
 export default function Room({ debateId, socket }: IRoomProps) {
+  const peerRef = useRef<Peer.Instance>();
   const myStreamRef = useRef<MediaStream>();
   const peerStreamRef = useRef<MediaStream>();
   const myVideoRef = useRef<HTMLVideoElement>(null);
   const peerVideoRef = useRef<HTMLVideoElement>(null);
-  const peerRef = useRef<Peer.Instance>();
+  const [isAudioMuted, setIsAudioMuted] = useState<boolean>(false);
+  const [isVideoMuted, setIsVideoMuted] = useState<boolean>(false);
 
   useEffect(() => {
     if (debateId && socket) {
       navigator.mediaDevices
-        .getUserMedia({ video: { facingMode: "user" }, audio: true })
+        .getUserMedia({
+          video: { facingMode: "user" },
+          audio: { echoCancellation: true, noiseSuppression: true },
+        })
         .then((stream) => {
           myStreamRef.current = stream;
           if (myVideoRef.current) {
@@ -38,10 +45,10 @@ export default function Room({ debateId, socket }: IRoomProps) {
         connectHostPeer(
           debateId,
           socket,
-          peerRef.current,
-          myStreamRef.current,
-          peerStreamRef.current,
-          peerVideoRef.current,
+          peerRef,
+          myStreamRef,
+          peerStreamRef,
+          peerVideoRef,
         );
       });
 
@@ -49,10 +56,10 @@ export default function Room({ debateId, socket }: IRoomProps) {
         connectGuestPeer(
           debateId,
           socket,
-          peerRef.current,
-          myStreamRef.current,
-          peerStreamRef.current,
-          peerVideoRef.current,
+          peerRef,
+          myStreamRef,
+          peerStreamRef,
+          peerVideoRef,
           signal,
         );
       });
@@ -64,6 +71,15 @@ export default function Room({ debateId, socket }: IRoomProps) {
       <h1>Room</h1>
       <video ref={myVideoRef} muted autoPlay playsInline></video>
       <video ref={peerVideoRef} autoPlay playsInline></video>
+      <Buttons
+        peerRef={peerRef}
+        myStreamRef={myStreamRef}
+        myVideoRef={myVideoRef}
+        isAudioMuted={isAudioMuted}
+        setIsAudioMuted={setIsAudioMuted}
+        isVideoMuted={isVideoMuted}
+        setIsVideoMuted={setIsVideoMuted}
+      />
     </div>
   );
 }
