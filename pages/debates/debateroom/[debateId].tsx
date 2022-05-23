@@ -1,21 +1,21 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
+import { useEffect, useRef } from "react";
+import { io, Socket } from "socket.io-client";
+
+import Room from "../../../components/debateroom/Room";
 
 export default function Debateroom() {
   const router = useRouter();
   const { debateId } = router.query;
-  const [socket, setSocket] = useState({});
+  const socketRef = useRef<Socket | undefined>(undefined);
 
   useEffect(() => {
-    setSocket(io(`${process.env.NEXT_PUBLIC_API_URL}`));
+    socketRef.current = io(`${process.env.NEXT_PUBLIC_API_URL}`);
   }, []);
 
-  console.log(socket);
-
   return (
-    <div>
-      <h1>Debateroom: {debateId}</h1>
-    </div>
+    <>
+      <Room debateId={debateId} socket={socketRef.current} />
+    </>
   );
 }
