@@ -7,7 +7,7 @@ import Room from "../../../components/debateroom/Room";
 export default function Debateroom() {
   const router = useRouter();
   const { debateId } = router.query;
-  const socketRef = useRef<Socket | undefined>(undefined);
+  const socketRef = useRef<Socket>();
 
   useEffect(() => {
     socketRef.current = io(`${process.env.NEXT_PUBLIC_API_URL}`);
