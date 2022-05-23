@@ -1,5 +1,5 @@
 import { screenShare } from "./utils/screenShare";
-import { toggleAudioMute, toggleVideoMute } from "./utils/toggleMute";
+import { toggleAudioOnOff, toggleVideoOnOff } from "./utils/toggleOnOff";
 
 import { IDebateroomProps } from "./types";
 
@@ -31,14 +31,14 @@ export default function Buttons({
     <div>
       <button
         onClick={() =>
-          toggleAudioMute(streamRef, isAudioOn ? false : true, setIsAudioOn)
+          toggleAudioOnOff(streamRef, isAudioOn ? false : true, setIsAudioOn)
         }
       >
         {isAudioOn ? "AudioOff" : "AudioOn"}
       </button>
       <button
         onClick={() =>
-          toggleVideoMute(
+          toggleVideoOnOff(
             debateId,
             socket,
             streamRef,
