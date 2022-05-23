@@ -31,10 +31,10 @@ export default function Buttons({
     <div>
       <button
         onClick={() =>
-          toggleAudioMute(streamRef, isAudioOn ? true : false, setIsAudioOn)
+          toggleAudioMute(streamRef, isAudioOn ? false : true, setIsAudioOn)
         }
       >
-        {isAudioOn ? "AudioOn" : "AudioOff"}
+        {isAudioOn ? "AudioOff" : "AudioOn"}
       </button>
       <button
         onClick={() =>
@@ -42,12 +42,12 @@ export default function Buttons({
             debateId,
             socket,
             streamRef,
-            isVideoOn ? true : false,
+            isVideoOn ? false : true,
             setIsVideoOn,
           )
         }
       >
-        {isVideoOn ? "VideoOn" : "VideoOff"}
+        {isVideoOn ? "VideoOff" : "VideoOn"}
       </button>
       <button
         onClick={() =>
