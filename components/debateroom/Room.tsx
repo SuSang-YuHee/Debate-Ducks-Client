@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
+import { IDummy } from "./types";
 import { connectHostPeer, connectGuestPeer } from "./utils/simple-peer";
 
 import Canvas from "./Canvas";
@@ -13,27 +14,40 @@ interface IRoomProps {
 }
 
 export default function Room({ debateId, socket }: IRoomProps) {
-  const peerRef = useRef<Peer.Instance>();
-  const myStreamRef = useRef<MediaStream>();
+  const [peer, setPeer] = useState<Peer.Instance>();
+  const streamRef = useRef<MediaStream>();
   const peerStreamRef = useRef<MediaStream>();
-  const myVideoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const peerVideoRef = useRef<HTMLVideoElement>(null);
-  const [isAudioMuted, setIsAudioMuted] = useState<boolean>(false);
-  const [isVideoMuted, setIsVideoMuted] = useState<boolean>(false);
+  const [isAudioOn, setIsAudioOn] = useState<boolean>(true);
+  const [isVideoOn, setIsVideoOn] = useState<boolean>(true);
+  const [isPeerVideoOn, setIsPeerVideoOn] = useState<boolean>(true);
+  const [isScreenOn, setIsScreenOn] = useState<boolean>(false);
+  const [isPeerScreenOn, setIsPeerScreenOn] = useState<boolean>(false);
   const recorderRef = useRef<MediaRecorder>();
   const downRef = useRef<HTMLAnchorElement>(null);
+
+  //! 임시 변수
+  const [dummy] = useState<IDummy>({
+    topic: "Is Alien Exist?",
+    prosName: "이찬성",
+    consName: "반대중",
+    isProsTurn: true,
+  });
+  const [isPros, setIsPros] = useState(true);
+  const [isStart, setIsStart] = useState(false);
 
   useEffect(() => {
     if (debateId && socket) {
       navigator.mediaDevices
         .getUserMedia({
-          video: { facingMode: "user" },
+          video: { facingMode: "user", width: 500, height: 500 },
           audio: { echoCancellation: true, noiseSuppression: true },
         })
         .then((stream) => {
-          myStreamRef.current = stream;
-          if (myVideoRef.current) {
-            myVideoRef.current.srcObject = stream;
+          streamRef.current = stream;
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
           }
         });
 
@@ -48,8 +62,8 @@ export default function Room({ debateId, socket }: IRoomProps) {
         connectHostPeer(
           debateId,
           socket,
-          peerRef,
-          myStreamRef,
+          setPeer,
+          streamRef,
           peerStreamRef,
           peerVideoRef,
         );
@@ -59,16 +73,25 @@ export default function Room({ debateId, socket }: IRoomProps) {
         connectGuestPeer(
           debateId,
           socket,
-          peerRef,
-          myStreamRef,
+          setPeer,
+          streamRef,
           peerStreamRef,
           peerVideoRef,
           signal,
         );
       });
+
+      socket.on("peerVideo", (isPeerVideoOn: boolean) => {
+        setIsPeerVideoOn(isPeerVideoOn);
+      });
+
+      socket.on("peerScreen", (isPeerScreenOn: boolean) => {
+        setIsPeerScreenOn(isPeerScreenOn);
+      });
     }
   }, [debateId, socket]);
 
+  //! 임시 함수
   function downloadRecord() {
     downRef.current?.click();
   }
@@ -84,22 +107,59 @@ export default function Room({ debateId, socket }: IRoomProps) {
   return (
     <div>
       <h1>Room</h1>
-      <video ref={myVideoRef} muted autoPlay playsInline></video>
-      <video ref={peerVideoRef} autoPlay playsInline></video>
-      <Canvas recorderRef={recorderRef} downRef={downRef} />
+      <video
+        ref={videoRef}
+        muted
+        autoPlay
+        playsInline
+        width={0}
+        height={0}
+        style={{ position: "sticky", top: 0 }}
+      ></video>
+      <video
+        ref={peerVideoRef}
+        autoPlay
+        playsInline
+        width={0}
+        height={0}
+        style={{ position: "sticky", top: 0 }}
+      ></video>
+      <Canvas
+        peer={peer}
+        recorderRef={recorderRef}
+        downRef={downRef}
+        videoRef={videoRef}
+        peerVideoRef={peerVideoRef}
+        isVideoOn={isVideoOn}
+        isPeerVideoOn={isPeerVideoOn}
+        isScreenOn={isScreenOn}
+        isPeerScreenOn={isPeerScreenOn}
+        dummy={dummy}
+        isPros={isPros}
+        isStart={isStart}
+      />
       <Buttons
-        peerRef={peerRef}
-        myStreamRef={myStreamRef}
-        myVideoRef={myVideoRef}
-        isAudioMuted={isAudioMuted}
-        setIsAudioMuted={setIsAudioMuted}
-        isVideoMuted={isVideoMuted}
-        setIsVideoMuted={setIsVideoMuted}
+        debateId={debateId}
+        socket={socket}
+        peer={peer}
+        streamRef={streamRef}
+        videoRef={videoRef}
+        isAudioOn={isAudioOn}
+        setIsAudioOn={setIsAudioOn}
+        isVideoOn={isVideoOn}
+        setIsVideoOn={setIsVideoOn}
+        setIsScreenOn={setIsScreenOn}
       />
       <a ref={downRef} download={`Test`} />
-      <button onClick={startRecord}>start</button>
-      <button onClick={stopRecord}>stop</button>
-      <button onClick={downloadRecord}>down</button>
+      <button onClick={startRecord}>recordStart</button>
+      <button onClick={stopRecord}>recordStop</button>
+      <button onClick={downloadRecord}>recordDown</button>
+      <button onClick={() => setIsPros(!isPros)}>
+        {isPros ? "Now pros" : "Now cons"}
+      </button>
+      <button onClick={() => setIsStart(!isStart)}>
+        {isStart ? "Now start" : "No start"}
+      </button>
     </div>
   );
 }

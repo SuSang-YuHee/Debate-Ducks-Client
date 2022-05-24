@@ -1,13 +1,57 @@
-import { useRef, useEffect, MutableRefObject } from "react";
+import { useRef, useEffect } from "react";
 
-interface ICanvasProps {
-  recorderRef: MutableRefObject<MediaRecorder | undefined>;
-  downRef: MutableRefObject<HTMLAnchorElement | null>;
-}
+import { draw } from "../debateroom/utils/draw";
+import { useSetInterval } from "../debateroom/utils/useSetInterval";
 
-export default function Canvas({ recorderRef, downRef }: ICanvasProps) {
+import { IDebateroomProps } from "./types";
+
+export default function Canvas({
+  peer,
+  recorderRef,
+  downRef,
+  videoRef,
+  peerVideoRef,
+  isVideoOn,
+  isPeerVideoOn,
+  isScreenOn,
+  isPeerScreenOn,
+  dummy,
+  isPros,
+  isStart,
+}: Pick<
+  IDebateroomProps,
+  | "peer"
+  | "recorderRef"
+  | "downRef"
+  | "videoRef"
+  | "peerVideoRef"
+  | "isVideoOn"
+  | "isPeerVideoOn"
+  | "isScreenOn"
+  | "isPeerScreenOn"
+  | "dummy"
+  | "isPros"
+  | "isStart"
+>) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const blobsRef = useRef<Blob[]>([]);
+  const [drawStart, drawStop] = useSetInterval(
+    () =>
+      draw(
+        canvasRef,
+        peer,
+        videoRef,
+        peerVideoRef,
+        isVideoOn,
+        isPeerVideoOn,
+        isScreenOn,
+        isPeerScreenOn,
+        dummy,
+        isPros,
+        isStart,
+      ),
+    1000 / 30,
+  );
 
   useEffect(() => {
     let mergedTracks, mergedStream, blob, url;
@@ -30,15 +74,19 @@ export default function Canvas({ recorderRef, downRef }: ICanvasProps) {
         if (downRef.current) downRef.current.href = url;
       };
     }
-
-    console.log(recorderRef.current); //*
-
-    const EraserCtx = canvasRef.current?.getContext("2d");
-    if (EraserCtx) {
-      EraserCtx.fillStyle = "red";
-      EraserCtx.fillRect(0, 0, 1280, 100);
-    }
   }, [recorderRef, downRef]);
+
+  useEffect(() => {
+    drawStop();
+    drawStart();
+  }, [
+    drawStart,
+    drawStop,
+    isVideoOn,
+    isPeerVideoOn,
+    isScreenOn,
+    isPeerScreenOn,
+  ]);
 
   return (
     <div>
@@ -47,7 +95,7 @@ export default function Canvas({ recorderRef, downRef }: ICanvasProps) {
         ref={canvasRef}
         width="1280px"
         height="720px"
-        style={{ border: "2px solid red", width: "100vw", height: "100wh" }}
+        style={{ border: "2px solid red", width: "100vw" }}
       ></canvas>
     </div>
   );

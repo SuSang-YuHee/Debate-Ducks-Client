@@ -1,57 +1,66 @@
-import { MutableRefObject } from "react";
-import Peer from "simple-peer";
-
-import { toggleAudioMute, toggleVideoMute } from "./utils/toggleMute";
 import { screenShare } from "./utils/screenShare";
+import { toggleAudioOnOff, toggleVideoOnOff } from "./utils/toggleOnOff";
 
-interface IButtonsProps {
-  peerRef: MutableRefObject<Peer.Instance | undefined>;
-  myStreamRef: MutableRefObject<MediaStream | undefined>;
-  myVideoRef: MutableRefObject<HTMLVideoElement | null>;
-  isAudioMuted: boolean;
-  setIsAudioMuted: (isMute: boolean) => void;
-  isVideoMuted: boolean;
-  setIsVideoMuted: (isMute: boolean) => void;
-}
+import { IDebateroomProps } from "./types";
 
 export default function Buttons({
-  peerRef,
-  myStreamRef,
-  myVideoRef,
-  isAudioMuted,
-  setIsAudioMuted,
-  isVideoMuted,
-  setIsVideoMuted,
-}: IButtonsProps) {
+  debateId,
+  socket,
+  peer,
+  streamRef,
+  videoRef,
+  isAudioOn,
+  setIsAudioOn,
+  isVideoOn,
+  setIsVideoOn,
+  setIsScreenOn,
+}: Pick<
+  IDebateroomProps,
+  | "debateId"
+  | "socket"
+  | "peer"
+  | "streamRef"
+  | "videoRef"
+  | "isAudioOn"
+  | "setIsAudioOn"
+  | "isVideoOn"
+  | "setIsVideoOn"
+  | "setIsScreenOn"
+>) {
   return (
     <div>
-      {isAudioMuted ? (
-        <button
-          onClick={() => toggleAudioMute(myStreamRef, setIsAudioMuted, false)}
-        >
-          AudioUnmuted
-        </button>
-      ) : (
-        <button
-          onClick={() => toggleAudioMute(myStreamRef, setIsAudioMuted, true)}
-        >
-          AudioMuted
-        </button>
-      )}
-      {isVideoMuted ? (
-        <button
-          onClick={() => toggleVideoMute(myStreamRef, setIsVideoMuted, false)}
-        >
-          VideoUnmuted
-        </button>
-      ) : (
-        <button
-          onClick={() => toggleVideoMute(myStreamRef, setIsVideoMuted, true)}
-        >
-          VideoMuted
-        </button>
-      )}
-      <button onClick={() => screenShare(peerRef, myStreamRef, myVideoRef)}>
+      <button
+        onClick={() =>
+          toggleAudioOnOff(streamRef, isAudioOn ? false : true, setIsAudioOn)
+        }
+      >
+        {isAudioOn ? "AudioOff" : "AudioOn"}
+      </button>
+      <button
+        onClick={() =>
+          toggleVideoOnOff(
+            debateId,
+            socket,
+            streamRef,
+            isVideoOn ? false : true,
+            setIsVideoOn,
+          )
+        }
+      >
+        {isVideoOn ? "VideoOff" : "VideoOn"}
+      </button>
+      <button
+        onClick={() =>
+          screenShare(
+            debateId,
+            socket,
+            peer,
+            streamRef,
+            videoRef,
+            setIsScreenOn,
+          )
+        }
+      >
         ScreenShare
       </button>
     </div>

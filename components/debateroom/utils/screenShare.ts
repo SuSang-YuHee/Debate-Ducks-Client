@@ -1,10 +1,14 @@
 import { MutableRefObject } from "react";
+import { Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
 export const screenShare = async (
-  peerRef: MutableRefObject<Peer.Instance | undefined>,
-  myStreamRef: MutableRefObject<MediaStream | undefined>,
-  myVideoRef: MutableRefObject<HTMLVideoElement | null>,
+  debateId: string | string[] | undefined,
+  socket: Socket | undefined,
+  peer: Peer.Instance | undefined,
+  streamRef: MutableRefObject<MediaStream | undefined>,
+  videoRef: MutableRefObject<HTMLVideoElement | null>,
+  setIsScreenOn: (isOn: boolean) => void,
 ) => {
   try {
     const screenStream = await navigator.mediaDevices.getDisplayMedia({
@@ -12,27 +16,27 @@ export const screenShare = async (
       audio: false,
     });
 
-    if (myStreamRef.current && myVideoRef.current) {
-      if (peerRef.current) {
-        peerRef.current.replaceTrack(
-          myStreamRef.current.getVideoTracks()[0],
-          screenStream.getVideoTracks()[0],
-          myStreamRef.current,
-        );
-      }
-      myVideoRef.current.srcObject = screenStream;
+    if (streamRef.current && videoRef.current) {
+      peer?.replaceTrack(
+        streamRef.current.getVideoTracks()[0],
+        screenStream.getVideoTracks()[0],
+        streamRef.current,
+      );
+      videoRef.current.srcObject = screenStream;
+      setIsScreenOn(true);
+      socket?.emit("peerScreen", { debateId, isPeerScreenOn: true });
     }
 
     screenStream.getTracks()[0].onended = () => {
-      if (myStreamRef.current && myVideoRef.current) {
-        if (peerRef.current) {
-          peerRef.current.replaceTrack(
-            screenStream.getVideoTracks()[0],
-            myStreamRef.current.getVideoTracks()[0],
-            myStreamRef.current,
-          );
-        }
-        myVideoRef.current.srcObject = myStreamRef.current;
+      if (streamRef.current && videoRef.current) {
+        peer?.replaceTrack(
+          screenStream.getVideoTracks()[0],
+          streamRef.current.getVideoTracks()[0],
+          streamRef.current,
+        );
+        videoRef.current.srcObject = streamRef.current;
+        setIsScreenOn(false);
+        socket?.emit("peerScreen", { debateId, isPeerScreenOn: false });
       }
     };
   } catch (err) {

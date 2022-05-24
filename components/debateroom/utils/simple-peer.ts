@@ -5,8 +5,8 @@ import Peer from "simple-peer";
 export const connectHostPeer = (
   debateId: string | string[],
   socket: Socket,
-  peerRef: MutableRefObject<Peer.Instance | undefined>,
-  myStreamRef: MutableRefObject<MediaStream | undefined>,
+  setPeer: (peer: Peer.Instance | undefined) => void,
+  streamRef: MutableRefObject<MediaStream | undefined>,
   peerStreamRef: MutableRefObject<MediaStream | undefined>,
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
 ) => {
@@ -23,10 +23,10 @@ export const connectHostPeer = (
         { urls: "stun:stun.nextcloud.com:443" },
       ],
     },
-    stream: myStreamRef.current,
+    stream: streamRef.current,
   });
 
-  peerRef.current = simplePeer;
+  setPeer(simplePeer);
 
   simplePeer.on("signal", (signal) => {
     socket.emit("offer", { debateId, signal });
@@ -51,8 +51,8 @@ export const connectHostPeer = (
 export const connectGuestPeer = (
   debateId: string | string[],
   socket: Socket,
-  peerRef: MutableRefObject<Peer.Instance | undefined>,
-  myStreamRef: MutableRefObject<MediaStream | undefined>,
+  setPeer: (peer: Peer.Instance | undefined) => void,
+  streamRef: MutableRefObject<MediaStream | undefined>,
   peerStreamRef: MutableRefObject<MediaStream | undefined>,
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
   signal: Peer.SignalData,
@@ -60,10 +60,10 @@ export const connectGuestPeer = (
   const simplePeer = new Peer({
     initiator: false,
     trickle: false,
-    stream: myStreamRef.current,
+    stream: streamRef.current,
   });
 
-  peerRef.current = simplePeer;
+  setPeer(simplePeer);
 
   simplePeer.on("signal", (signal) => {
     socket.emit("answer", { debateId, signal });
