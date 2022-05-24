@@ -29,9 +29,9 @@ export default function Canvas({
   | "isPeerVideoOn"
   | "isScreenOn"
   | "isPeerScreenOn"
+  | "isStart"
   | "dummy"
   | "isPros"
-  | "isStart"
 >) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const blobsRef = useRef<Blob[]>([]);
@@ -46,9 +46,9 @@ export default function Canvas({
         isPeerVideoOn,
         isScreenOn,
         isPeerScreenOn,
+        isStart,
         dummy,
         isPros,
-        isStart,
       ),
     1000 / 30,
   );
@@ -82,6 +82,7 @@ export default function Canvas({
   }, [
     drawStart,
     drawStop,
+    peer,
     isVideoOn,
     isPeerVideoOn,
     isScreenOn,

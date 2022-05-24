@@ -1,5 +1,4 @@
 import { MutableRefObject } from "react";
-import { Socket } from "socket.io-client";
 
 export const toggleAudioOnOff = (
   streamRef: MutableRefObject<MediaStream | undefined>,
@@ -13,8 +12,6 @@ export const toggleAudioOnOff = (
 };
 
 export const toggleVideoOnOff = (
-  debateId: string | string[] | undefined,
-  socket: Socket | undefined,
   streamRef: MutableRefObject<MediaStream | undefined>,
   isVideoOn: boolean,
   setIsVideoOn: (isVideoOn: boolean) => void,
@@ -22,6 +19,5 @@ export const toggleVideoOnOff = (
   if (streamRef.current) {
     streamRef.current.getVideoTracks()[0].enabled = isVideoOn;
     setIsVideoOn(isVideoOn);
-    socket?.emit("peerVideo", { debateId, isVideoOn });
   }
 };

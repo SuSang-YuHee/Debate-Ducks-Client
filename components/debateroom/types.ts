@@ -6,6 +6,8 @@ export interface IDebateroomProps {
   debateId: string | string[] | undefined;
   socket: Socket | undefined;
   peer: Peer.Instance | undefined;
+  recorderRef: MutableRefObject<MediaRecorder | undefined>;
+  downRef: MutableRefObject<HTMLAnchorElement | null>;
   setPeer: (peer: Peer.Instance | undefined) => void;
   streamRef: MutableRefObject<MediaStream | undefined>;
   videoRef: MutableRefObject<HTMLVideoElement | null>;
@@ -20,11 +22,10 @@ export interface IDebateroomProps {
   setIsScreenOn: (isScreenON: boolean) => void;
   isPeerScreenOn: boolean;
   setIsPeerScreenOn: (isScreenON: boolean) => void;
-  recorderRef: MutableRefObject<MediaRecorder | undefined>;
-  downRef: MutableRefObject<HTMLAnchorElement | null>;
+  isStart: boolean;
+  //! 임시 타입
   dummy: IDummy;
   isPros: boolean;
-  isStart: boolean;
 }
 
 //! 임시 타입

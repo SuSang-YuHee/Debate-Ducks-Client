@@ -44,9 +44,9 @@ export const draw = (
   isPeerVideoOn: boolean,
   isScreenOn: boolean,
   isPeerScreenOn: boolean,
+  isStart: boolean,
   dummy: IDummy,
   isPros: boolean,
-  isStart: boolean,
 ) => {
   // Common Bg
   drawSquare(canvasRef, "#F8FBFD", 0, 80, 1280, 640);
@@ -56,10 +56,14 @@ export const draw = (
   } else if (isPeerScreenOn && isPros === dummy.isProsTurn && isStart) {
     //! 상대 화면 크게
   } else {
-    drawText(canvasRef, "#292929", "bold 48px san-serif", "VS", 640, 420); // V
+    // VS
+    drawText(canvasRef, "#292929", "bold 48px san-serif", "VS", 640, 420);
 
-    drawSquare(canvasRef, "#ff9425", 40, 110, 520, 520); // prosOuterBg
-    drawSquare(canvasRef, "#292929", 50, 120, 500, 500); // prosInnerBg
+    // prosOuterBg
+    drawSquare(canvasRef, "#ff9425", 40, 110, 520, 520);
+    // prosInnerBg
+    drawSquare(canvasRef, "#292929", 50, 120, 500, 500);
+    // prosName
     drawText(
       canvasRef,
       "#ff9425",
@@ -67,18 +71,22 @@ export const draw = (
       `${dummy.prosName}`,
       300,
       680,
-    ); // prosName
+    );
+    // prosText
     drawText(
       canvasRef,
       "#F8FBFD",
       "bold 32px san-serif",
-      peer ? "Camera Off" : "Not connected",
+      peer ? "Camera Off" : isPros ? "Camera Off" : "Not connected",
       300,
       380,
-    ); // prosText
+    );
 
-    drawSquare(canvasRef, "#6667ab", 720, 110, 520, 520); // consOuterBg
-    drawSquare(canvasRef, "#292929", 730, 120, 500, 500); // consInnerBg
+    // consOuterBg
+    drawSquare(canvasRef, "#6667ab", 720, 110, 520, 520);
+    // consInnerBg
+    drawSquare(canvasRef, "#292929", 730, 120, 500, 500);
+    // consName
     drawText(
       canvasRef,
       "#6667ab",
@@ -86,15 +94,16 @@ export const draw = (
       `${dummy.consName}`,
       980,
       680,
-    ); // consName
+    );
+    // consText
     drawText(
       canvasRef,
       "#F8FBFD",
       "bold 32px san-serif",
-      peer ? "Camera Off" : "Not connected",
+      peer ? "Camera Off" : !isPros ? "Camera Off" : "Not connected",
       980,
       380,
-    ); // consText
+    );
 
     // Video
     if (myVideoRef.current && peerVideoRef.current) {
