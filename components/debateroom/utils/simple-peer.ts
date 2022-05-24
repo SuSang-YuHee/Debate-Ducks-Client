@@ -5,7 +5,7 @@ import Peer from "simple-peer";
 export const connectHostPeer = (
   debateId: string | string[],
   socket: Socket,
-  peerRef: MutableRefObject<Peer.Instance | undefined>,
+  setPeer: (peer: Peer.Instance | undefined) => void,
   streamRef: MutableRefObject<MediaStream | undefined>,
   peerStreamRef: MutableRefObject<MediaStream | undefined>,
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
@@ -26,7 +26,7 @@ export const connectHostPeer = (
     stream: streamRef.current,
   });
 
-  peerRef.current = simplePeer;
+  setPeer(simplePeer);
 
   simplePeer.on("signal", (signal) => {
     socket.emit("offer", { debateId, signal });
@@ -51,7 +51,7 @@ export const connectHostPeer = (
 export const connectGuestPeer = (
   debateId: string | string[],
   socket: Socket,
-  peerRef: MutableRefObject<Peer.Instance | undefined>,
+  setPeer: (peer: Peer.Instance | undefined) => void,
   streamRef: MutableRefObject<MediaStream | undefined>,
   peerStreamRef: MutableRefObject<MediaStream | undefined>,
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
@@ -63,7 +63,7 @@ export const connectGuestPeer = (
     stream: streamRef.current,
   });
 
-  peerRef.current = simplePeer;
+  setPeer(simplePeer);
 
   simplePeer.on("signal", (signal) => {
     socket.emit("answer", { debateId, signal });

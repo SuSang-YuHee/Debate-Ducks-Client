@@ -6,7 +6,7 @@ import { IDebateroomProps } from "./types";
 export default function Buttons({
   debateId,
   socket,
-  peerRef,
+  peer,
   streamRef,
   videoRef,
   isAudioOn,
@@ -18,7 +18,7 @@ export default function Buttons({
   IDebateroomProps,
   | "debateId"
   | "socket"
-  | "peerRef"
+  | "peer"
   | "streamRef"
   | "videoRef"
   | "isAudioOn"
@@ -54,7 +54,7 @@ export default function Buttons({
           screenShare(
             debateId,
             socket,
-            peerRef,
+            peer,
             streamRef,
             videoRef,
             setIsScreenOn,

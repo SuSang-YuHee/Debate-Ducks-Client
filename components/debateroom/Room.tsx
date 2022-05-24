@@ -14,28 +14,28 @@ interface IRoomProps {
 }
 
 export default function Room({ debateId, socket }: IRoomProps) {
-  const peerRef = useRef<Peer.Instance>();
+  const [peer, setPeer] = useState<Peer.Instance>();
   const streamRef = useRef<MediaStream>();
   const peerStreamRef = useRef<MediaStream>();
   const videoRef = useRef<HTMLVideoElement>(null);
   const peerVideoRef = useRef<HTMLVideoElement>(null);
   const [isAudioOn, setIsAudioOn] = useState<boolean>(true);
   const [isVideoOn, setIsVideoOn] = useState<boolean>(true);
-  // const [isPeerVideoOn, setIsPeerVideoOn] = useState<boolean>(true);
-  const [, /*isScreenOn*/ setIsScreenOn] = useState<boolean>(false);
-  // const [isPeerScreenOn, setIsPeerScreenOn] = useState<boolean>(false);
-
+  const [isPeerVideoOn, setIsPeerVideoOn] = useState<boolean>(true);
+  const [isScreenOn, setIsScreenOn] = useState<boolean>(false);
+  const [isPeerScreenOn, setIsPeerScreenOn] = useState<boolean>(false);
   const recorderRef = useRef<MediaRecorder>();
   const downRef = useRef<HTMLAnchorElement>(null);
 
   //! 임시 변수
   const [dummy] = useState<IDummy>({
     topic: "Is Alien Exist?",
-    isPros: true,
-    isProsTurn: true,
     prosName: "이찬성",
     consName: "반대중",
+    isProsTurn: true,
   });
+  const [isPros, setIsPros] = useState(true);
+  const [isStart, setIsStart] = useState(false);
 
   useEffect(() => {
     if (debateId && socket) {
@@ -62,7 +62,7 @@ export default function Room({ debateId, socket }: IRoomProps) {
         connectHostPeer(
           debateId,
           socket,
-          peerRef,
+          setPeer,
           streamRef,
           peerStreamRef,
           peerVideoRef,
@@ -73,17 +73,23 @@ export default function Room({ debateId, socket }: IRoomProps) {
         connectGuestPeer(
           debateId,
           socket,
-          peerRef,
+          setPeer,
           streamRef,
           peerStreamRef,
           peerVideoRef,
           signal,
         );
       });
+
+      socket.on("peerVideo", (isPeerVideoOn: boolean) => {
+        setIsPeerVideoOn(isPeerVideoOn);
+      });
+
+      socket.on("peerScreen", (isPeerScreenOn: boolean) => {
+        setIsPeerScreenOn(isPeerScreenOn);
+      });
     }
   }, [debateId, socket]);
-
-  // useEffect(() => {}, [isProScreenOn /*isConScreenOn, isProTurn*/]);
 
   //! 임시 함수
   function downloadRecord() {
@@ -119,16 +125,23 @@ export default function Room({ debateId, socket }: IRoomProps) {
         style={{ position: "sticky", top: 0 }}
       ></video>
       <Canvas
+        peer={peer}
         recorderRef={recorderRef}
         downRef={downRef}
         videoRef={videoRef}
         peerVideoRef={peerVideoRef}
+        isVideoOn={isVideoOn}
+        isPeerVideoOn={isPeerVideoOn}
+        isScreenOn={isScreenOn}
+        isPeerScreenOn={isPeerScreenOn}
         dummy={dummy}
+        isPros={isPros}
+        isStart={isStart}
       />
       <Buttons
         debateId={debateId}
         socket={socket}
-        peerRef={peerRef}
+        peer={peer}
         streamRef={streamRef}
         videoRef={videoRef}
         isAudioOn={isAudioOn}
@@ -141,6 +154,12 @@ export default function Room({ debateId, socket }: IRoomProps) {
       <button onClick={startRecord}>recordStart</button>
       <button onClick={stopRecord}>recordStop</button>
       <button onClick={downloadRecord}>recordDown</button>
+      <button onClick={() => setIsPros(!isPros)}>
+        {isPros ? "Now pros" : "Now cons"}
+      </button>
+      <button onClick={() => setIsStart(!isStart)}>
+        {isStart ? "Now start" : "No start"}
+      </button>
     </div>
   );
 }

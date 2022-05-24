@@ -1,28 +1,57 @@
 import { useRef, useEffect } from "react";
 
-import { drawVideo } from "../debateroom/utils/draw";
+import { draw } from "../debateroom/utils/draw";
 import { useSetInterval } from "../debateroom/utils/useSetInterval";
 
 import { IDebateroomProps } from "./types";
 
 export default function Canvas({
+  peer,
   recorderRef,
   downRef,
   videoRef,
   peerVideoRef,
+  isVideoOn,
+  isPeerVideoOn,
+  isScreenOn,
+  isPeerScreenOn,
   dummy,
+  isPros,
+  isStart,
 }: Pick<
   IDebateroomProps,
-  "recorderRef" | "downRef" | "videoRef" | "peerVideoRef" | "dummy"
+  | "peer"
+  | "recorderRef"
+  | "downRef"
+  | "videoRef"
+  | "peerVideoRef"
+  | "isVideoOn"
+  | "isPeerVideoOn"
+  | "isScreenOn"
+  | "isPeerScreenOn"
+  | "dummy"
+  | "isPros"
+  | "isStart"
 >) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const blobsRef = useRef<Blob[]>([]);
-  const [drawVideoStart] = useSetInterval(
-    () => drawVideo(canvasRef, videoRef, peerVideoRef, dummy),
+  const [drawStart, drawStop] = useSetInterval(
+    () =>
+      draw(
+        canvasRef,
+        peer,
+        videoRef,
+        peerVideoRef,
+        isVideoOn,
+        isPeerVideoOn,
+        isScreenOn,
+        isPeerScreenOn,
+        dummy,
+        isPros,
+        isStart,
+      ),
     1000 / 30,
   );
-  // const [drawProsStart, drawProsStop] = useSetInterval(() => drawPros(), 1000 / 30);
-  // const [drawConsStart, drawConsStop] = useSetInterval(() => drawCons(), 1000 / 30);
 
   useEffect(() => {
     let mergedTracks, mergedStream, blob, url;
@@ -45,13 +74,19 @@ export default function Canvas({
         if (downRef.current) downRef.current.href = url;
       };
     }
-
-    console.log(recorderRef.current); //*
   }, [recorderRef, downRef]);
 
   useEffect(() => {
-    drawVideoStart();
-  });
+    drawStop();
+    drawStart();
+  }, [
+    drawStart,
+    drawStop,
+    isVideoOn,
+    isPeerVideoOn,
+    isScreenOn,
+    isPeerScreenOn,
+  ]);
 
   return (
     <div>
