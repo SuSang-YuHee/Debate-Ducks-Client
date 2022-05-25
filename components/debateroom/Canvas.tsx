@@ -17,7 +17,6 @@ export default function Canvas({
   isPeerScreenOn,
   dummy,
   isPros,
-  isStart,
 }: Pick<
   IDebateroomProps,
   | "peer"
@@ -29,7 +28,6 @@ export default function Canvas({
   | "isPeerVideoOn"
   | "isScreenOn"
   | "isPeerScreenOn"
-  | "isStart"
   | "dummy"
   | "isPros"
 >) {
@@ -46,7 +44,6 @@ export default function Canvas({
         isPeerVideoOn,
         isScreenOn,
         isPeerScreenOn,
-        isStart,
         dummy,
         isPros,
       ),

@@ -33,5 +33,5 @@ export interface IDummy {
   topic: string;
   prosName: string;
   consName: string;
-  isProsTurn: boolean;
+  prosTurn: string;
 }

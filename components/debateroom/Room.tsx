@@ -33,7 +33,7 @@ export default function Room({ debateId, socket }: IRoomProps) {
     topic: "Is Alien Exist?",
     prosName: "이찬성",
     consName: "반대중",
-    isProsTurn: true,
+    prosTurn: "false",
   });
   const [isPros, setIsPros] = useState(true);
 
@@ -107,9 +107,9 @@ export default function Room({ debateId, socket }: IRoomProps) {
   useEffect(() => {
     if (peer) {
       socket?.emit("peerVideo", { debateId, isVideoOn });
-      socket?.emit("peerScreen", { debateId, isPeerScreenOn });
+      socket?.emit("peerScreen", { debateId, isScreenOn });
     }
-  }, [socket, peer, debateId, isVideoOn, isPeerScreenOn]);
+  }, [debateId, socket, peer, isVideoOn, isScreenOn]);
 
   return (
     <div>
@@ -141,7 +141,6 @@ export default function Room({ debateId, socket }: IRoomProps) {
         isPeerVideoOn={isPeerVideoOn}
         isScreenOn={isScreenOn}
         isPeerScreenOn={isPeerScreenOn}
-        isStart={isStart}
         dummy={dummy}
         isPros={isPros}
       />
