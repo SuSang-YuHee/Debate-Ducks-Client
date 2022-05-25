@@ -14,6 +14,7 @@ export interface IDebateroomProps {
   streamRef: MutableRefObject<MediaStream | undefined>;
   videoRef: MutableRefObject<HTMLVideoElement | null>;
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>;
+  screenStreamRef: MutableRefObject<MediaStream | undefined>;
   isAudioOn: boolean;
   setIsAudioOn: (isAudioOn: boolean) => void;
   isVideoOn: boolean;

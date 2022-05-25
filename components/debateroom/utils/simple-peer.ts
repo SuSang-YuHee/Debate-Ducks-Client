@@ -44,7 +44,6 @@ export const connectHostPeer = (
   });
 
   socket.current?.on("answer", (signal: Peer.SignalData) => {
-    console.log("answer"); //!
     simplePeer.signal(signal);
   });
 };

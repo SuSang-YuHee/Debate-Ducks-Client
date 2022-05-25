@@ -4,6 +4,7 @@ import Peer from "simple-peer";
 
 import { IDummy } from "./types";
 import { connectHostPeer, connectGuestPeer } from "./utils/simple-peer";
+import { toggleVideoOnOff } from "./utils/toggleOnOff";
 
 import Canvas from "./Canvas";
 import Buttons from "./Buttons";
@@ -14,19 +15,24 @@ interface IRoomProps {
 }
 
 export default function Room({ debateId, socket }: IRoomProps) {
+  //* WebRTC 변수
   const [reConnect, setReConnect] = useState<boolean>(false);
   const [peer, setPeer] = useState<Peer.Instance | undefined>();
+  //* 녹화 변수
   const recorderRef = useRef<MediaRecorder | undefined>();
   const downRef = useRef<HTMLAnchorElement | null>(null);
+  //* 스트림 변수
   const streamRef = useRef<MediaStream | undefined>();
   const peerStreamRef = useRef<MediaStream | undefined>();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const peerVideoRef = useRef<HTMLVideoElement | null>(null);
+  const screenStreamRef = useRef<MediaStream | undefined>();
   const [isAudioOn, setIsAudioOn] = useState<boolean>(true);
   const [isVideoOn, setIsVideoOn] = useState<boolean>(false);
   const [isPeerVideoOn, setIsPeerVideoOn] = useState<boolean>(false);
   const [isScreenOn, setIsScreenOn] = useState<boolean>(false);
   const [isPeerScreenOn, setIsPeerScreenOn] = useState<boolean>(false);
+  //* Etc.
   const [isStart, setIsStart] = useState(false);
 
   //! 임시 변수
@@ -51,9 +57,10 @@ export default function Room({ debateId, socket }: IRoomProps) {
     recorderRef.current?.stop();
   }
 
-  //
+  //* Room and WebRTC 연결
   useEffect(() => {
     if (debateId && socket.current) {
+      //* 사용자 미디어 획득
       navigator.mediaDevices
         .getUserMedia({
           video: { facingMode: "user", width: 500, height: 500 },
@@ -66,14 +73,16 @@ export default function Room({ debateId, socket }: IRoomProps) {
           }
         });
 
+      //* 방 입장
       socket.current.emit("join", { debateId });
 
+      //* 방 입장 거절
       socket.current.on("overcapacity", () => {
-        console.log("overcapacity"); //!
+        console.log("overcapacity"); //! 추가 처리 필요
       });
 
+      //* offer and answer
       socket.current.on("guestJoin", () => {
-        console.log("guest join"); //!
         connectHostPeer(
           debateId,
           socket,
@@ -85,7 +94,6 @@ export default function Room({ debateId, socket }: IRoomProps) {
       });
 
       socket.current.on("offer", (signal: Peer.SignalData) => {
-        console.log("offer"); //!
         connectGuestPeer(
           debateId,
           socket,
@@ -97,6 +105,7 @@ export default function Room({ debateId, socket }: IRoomProps) {
         );
       });
 
+      //* 끄기/켜기 정보 수신
       socket.current.on("peerVideo", (isPeerVideoOn: boolean) => {
         setIsPeerVideoOn(isPeerVideoOn);
       });
@@ -107,24 +116,41 @@ export default function Room({ debateId, socket }: IRoomProps) {
     }
   }, [debateId, socket, reConnect]);
 
-  //!
+  //* Room and WebRTC 연결 해제
   useEffect(() => {
-    socket.current?.on("peerDisconnect", (peerId) => {
-      console.log("peerDisconnect", peerId); //!
+    socket.current?.on("peerDisconnect", () => {
       peer?.destroy();
       setPeer(undefined);
       socket.current?.disconnect();
       socket.current = io(`${process.env.NEXT_PUBLIC_API_URL}`);
+
+      streamRef.current = undefined;
+      peerStreamRef.current = undefined;
+      if (videoRef.current) videoRef.current.srcObject = null;
+      if (peerVideoRef.current) peerVideoRef.current.srcObject = null;
+      if (screenStreamRef.current) {
+        screenStreamRef.current.getTracks()[0].stop();
+      }
+      setIsPeerVideoOn(false);
+      setIsScreenOn(false);
+      setIsPeerScreenOn(false);
+
       setReConnect(!reConnect);
     });
   }, [debateId, socket, reConnect, peer]);
 
+  //* 끄기/켜기 정보 송신
   useEffect(() => {
     if (peer) {
       socket.current?.emit("peerVideo", { debateId, isVideoOn });
       socket.current?.emit("peerScreen", { debateId, isScreenOn });
     }
   }, [debateId, socket, peer, isVideoOn, isScreenOn]);
+
+  //* 첫 입장시 비디오 끄기
+  useEffect(() => {
+    toggleVideoOnOff(streamRef, false, setIsAudioOn);
+  }, []);
 
   return (
     <div>
@@ -163,10 +189,12 @@ export default function Room({ debateId, socket }: IRoomProps) {
         peer={peer}
         streamRef={streamRef}
         videoRef={videoRef}
+        screenStreamRef={screenStreamRef}
         isAudioOn={isAudioOn}
         setIsAudioOn={setIsAudioOn}
         isVideoOn={isVideoOn}
         setIsVideoOn={setIsVideoOn}
+        isScreenOn={isScreenOn}
         setIsScreenOn={setIsScreenOn}
       />
       <a ref={downRef} download={`Test`} />
