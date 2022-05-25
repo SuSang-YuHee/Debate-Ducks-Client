@@ -5,6 +5,8 @@ import Peer from "simple-peer";
 export interface IDebateroomProps {
   debateId: string | string[] | undefined;
   socket: Socket | undefined;
+  reConnect: boolean;
+  setReconnect: (reConnect: boolean) => void;
   peer: Peer.Instance | undefined;
   recorderRef: MutableRefObject<MediaRecorder | undefined>;
   downRef: MutableRefObject<HTMLAnchorElement | null>;

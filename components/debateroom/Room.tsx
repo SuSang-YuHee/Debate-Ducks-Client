@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { Socket } from "socket.io-client";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { io, Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
 import { IDummy } from "./types";
@@ -10,20 +10,21 @@ import Buttons from "./Buttons";
 
 interface IRoomProps {
   debateId: string | string[] | undefined;
-  socket: Socket | undefined;
+  socket: MutableRefObject<Socket | undefined>;
 }
 
 export default function Room({ debateId, socket }: IRoomProps) {
-  const [peer, setPeer] = useState<Peer.Instance>();
-  const recorderRef = useRef<MediaRecorder>();
-  const downRef = useRef<HTMLAnchorElement>(null);
-  const streamRef = useRef<MediaStream>();
-  const peerStreamRef = useRef<MediaStream>();
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const peerVideoRef = useRef<HTMLVideoElement>(null);
+  const [reConnect, setReConnect] = useState<boolean>(false);
+  const [peer, setPeer] = useState<Peer.Instance | undefined>();
+  const recorderRef = useRef<MediaRecorder | undefined>();
+  const downRef = useRef<HTMLAnchorElement | null>(null);
+  const streamRef = useRef<MediaStream | undefined>();
+  const peerStreamRef = useRef<MediaStream | undefined>();
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const peerVideoRef = useRef<HTMLVideoElement | null>(null);
   const [isAudioOn, setIsAudioOn] = useState<boolean>(true);
-  const [isVideoOn, setIsVideoOn] = useState<boolean>(true);
-  const [isPeerVideoOn, setIsPeerVideoOn] = useState<boolean>(true);
+  const [isVideoOn, setIsVideoOn] = useState<boolean>(false);
+  const [isPeerVideoOn, setIsPeerVideoOn] = useState<boolean>(false);
   const [isScreenOn, setIsScreenOn] = useState<boolean>(false);
   const [isPeerScreenOn, setIsPeerScreenOn] = useState<boolean>(false);
   const [isStart, setIsStart] = useState(false);
@@ -50,8 +51,9 @@ export default function Room({ debateId, socket }: IRoomProps) {
     recorderRef.current?.stop();
   }
 
+  //
   useEffect(() => {
-    if (debateId && socket) {
+    if (debateId && socket.current) {
       navigator.mediaDevices
         .getUserMedia({
           video: { facingMode: "user", width: 500, height: 500 },
@@ -64,14 +66,14 @@ export default function Room({ debateId, socket }: IRoomProps) {
           }
         });
 
-      socket.emit("join", { debateId });
+      socket.current.emit("join", { debateId });
 
-      socket.on("overcapacity", () => {
-        console.log("overcapacity"); //*
-        socket.disconnect(); //*
+      socket.current.on("overcapacity", () => {
+        console.log("overcapacity"); //!
       });
 
-      socket.on("guestJoin", () => {
+      socket.current.on("guestJoin", () => {
+        console.log("guest join"); //!
         connectHostPeer(
           debateId,
           socket,
@@ -82,7 +84,8 @@ export default function Room({ debateId, socket }: IRoomProps) {
         );
       });
 
-      socket.on("offer", (signal: Peer.SignalData) => {
+      socket.current.on("offer", (signal: Peer.SignalData) => {
+        console.log("offer"); //!
         connectGuestPeer(
           debateId,
           socket,
@@ -94,20 +97,32 @@ export default function Room({ debateId, socket }: IRoomProps) {
         );
       });
 
-      socket.on("peerVideo", (isPeerVideoOn: boolean) => {
+      socket.current.on("peerVideo", (isPeerVideoOn: boolean) => {
         setIsPeerVideoOn(isPeerVideoOn);
       });
 
-      socket.on("peerScreen", (isPeerScreenOn: boolean) => {
+      socket.current.on("peerScreen", (isPeerScreenOn: boolean) => {
         setIsPeerScreenOn(isPeerScreenOn);
       });
     }
-  }, [debateId, socket]);
+  }, [debateId, socket, reConnect]);
+
+  //!
+  useEffect(() => {
+    socket.current?.on("peerDisconnect", (peerId) => {
+      console.log("peerDisconnect", peerId); //!
+      peer?.destroy();
+      setPeer(undefined);
+      socket.current?.disconnect();
+      socket.current = io(`${process.env.NEXT_PUBLIC_API_URL}`);
+      setReConnect(!reConnect);
+    });
+  }, [debateId, socket, reConnect, peer]);
 
   useEffect(() => {
     if (peer) {
-      socket?.emit("peerVideo", { debateId, isVideoOn });
-      socket?.emit("peerScreen", { debateId, isScreenOn });
+      socket.current?.emit("peerVideo", { debateId, isVideoOn });
+      socket.current?.emit("peerScreen", { debateId, isScreenOn });
     }
   }, [debateId, socket, peer, isVideoOn, isScreenOn]);
 

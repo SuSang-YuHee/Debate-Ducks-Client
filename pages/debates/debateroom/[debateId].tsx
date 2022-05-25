@@ -13,5 +13,5 @@ export default function Debateroom() {
     socketRef.current = io(`${process.env.NEXT_PUBLIC_API_URL}`);
   }, []);
 
-  return <Room debateId={debateId} socket={socketRef.current} />;
+  return <Room debateId={debateId} socket={socketRef} />;
 }

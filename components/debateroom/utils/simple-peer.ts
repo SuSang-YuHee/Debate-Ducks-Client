@@ -4,7 +4,7 @@ import Peer from "simple-peer";
 
 export const connectHostPeer = (
   debateId: string | string[],
-  socket: Socket,
+  socket: MutableRefObject<Socket | undefined>,
   setPeer: (peer: Peer.Instance | undefined) => void,
   streamRef: MutableRefObject<MediaStream | undefined>,
   peerStreamRef: MutableRefObject<MediaStream | undefined>,
@@ -29,7 +29,7 @@ export const connectHostPeer = (
   setPeer(simplePeer);
 
   simplePeer.on("signal", (signal) => {
-    socket.emit("offer", { debateId, signal });
+    socket.current?.emit("offer", { debateId, signal });
   });
 
   simplePeer.on("stream", (stream) => {
@@ -40,17 +40,18 @@ export const connectHostPeer = (
   });
 
   simplePeer.on("error", (err) => {
-    console.log(err); //*
+    console.log(err); //!
   });
 
-  socket.on("answer", (signal: Peer.SignalData) => {
+  socket.current?.on("answer", (signal: Peer.SignalData) => {
+    console.log("answer"); //!
     simplePeer.signal(signal);
   });
 };
 
 export const connectGuestPeer = (
   debateId: string | string[],
-  socket: Socket,
+  socket: MutableRefObject<Socket | undefined>,
   setPeer: (peer: Peer.Instance | undefined) => void,
   streamRef: MutableRefObject<MediaStream | undefined>,
   peerStreamRef: MutableRefObject<MediaStream | undefined>,
@@ -66,7 +67,7 @@ export const connectGuestPeer = (
   setPeer(simplePeer);
 
   simplePeer.on("signal", (signal) => {
-    socket.emit("answer", { debateId, signal });
+    socket.current?.emit("answer", { debateId, signal });
   });
 
   simplePeer.on("stream", (stream) => {
@@ -77,7 +78,7 @@ export const connectGuestPeer = (
   });
 
   simplePeer.on("error", (err) => {
-    console.log(err); //*
+    console.log(err); //!
   });
 
   simplePeer.signal(signal);
