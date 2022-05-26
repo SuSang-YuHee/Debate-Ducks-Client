@@ -1,13 +1,14 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
-import { io, Socket } from "socket.io-client";
+import { Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
-import { IDummy } from "./types";
-import { connectHostPeer, connectGuestPeer } from "./utils/simple-peer";
 import { toggleVideoOnOff } from "./utils/toggleOnOff";
+import { wsConnect, wsDisconnect, wsTransmit } from "./utils/webSocket";
 
 import Canvas from "./Canvas";
 import Buttons from "./Buttons";
+
+import { IDummy } from "./types";
 
 interface IRoomProps {
   debateId: string | string[] | undefined;
@@ -16,7 +17,7 @@ interface IRoomProps {
 
 export default function Room({ debateId, socket }: IRoomProps) {
   //* WebRTC 변수
-  const [reConnect, setReConnect] = useState<boolean>(false);
+  const [reConnect, setReconnect] = useState<boolean>(false);
   const [peer, setPeer] = useState<Peer.Instance | undefined>();
   //* 녹화 변수
   const recorderRef = useRef<MediaRecorder | undefined>();
@@ -59,92 +60,41 @@ export default function Room({ debateId, socket }: IRoomProps) {
 
   //* Room and WebRTC 연결
   useEffect(() => {
-    if (debateId && socket.current) {
-      //* 사용자 미디어 획득
-      navigator.mediaDevices
-        .getUserMedia({
-          video: { facingMode: "user", width: 500, height: 500 },
-          audio: { echoCancellation: true, noiseSuppression: true },
-        })
-        .then((stream) => {
-          streamRef.current = stream;
-          if (videoRef.current) {
-            videoRef.current.srcObject = stream;
-          }
-        });
-
-      //* 방 입장
-      socket.current.emit("join", { debateId });
-
-      //* 방 입장 거절
-      socket.current.on("overcapacity", () => {
-        console.log("overcapacity"); //! 추가 처리 필요
-      });
-
-      //* offer and answer
-      socket.current.on("guestJoin", () => {
-        connectHostPeer(
-          debateId,
-          socket,
-          setPeer,
-          streamRef,
-          peerStreamRef,
-          peerVideoRef,
-        );
-      });
-
-      socket.current.on("offer", (signal: Peer.SignalData) => {
-        connectGuestPeer(
-          debateId,
-          socket,
-          setPeer,
-          streamRef,
-          peerStreamRef,
-          peerVideoRef,
-          signal,
-        );
-      });
-
-      //* 끄기/켜기 정보 수신
-      socket.current.on("peerVideo", (isPeerVideoOn: boolean) => {
-        setIsPeerVideoOn(isPeerVideoOn);
-      });
-
-      socket.current.on("peerScreen", (isPeerScreenOn: boolean) => {
-        setIsPeerScreenOn(isPeerScreenOn);
-      });
-    }
+    wsConnect(
+      debateId,
+      socket,
+      setPeer,
+      streamRef,
+      peerStreamRef,
+      videoRef,
+      peerVideoRef,
+      setIsPeerVideoOn,
+      setIsPeerScreenOn,
+    );
   }, [debateId, socket, reConnect]);
 
   //* Room and WebRTC 연결 해제
   useEffect(() => {
-    socket.current?.on("peerDisconnect", () => {
-      peer?.destroy();
-      setPeer(undefined);
-      socket.current?.disconnect();
-      socket.current = io(`${process.env.NEXT_PUBLIC_API_URL}`);
-
-      streamRef.current = undefined;
-      peerStreamRef.current = undefined;
-      if (videoRef.current) videoRef.current.srcObject = null;
-      if (peerVideoRef.current) peerVideoRef.current.srcObject = null;
-      if (screenStreamRef.current) {
-        screenStreamRef.current.getTracks()[0].stop();
-      }
-      setIsPeerVideoOn(false);
-      setIsScreenOn(false);
-      setIsPeerScreenOn(false);
-
-      setReConnect(!reConnect);
-    });
+    wsDisconnect(
+      socket,
+      reConnect,
+      setReconnect,
+      peer,
+      setPeer,
+      streamRef,
+      peerStreamRef,
+      videoRef,
+      peerVideoRef,
+      screenStreamRef,
+      setIsPeerVideoOn,
+      setIsScreenOn,
+      setIsPeerScreenOn,
+    );
   }, [debateId, socket, reConnect, peer]);
 
-  //* 끄기/켜기 정보 송신
+  //* 정보 송신
   useEffect(() => {
-    if (peer) {
-      socket.current?.emit("peerVideo", { debateId, isVideoOn });
-      socket.current?.emit("peerScreen", { debateId, isScreenOn });
-    }
+    wsTransmit(debateId, socket, peer, isVideoOn, isScreenOn);
   }, [debateId, socket, peer, isVideoOn, isScreenOn]);
 
   //* 첫 입장시 비디오 끄기
