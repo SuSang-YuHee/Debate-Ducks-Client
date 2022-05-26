@@ -1,5 +1,5 @@
 import { screenShare } from "./utils/screenShare";
-import { toggleAudioOnOff, toggleVideoOnOff } from "./utils/toggleOnOff";
+import { toggleAudio, toggleReady, toggleVideo } from "./utils/toggle";
 
 import { IDebateroomProps } from "./types";
 
@@ -14,6 +14,9 @@ export default function Buttons({
   setIsVideoOn,
   isScreenOn,
   setIsScreenOn,
+  isReady,
+  setIsReady,
+  isDebate,
 }: Pick<
   IDebateroomProps,
   | "peer"
@@ -26,19 +29,22 @@ export default function Buttons({
   | "setIsVideoOn"
   | "isScreenOn"
   | "setIsScreenOn"
+  | "isReady"
+  | "setIsReady"
+  | "isDebate"
 >) {
   return (
     <div>
       <button
         onClick={() =>
-          toggleAudioOnOff(streamRef, isAudioOn ? false : true, setIsAudioOn)
+          toggleAudio(streamRef, isAudioOn ? false : true, setIsAudioOn)
         }
       >
         {isAudioOn ? "AudioOff" : "AudioOn"}
       </button>
       <button
         onClick={() =>
-          toggleVideoOnOff(streamRef, isVideoOn ? false : true, setIsVideoOn)
+          toggleVideo(streamRef, isVideoOn ? false : true, setIsVideoOn)
         }
       >
         {isVideoOn ? "VideoOff" : "VideoOn"}
@@ -56,6 +62,15 @@ export default function Buttons({
           }
         >
           ScreenShare
+        </button>
+      )}
+      {isDebate ? null : (
+        <button
+          onClick={() => {
+            toggleReady(isReady ? false : true, setIsReady);
+          }}
+        >
+          {isReady ? "Cancel" : "Ready"}
         </button>
       )}
     </div>

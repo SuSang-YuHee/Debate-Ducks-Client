@@ -15,6 +15,7 @@ export const wsConnect = (
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
   setIsPeerVideoOn: (isVideoOn: boolean) => void,
   setIsPeerScreenOn: (isScreenON: boolean) => void,
+  setIsDebate: (isDebate: boolean) => void,
 ) => {
   if (debateId && socket.current) {
     //* 사용자 미디어 획득
@@ -70,6 +71,10 @@ export const wsConnect = (
     socket.current.on("peerScreen", (isPeerScreenOn: boolean) => {
       setIsPeerScreenOn(isPeerScreenOn);
     });
+
+    socket.current.on("debate", () => {
+      setIsDebate(true);
+    });
   }
 };
 
@@ -117,9 +122,12 @@ export const wsTransmit = (
   peer: Peer.Instance | undefined,
   isVideoOn: boolean,
   isScreenOn: boolean,
+  isReady: boolean,
+  isPros: boolean,
 ) => {
   if (peer) {
     socket.current?.emit("peerVideo", { debateId, isVideoOn });
     socket.current?.emit("peerScreen", { debateId, isScreenOn });
   }
+  socket.current?.emit("ready", { debateId, isReady, isPros });
 };

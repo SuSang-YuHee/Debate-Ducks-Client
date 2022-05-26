@@ -2,7 +2,7 @@ import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
-import { toggleVideoOnOff } from "./utils/toggleOnOff";
+import { toggleVideo } from "./utils/toggle";
 import { wsConnect, wsDisconnect, wsTransmit } from "./utils/webSocket";
 
 import Canvas from "./Canvas";
@@ -34,7 +34,8 @@ export default function Room({ debateId, socket }: IRoomProps) {
   const [isScreenOn, setIsScreenOn] = useState<boolean>(false);
   const [isPeerScreenOn, setIsPeerScreenOn] = useState<boolean>(false);
   //* Etc.
-  const [isStart, setIsStart] = useState(false);
+  const [isReady, setIsReady] = useState<boolean>(false);
+  const [isDebate, setIsDebate] = useState<boolean>(false);
 
   //! 임시 변수
   const [dummy] = useState<IDummy>({
@@ -70,6 +71,7 @@ export default function Room({ debateId, socket }: IRoomProps) {
       peerVideoRef,
       setIsPeerVideoOn,
       setIsPeerScreenOn,
+      setIsDebate,
     );
   }, [debateId, socket, reConnect]);
 
@@ -94,12 +96,12 @@ export default function Room({ debateId, socket }: IRoomProps) {
 
   //* 정보 송신
   useEffect(() => {
-    wsTransmit(debateId, socket, peer, isVideoOn, isScreenOn);
-  }, [debateId, socket, peer, isVideoOn, isScreenOn]);
+    wsTransmit(debateId, socket, peer, isVideoOn, isScreenOn, isReady, isPros);
+  }, [debateId, socket, peer, isVideoOn, isScreenOn, isReady, isPros]);
 
   //* 첫 입장시 비디오 끄기
   useEffect(() => {
-    toggleVideoOnOff(streamRef, false, setIsAudioOn);
+    toggleVideo(streamRef, false, setIsAudioOn);
   }, []);
 
   return (
@@ -146,6 +148,9 @@ export default function Room({ debateId, socket }: IRoomProps) {
         setIsVideoOn={setIsVideoOn}
         isScreenOn={isScreenOn}
         setIsScreenOn={setIsScreenOn}
+        isReady={isReady}
+        setIsReady={setIsReady}
+        isDebate={isDebate}
       />
       <a ref={downRef} download={`Test`} />
       <button onClick={startRecord}>recordStart</button>
@@ -154,9 +159,7 @@ export default function Room({ debateId, socket }: IRoomProps) {
       <button onClick={() => setIsPros(!isPros)}>
         {isPros ? "Now pros" : "Now cons"}
       </button>
-      <button onClick={() => setIsStart(!isStart)}>
-        {isStart ? "Now start" : "No start"}
-      </button>
+      {isDebate ? "start" : "waiting"}
     </div>
   );
 }

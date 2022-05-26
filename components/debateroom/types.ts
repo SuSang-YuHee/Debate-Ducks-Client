@@ -30,7 +30,10 @@ export interface IDebateroomProps {
   isPeerScreenOn: boolean;
   setIsPeerScreenOn: (isScreenON: boolean) => void;
   //* Etc.
-  isStart: boolean;
+  isReady: boolean;
+  setIsReady: (isReady: boolean) => void;
+  isDebate: boolean;
+  setIsDebate: (isDebate: boolean) => void;
   //! 임시 타입
   dummy: IDummy;
   isPros: boolean;
@@ -41,5 +44,5 @@ export interface IDummy {
   topic: string;
   prosName: string;
   consName: string;
-  prosTurn: string;
+  prosTurn: "none" | "turn" | "false";
 }

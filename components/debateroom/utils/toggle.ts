@@ -1,6 +1,6 @@
 import { MutableRefObject } from "react";
 
-export const toggleAudioOnOff = (
+export const toggleAudio = (
   streamRef: MutableRefObject<MediaStream | undefined>,
   isAudioOn: boolean,
   setIsAudioOn: (isMute: boolean) => void,
@@ -11,7 +11,7 @@ export const toggleAudioOnOff = (
   }
 };
 
-export const toggleVideoOnOff = (
+export const toggleVideo = (
   streamRef: MutableRefObject<MediaStream | undefined>,
   isVideoOn: boolean,
   setIsVideoOn: (isVideoOn: boolean) => void,
@@ -20,4 +20,11 @@ export const toggleVideoOnOff = (
     streamRef.current.getVideoTracks()[0].enabled = isVideoOn;
     setIsVideoOn(isVideoOn);
   }
+};
+
+export const toggleReady = (
+  isReady: boolean,
+  setIsReady: (isReady: boolean) => void,
+) => {
+  setIsReady(isReady);
 };
