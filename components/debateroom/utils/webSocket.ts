@@ -18,7 +18,7 @@ export const wsConnect = (
   setIsDebate: (isDebate: boolean) => void,
 ) => {
   if (debateId && socket.current) {
-    //* 사용자 미디어 획득
+    //  * 사용자 미디어 획득
     navigator.mediaDevices
       .getUserMedia({
         video: { facingMode: "user", width: 500, height: 500 },
@@ -31,10 +31,10 @@ export const wsConnect = (
         }
       });
 
-    //* 방 입장
+    //  * 방 입장
     socket.current.emit("join", { debateId });
 
-    //* 방 입장 거절
+    //  * 방 입장 거절
     socket.current.on("overcapacity", () => {
       console.log("overcapacity"); //! 추가 처리 필요
     });
@@ -63,7 +63,7 @@ export const wsConnect = (
       );
     });
 
-    //* 정보 수신
+    //  * 정보 수신
     socket.current.on("peerVideo", (isPeerVideoOn: boolean) => {
       setIsPeerVideoOn(isPeerVideoOn);
     });

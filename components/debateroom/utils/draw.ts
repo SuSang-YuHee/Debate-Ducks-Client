@@ -80,10 +80,10 @@ export const draw = (
   dummy: IDummy,
   isPros: boolean,
 ) => {
-  // Common Bg
+  //* Common Bg
   drawSquare(canvasRef, color.bg, 0, 80, 1280, 640);
 
-  // My screen share
+  //* My screen share
   if (isScreenOn && String(isPros) === dummy.prosTurn) {
     if (videoRef.current) {
       drawSquare(canvasRef, color.black, 0, 80, 1280, 640);
@@ -92,7 +92,7 @@ export const draw = (
         ?.getContext("2d")
         ?.drawImage(videoRef.current, 640 - w / 2, 440 - h / 2, w, h);
     }
-    // Peer screen share
+    //* Peer screen share
   } else if (isPeerScreenOn && String(!isPros) === dummy.prosTurn) {
     if (peerVideoRef.current) {
       drawSquare(canvasRef, color.black, 0, 80, 1280, 640);
@@ -102,14 +102,14 @@ export const draw = (
         ?.drawImage(peerVideoRef.current, 640 - w / 2, 440 - h / 2, w, h);
     }
   } else {
-    // VS
+    //* VS
     drawText(canvasRef, color.black, "bold 48px san-serif", "VS", 640, 420);
 
-    // prosOuterBg
+    //* prosOuterBg
     drawSquare(canvasRef, color.pros, 40, 110, 520, 520);
-    // prosInnerBg
+    //* prosInnerBg
     drawSquare(canvasRef, color.black, 50, 120, 500, 500);
-    // prosName
+    //* prosName
     drawText(
       canvasRef,
       color.pros,
@@ -118,7 +118,7 @@ export const draw = (
       300,
       680,
     );
-    // prosText
+    //* prosText
     drawText(
       canvasRef,
       color.bg,
@@ -128,11 +128,11 @@ export const draw = (
       380,
     );
 
-    // consOuterBg
+    //* consOuterBg
     drawSquare(canvasRef, color.cons, 720, 110, 520, 520);
-    // consInnerBg
+    //* consInnerBg
     drawSquare(canvasRef, color.black, 730, 120, 500, 500);
-    // consName
+    //* consName
     drawText(
       canvasRef,
       color.cons,
@@ -141,7 +141,7 @@ export const draw = (
       980,
       680,
     );
-    // consText
+    //* consText
     drawText(
       canvasRef,
       color.bg,
@@ -151,7 +151,7 @@ export const draw = (
       380,
     );
 
-    // Video
+    //* Video
     if (videoRef.current && peerVideoRef.current) {
       const prosVideo = isPros ? videoRef.current : peerVideoRef.current;
       const consVideo = isPros ? peerVideoRef.current : videoRef.current;

@@ -59,7 +59,7 @@ export default function Room({ debateId, socket }: IRoomProps) {
     recorderRef.current?.stop();
   }
 
-  //* Room and WebRTC 연결
+  // * Room and WebRTC 연결
   useEffect(() => {
     wsConnect(
       debateId,
@@ -75,7 +75,7 @@ export default function Room({ debateId, socket }: IRoomProps) {
     );
   }, [debateId, socket, reConnect]);
 
-  //* Room and WebRTC 연결 해제
+  //  * Room and WebRTC 연결 해제
   useEffect(() => {
     wsDisconnect(
       socket,
@@ -94,12 +94,12 @@ export default function Room({ debateId, socket }: IRoomProps) {
     );
   }, [debateId, socket, reConnect, peer]);
 
-  //* 정보 송신
+  //  * 정보 송신
   useEffect(() => {
     wsTransmit(debateId, socket, peer, isVideoOn, isScreenOn, isReady, isPros);
   }, [debateId, socket, peer, isVideoOn, isScreenOn, isReady, isPros]);
 
-  //* 첫 입장시 비디오 끄기
+  //  * 첫 입장시 비디오 끄기
   useEffect(() => {
     toggleVideo(streamRef, false, setIsAudioOn);
   }, []);
