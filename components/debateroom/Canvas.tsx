@@ -18,6 +18,7 @@ export default function Canvas({
   isPeerScreenOn,
   dummy,
   isPros,
+  turn,
 }: Pick<
   IDebateroomProps,
   | "peer"
@@ -32,6 +33,7 @@ export default function Canvas({
   | "isPeerScreenOn"
   | "dummy"
   | "isPros"
+  | "turn"
 >) {
   const blobsRef = useRef<Blob[]>([]);
   const [drawStart, drawStop] = useSetInterval(
@@ -47,6 +49,7 @@ export default function Canvas({
         isPeerScreenOn,
         dummy,
         isPros,
+        turn,
       ),
     1000 / 30,
   );

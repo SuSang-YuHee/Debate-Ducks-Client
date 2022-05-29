@@ -3,8 +3,13 @@ import { Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
 import { toggleVideo } from "./utils/toggle";
-import { wsConnect, wsDisconnect, wsTransmit } from "./utils/webSocket";
-import { drawNotice } from "./utils/draw";
+import {
+  wsConnect,
+  wsDisconnect,
+  wsTransmitVideo,
+  wsTransmitScreen,
+  wsTransmitReady,
+} from "./utils/webSocket";
 
 import Canvas from "./Canvas";
 import Buttons from "./Buttons";
@@ -39,13 +44,15 @@ export default function Room({ debateId, socket }: IRoomProps) {
   //*- 토론 변수
   const [isReady, setIsReady] = useState<boolean>(false);
   const [isStart, setIsStart] = useState<boolean>(false);
+  const [turn, setTurn] = useState<
+    "notice" | "pros" | "cons" | "prosCross" | "consCross"
+  >("notice");
 
   //! 임시 변수
   const [dummy] = useState<IDummy>({
     topic: "Is Alien Exist?",
     prosName: "이찬성",
     consName: "반대중",
-    prosTurn: "false",
   });
   const [isPros, setIsPros] = useState(true);
 
@@ -77,9 +84,10 @@ export default function Room({ debateId, socket }: IRoomProps) {
       setIsPeerScreenOn,
       isStart,
       setIsStart,
-      drawNotice,
+      setTurn,
+      dummy.topic,
     );
-  }, [debateId, socket, reConnect, isStart]);
+  }, [debateId, socket, reConnect, isStart, dummy.topic]);
 
   //*- Socket and WebRTC 연결 해제
   useEffect(() => {
@@ -102,13 +110,23 @@ export default function Room({ debateId, socket }: IRoomProps) {
 
   //*- 정보 송신
   useEffect(() => {
-    wsTransmit(debateId, socket, peer, isVideoOn, isScreenOn, isReady, isPros);
-  }, [debateId, socket, peer, isVideoOn, isScreenOn, isReady, isPros]);
+    wsTransmitVideo(debateId, socket, peer, isVideoOn);
+  }, [debateId, socket, peer, isVideoOn]);
+
+  useEffect(() => {
+    wsTransmitScreen(debateId, socket, peer, isScreenOn);
+  }, [debateId, socket, peer, isScreenOn]);
+
+  useEffect(() => {
+    wsTransmitReady(debateId, socket, isReady, isPros);
+  }, [debateId, socket, isReady, isPros]);
 
   //*- 첫 입장 시 비디오 끄기
   useEffect(() => {
     toggleVideo(streamRef, false, setIsAudioOn);
   }, []);
+
+  console.log("재랜더링 테스트"); //!
 
   return (
     <div>
@@ -144,6 +162,7 @@ export default function Room({ debateId, socket }: IRoomProps) {
         isPeerScreenOn={isPeerScreenOn}
         dummy={dummy}
         isPros={isPros}
+        turn={turn}
       />
       <Buttons
         peer={peer}
