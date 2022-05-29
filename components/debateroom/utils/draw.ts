@@ -83,12 +83,14 @@ export const drawContents = (
   isPeerScreenOn: boolean,
   dummy: IDummy,
   isPros: boolean,
+  turn: "notice" | "pros" | "cons" | "prosCross" | "consCross",
 ) => {
   // * Common Bg
   drawSquare(canvasRef, color.white, 0, 80, 1280, 640);
 
+  //! 로직 변경 필요
   // * My screen share
-  if (isScreenOn && String(isPros) === dummy.prosTurn) {
+  if (isScreenOn && String(isPros) === turn) {
     if (videoRef.current) {
       drawSquare(canvasRef, color.black, 0, 80, 1280, 640);
       const [w, h] = resize(videoRef.current);
@@ -97,7 +99,7 @@ export const drawContents = (
         ?.drawImage(videoRef.current, 640 - w / 2, 440 - h / 2, w, h);
     }
     // * Peer screen share
-  } else if (isPeerScreenOn && String(!isPros) === dummy.prosTurn) {
+  } else if (isPeerScreenOn && String(!isPros) === turn) {
     if (peerVideoRef.current) {
       drawSquare(canvasRef, color.black, 0, 80, 1280, 640);
       const [w, h] = resize(peerVideoRef.current);
@@ -173,17 +175,18 @@ export const drawContents = (
 export const drawNotice = (
   canvasRef: MutableRefObject<HTMLCanvasElement | null>,
   debateData: IDebateData,
+  topic: string,
+  turn: string,
 ) => {
   const notice =
-    debateData.timer < 0
+    debateData.turn === 0
+      ? `${topic} ( ${debateData.timer}초 후 시작 )`
+      : debateData.timer < 0
       ? debateData.notice
       : `${debateData.notice} ( ${debateData.timer}초 )`;
-  // const turn =
-  //   debateData.turn === (1 | 4 | 5)
-  //     ? "pros"
-  //     : debateData.turn === (2 | 3 | 6)
-  //     ? "cons"
-  //     : "none";
-  drawSquare(canvasRef, color.black, 0, 0, 1280, 80);
+  let bgColor = color.black;
+  if (turn === "pros" || turn === "prosCross") bgColor = color.pros;
+  if (turn === "cons" || turn === "consCross") bgColor = color.cons;
+  drawSquare(canvasRef, bgColor, 0, 0, 1280, 80);
   drawText(canvasRef, color.white, "normal 28px san-serif", notice, 640, 50);
 };

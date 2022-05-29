@@ -36,6 +36,10 @@ export interface IDebateroomProps {
   setIsReady: (isReady: boolean) => void;
   isStart: boolean;
   setIsStart: (isStart: boolean) => void;
+  turn: "notice" | "pros" | "cons" | "prosCross" | "consCross";
+  setIsTurn: (
+    turn: "notice" | "pros" | "cons" | "prosCross" | "consCross",
+  ) => void;
   //! 임시 타입
   dummy: IDummy;
   isPros: boolean;
@@ -46,5 +50,4 @@ export interface IDummy {
   topic: string;
   prosName: string;
   consName: string;
-  prosTurn: "none" | "turn" | "false";
 }
