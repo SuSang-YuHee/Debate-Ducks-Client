@@ -4,14 +4,17 @@ import Peer from "simple-peer";
 import { IDummy } from "./../types";
 
 interface IColor {
-  bg: string;
-  black: string;
-  pros: string;
-  cons: string;
+  [index: string]: string;
+}
+
+export interface IDebateData {
+  notice: string;
+  turn: number;
+  timer: number;
 }
 
 const color: IColor = {
-  bg: "#F8FBFD",
+  white: "#F8FBFD",
   black: "#292929",
   pros: "#ff9425",
   cons: "#6667ab",
@@ -68,7 +71,8 @@ const resize = (screen: HTMLVideoElement) => {
   return [w, h];
 };
 
-export const draw = (
+//*- 내용 그리기
+export const drawContents = (
   canvasRef: MutableRefObject<HTMLCanvasElement | null>,
   peer: Peer.Instance | undefined,
   videoRef: MutableRefObject<HTMLVideoElement | null>,
@@ -80,10 +84,10 @@ export const draw = (
   dummy: IDummy,
   isPros: boolean,
 ) => {
-  //* Common Bg
-  drawSquare(canvasRef, color.bg, 0, 80, 1280, 640);
+  // * Common Bg
+  drawSquare(canvasRef, color.white, 0, 80, 1280, 640);
 
-  //* My screen share
+  // * My screen share
   if (isScreenOn && String(isPros) === dummy.prosTurn) {
     if (videoRef.current) {
       drawSquare(canvasRef, color.black, 0, 80, 1280, 640);
@@ -92,7 +96,7 @@ export const draw = (
         ?.getContext("2d")
         ?.drawImage(videoRef.current, 640 - w / 2, 440 - h / 2, w, h);
     }
-    //* Peer screen share
+    // * Peer screen share
   } else if (isPeerScreenOn && String(!isPros) === dummy.prosTurn) {
     if (peerVideoRef.current) {
       drawSquare(canvasRef, color.black, 0, 80, 1280, 640);
@@ -102,14 +106,12 @@ export const draw = (
         ?.drawImage(peerVideoRef.current, 640 - w / 2, 440 - h / 2, w, h);
     }
   } else {
-    //* VS
+    // * VS
     drawText(canvasRef, color.black, "bold 48px san-serif", "VS", 640, 420);
 
-    //* prosOuterBg
+    // * pros draw
     drawSquare(canvasRef, color.pros, 40, 110, 520, 520);
-    //* prosInnerBg
     drawSquare(canvasRef, color.black, 50, 120, 500, 500);
-    //* prosName
     drawText(
       canvasRef,
       color.pros,
@@ -118,21 +120,18 @@ export const draw = (
       300,
       680,
     );
-    //* prosText
     drawText(
       canvasRef,
-      color.bg,
+      color.white,
       "bold 32px san-serif",
       peer ? "Camera Off" : isPros ? "Camera Off" : "Not connected",
       300,
       380,
     );
 
-    //* consOuterBg
+    // * cons draw
     drawSquare(canvasRef, color.cons, 720, 110, 520, 520);
-    //* consInnerBg
     drawSquare(canvasRef, color.black, 730, 120, 500, 500);
-    //* consName
     drawText(
       canvasRef,
       color.cons,
@@ -141,29 +140,26 @@ export const draw = (
       980,
       680,
     );
-    //* consText
     drawText(
       canvasRef,
-      color.bg,
+      color.white,
       "bold 32px san-serif",
       peer ? "Camera Off" : !isPros ? "Camera Off" : "Not connected",
       980,
       380,
     );
 
-    //* Video
+    // * Video
     if (videoRef.current && peerVideoRef.current) {
       const prosVideo = isPros ? videoRef.current : peerVideoRef.current;
       const consVideo = isPros ? peerVideoRef.current : videoRef.current;
       const IsProsVideoOn = isPros ? isVideoOn : isPeerVideoOn;
       const IsConsVideoOn = isPros ? isPeerVideoOn : isVideoOn;
-
       if (IsProsVideoOn) {
         canvasRef.current
           ?.getContext("2d")
           ?.drawImage(prosVideo, 50, 120, 500, 500);
       }
-
       if (IsConsVideoOn) {
         canvasRef.current
           ?.getContext("2d")
@@ -171,4 +167,23 @@ export const draw = (
       }
     }
   }
+};
+
+//*- 공지 그리기
+export const drawNotice = (
+  canvasRef: MutableRefObject<HTMLCanvasElement | null>,
+  debateData: IDebateData,
+) => {
+  const notice =
+    debateData.timer < 0
+      ? debateData.notice
+      : `${debateData.notice} ( ${debateData.timer}초 )`;
+  // const turn =
+  //   debateData.turn === (1 | 4 | 5)
+  //     ? "pros"
+  //     : debateData.turn === (2 | 3 | 6)
+  //     ? "cons"
+  //     : "none";
+  drawSquare(canvasRef, color.black, 0, 0, 1280, 80);
+  drawText(canvasRef, color.white, "normal 28px san-serif", notice, 640, 50);
 };

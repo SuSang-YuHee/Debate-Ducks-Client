@@ -3,22 +3,29 @@ import { io, Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
 import { connectHostPeer, connectGuestPeer } from "./simple-peer";
+import { IDebateData } from "./draw";
 
-//* Room and WebRTC 연결
+//*- Socket and WebRTC 연결
 export const wsConnect = (
   debateId: string | string[] | undefined,
   socket: MutableRefObject<Socket | undefined>,
   setPeer: (peer: Peer.Instance | undefined) => void,
+  canvasRef: MutableRefObject<HTMLCanvasElement | null>,
   streamRef: MutableRefObject<MediaStream | undefined>,
   peerStreamRef: MutableRefObject<MediaStream | undefined>,
   videoRef: MutableRefObject<HTMLVideoElement | null>,
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
   setIsPeerVideoOn: (isVideoOn: boolean) => void,
   setIsPeerScreenOn: (isScreenON: boolean) => void,
-  setIsDebate: (isDebate: boolean) => void,
+  isStart: boolean,
+  setIsStart: (isStart: boolean) => void,
+  drawNotice: (
+    canvasRef: MutableRefObject<HTMLCanvasElement | null>,
+    debateData: IDebateData,
+  ) => void,
 ) => {
   if (debateId && socket.current) {
-    //  * 사용자 미디어 획득
+    // * 사용자 미디어 획득
     navigator.mediaDevices
       .getUserMedia({
         video: { facingMode: "user", width: 500, height: 500 },
@@ -31,15 +38,15 @@ export const wsConnect = (
         }
       });
 
-    //  * 방 입장
+    // * 방 입장
     socket.current.emit("join", { debateId });
 
-    //  * 방 입장 거절
+    // * 방 입장 거절
     socket.current.on("overcapacity", () => {
       console.log("overcapacity"); //! 추가 처리 필요
     });
 
-    //* offer and answer
+    // * WebRTC 연결
     socket.current.on("guestJoin", () => {
       connectHostPeer(
         debateId,
@@ -63,7 +70,7 @@ export const wsConnect = (
       );
     });
 
-    //  * 정보 수신
+    // * 정보 수신
     socket.current.on("peerVideo", (isPeerVideoOn: boolean) => {
       setIsPeerVideoOn(isPeerVideoOn);
     });
@@ -72,13 +79,24 @@ export const wsConnect = (
       setIsPeerScreenOn(isPeerScreenOn);
     });
 
-    socket.current.on("debate", () => {
-      setIsDebate(true);
+    socket.current.on("debateStart", () => {
+      setIsStart(true);
+    });
+
+    socket.current.on("debateProgress", (debateData: IDebateData) => {
+      drawNotice(canvasRef, debateData);
+    });
+
+    // * 첫 공지
+    drawNotice(canvasRef, {
+      notice: isStart ? "곧 토론이 재시작 됩니다." : "토론 주제", //!
+      turn: 0,
+      timer: -1,
     });
   }
 };
 
-//* Room and WebRTC 연결 해제
+//*- Socket and WebRTC 연결 해제
 export const wsDisconnect = (
   socket: MutableRefObject<Socket | undefined>,
   reConnect: boolean,
@@ -97,6 +115,7 @@ export const wsDisconnect = (
   socket.current?.on("peerDisconnect", () => {
     peer?.destroy();
     setPeer(undefined);
+
     socket.current?.disconnect();
     socket.current = io(`${process.env.NEXT_PUBLIC_API_URL}`);
 
@@ -115,7 +134,7 @@ export const wsDisconnect = (
   });
 };
 
-//* 정보 송신
+//*- 정보 송신
 export const wsTransmit = (
   debateId: string | string[] | undefined,
   socket: MutableRefObject<Socket | undefined>,

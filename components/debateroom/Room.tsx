@@ -4,6 +4,7 @@ import Peer from "simple-peer";
 
 import { toggleVideo } from "./utils/toggle";
 import { wsConnect, wsDisconnect, wsTransmit } from "./utils/webSocket";
+import { drawNotice } from "./utils/draw";
 
 import Canvas from "./Canvas";
 import Buttons from "./Buttons";
@@ -16,13 +17,15 @@ interface IRoomProps {
 }
 
 export default function Room({ debateId, socket }: IRoomProps) {
-  //* WebRTC 변수
+  //*- WebRTC 변수
   const [reConnect, setReconnect] = useState<boolean>(false);
   const [peer, setPeer] = useState<Peer.Instance | undefined>();
-  //* 녹화 변수
+  //*- 캔버스 변수
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  //*- 녹화 변수
   const recorderRef = useRef<MediaRecorder | undefined>();
   const downRef = useRef<HTMLAnchorElement | null>(null);
-  //* 스트림 변수
+  //*- 스트림 변수
   const streamRef = useRef<MediaStream | undefined>();
   const peerStreamRef = useRef<MediaStream | undefined>();
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -33,9 +36,9 @@ export default function Room({ debateId, socket }: IRoomProps) {
   const [isPeerVideoOn, setIsPeerVideoOn] = useState<boolean>(false);
   const [isScreenOn, setIsScreenOn] = useState<boolean>(false);
   const [isPeerScreenOn, setIsPeerScreenOn] = useState<boolean>(false);
-  //* Etc.
+  //*- 토론 변수
   const [isReady, setIsReady] = useState<boolean>(false);
-  const [isDebate, setIsDebate] = useState<boolean>(false);
+  const [isStart, setIsStart] = useState<boolean>(false);
 
   //! 임시 변수
   const [dummy] = useState<IDummy>({
@@ -59,23 +62,26 @@ export default function Room({ debateId, socket }: IRoomProps) {
     recorderRef.current?.stop();
   }
 
-  // * Room and WebRTC 연결
+  //*- Socket and WebRTC 연결
   useEffect(() => {
     wsConnect(
       debateId,
       socket,
       setPeer,
+      canvasRef,
       streamRef,
       peerStreamRef,
       videoRef,
       peerVideoRef,
       setIsPeerVideoOn,
       setIsPeerScreenOn,
-      setIsDebate,
+      isStart,
+      setIsStart,
+      drawNotice,
     );
-  }, [debateId, socket, reConnect]);
+  }, [debateId, socket, reConnect, isStart]);
 
-  //  * Room and WebRTC 연결 해제
+  //*- Socket and WebRTC 연결 해제
   useEffect(() => {
     wsDisconnect(
       socket,
@@ -94,12 +100,12 @@ export default function Room({ debateId, socket }: IRoomProps) {
     );
   }, [debateId, socket, reConnect, peer]);
 
-  //  * 정보 송신
+  //*- 정보 송신
   useEffect(() => {
     wsTransmit(debateId, socket, peer, isVideoOn, isScreenOn, isReady, isPros);
   }, [debateId, socket, peer, isVideoOn, isScreenOn, isReady, isPros]);
 
-  //  * 첫 입장시 비디오 끄기
+  //*- 첫 입장 시 비디오 끄기
   useEffect(() => {
     toggleVideo(streamRef, false, setIsAudioOn);
   }, []);
@@ -118,6 +124,7 @@ export default function Room({ debateId, socket }: IRoomProps) {
       ></video>
       <video
         ref={peerVideoRef}
+        muted //! 테스트용
         autoPlay
         playsInline
         width={0}
@@ -126,6 +133,7 @@ export default function Room({ debateId, socket }: IRoomProps) {
       ></video>
       <Canvas
         peer={peer}
+        canvasRef={canvasRef}
         recorderRef={recorderRef}
         downRef={downRef}
         videoRef={videoRef}
@@ -150,7 +158,7 @@ export default function Room({ debateId, socket }: IRoomProps) {
         setIsScreenOn={setIsScreenOn}
         isReady={isReady}
         setIsReady={setIsReady}
-        isDebate={isDebate}
+        isStart={isStart}
       />
       <a ref={downRef} download={`Test`} />
       <button onClick={startRecord}>recordStart</button>
@@ -159,7 +167,7 @@ export default function Room({ debateId, socket }: IRoomProps) {
       <button onClick={() => setIsPros(!isPros)}>
         {isPros ? "Now pros" : "Now cons"}
       </button>
-      {isDebate ? "start" : "waiting"}
+      {isStart ? "start" : "waiting"}
     </div>
   );
 }

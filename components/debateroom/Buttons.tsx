@@ -16,7 +16,7 @@ export default function Buttons({
   setIsScreenOn,
   isReady,
   setIsReady,
-  isDebate,
+  isStart,
 }: Pick<
   IDebateroomProps,
   | "peer"
@@ -31,7 +31,7 @@ export default function Buttons({
   | "setIsScreenOn"
   | "isReady"
   | "setIsReady"
-  | "isDebate"
+  | "isStart"
 >) {
   return (
     <div>
@@ -64,7 +64,7 @@ export default function Buttons({
           ScreenShare
         </button>
       )}
-      {isDebate ? null : (
+      {isStart ? null : (
         <button
           onClick={() => {
             toggleReady(isReady ? false : true, setIsReady);
