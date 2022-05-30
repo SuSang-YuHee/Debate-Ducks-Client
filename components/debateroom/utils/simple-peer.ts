@@ -5,7 +5,7 @@ import Peer from "simple-peer";
 export const connectHostPeer = (
   debateId: string | string[],
   socket: MutableRefObject<Socket | undefined>,
-  setPeer: (peer: Peer.Instance | undefined) => void,
+  setPeer: (params: Peer.Instance | undefined) => void,
   streamRef: MutableRefObject<MediaStream | undefined>,
   peerStreamRef: MutableRefObject<MediaStream | undefined>,
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
@@ -40,7 +40,7 @@ export const connectHostPeer = (
   });
 
   simplePeer.on("error", (err) => {
-    console.log(err); //!
+    console.log(err);
   });
 
   socket.current?.on("answer", (signal: Peer.SignalData) => {
@@ -51,7 +51,7 @@ export const connectHostPeer = (
 export const connectGuestPeer = (
   debateId: string | string[],
   socket: MutableRefObject<Socket | undefined>,
-  setPeer: (peer: Peer.Instance | undefined) => void,
+  setPeer: (params: Peer.Instance | undefined) => void,
   streamRef: MutableRefObject<MediaStream | undefined>,
   peerStreamRef: MutableRefObject<MediaStream | undefined>,
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
@@ -77,7 +77,7 @@ export const connectGuestPeer = (
   });
 
   simplePeer.on("error", (err) => {
-    console.log(err); //!
+    console.log(err);
   });
 
   simplePeer.signal(signal);

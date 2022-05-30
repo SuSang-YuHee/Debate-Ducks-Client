@@ -17,6 +17,8 @@ export default function Buttons({
   isReady,
   setIsReady,
   isStart,
+  turn,
+  isPros,
 }: Pick<
   IDebateroomProps,
   | "peer"
@@ -32,24 +34,44 @@ export default function Buttons({
   | "isReady"
   | "setIsReady"
   | "isStart"
+  | "turn"
+  | "isPros"
 >) {
+  const checkAudioDisable = () => {
+    if (turn === "notice") return true;
+    if (isPros && turn === "cons") return true;
+    if (!isPros && turn === "pros") return true;
+    return false;
+  };
+
+  const checkScreenDisable = () => {
+    if (isScreenOn) return true;
+    if (isPros && turn === "cons") return true;
+    if (!isPros && turn === "pros") return true;
+    return false;
+  };
+
   return (
     <div>
-      <button
-        onClick={() =>
-          toggleAudio(streamRef, isAudioOn ? false : true, setIsAudioOn)
-        }
-      >
-        {isAudioOn ? "AudioOff" : "AudioOn"}
-      </button>
+      {checkAudioDisable() ? (
+        "AudioOff"
+      ) : (
+        <button
+          onClick={() =>
+            toggleAudio(streamRef, isAudioOn ? false : true, setIsAudioOn)
+          }
+        >
+          {isAudioOn ? "AudioOn" : "AudioOff"}
+        </button>
+      )}
       <button
         onClick={() =>
           toggleVideo(streamRef, isVideoOn ? false : true, setIsVideoOn)
         }
       >
-        {isVideoOn ? "VideoOff" : "VideoOn"}
+        {isVideoOn ? "VideoOn" : "VideoOff"}
       </button>
-      {isScreenOn ? null : (
+      {checkScreenDisable() ? null : (
         <button
           onClick={() =>
             screenShare(

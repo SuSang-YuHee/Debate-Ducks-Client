@@ -9,21 +9,21 @@ import { IDebateData, drawNotice } from "./draw";
 export const wsConnect = (
   debateId: string | string[] | undefined,
   socket: MutableRefObject<Socket | undefined>,
-  setPeer: (peer: Peer.Instance | undefined) => void,
+  setPeer: (params: Peer.Instance | undefined) => void,
   canvasRef: MutableRefObject<HTMLCanvasElement | null>,
   streamRef: MutableRefObject<MediaStream | undefined>,
   peerStreamRef: MutableRefObject<MediaStream | undefined>,
   videoRef: MutableRefObject<HTMLVideoElement | null>,
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
-  setIsPeerVideoOn: (isVideoOn: boolean) => void,
-  setIsPeerScreenOn: (isScreenON: boolean) => void,
-  isStart: boolean,
-  setIsStart: (isStart: boolean) => void,
+  setIsPeerVideoOn: (params: boolean) => void,
+  setIsPeerScreenOn: (params: boolean) => void,
+  setIsStart: (params: boolean) => void,
   setTurn: (
-    turn: "notice" | "pros" | "cons" | "prosCross" | "consCross",
+    params: "none" | "notice" | "pros" | "cons" | "prosCross" | "consCross",
   ) => void,
   topic: string,
 ) => {
+  console.log("연결"); //!
   if (debateId && socket.current) {
     // * 사용자 미디어 획득
     navigator.mediaDevices
@@ -43,7 +43,7 @@ export const wsConnect = (
 
     // * 방 입장 거절
     socket.current.on("overcapacity", () => {
-      console.log("overcapacity"); //! 추가 처리 필요
+      console.log("overcapacity"); //!
     });
 
     // * WebRTC 연결
@@ -84,8 +84,13 @@ export const wsConnect = (
     });
 
     socket.current.on("debateProgress", (debateData: IDebateData) => {
-      let turn: "notice" | "pros" | "cons" | "prosCross" | "consCross" =
-        "notice";
+      let turn:
+        | "none"
+        | "notice"
+        | "pros"
+        | "cons"
+        | "prosCross"
+        | "consCross" = "notice";
       if (debateData.turn === 1 || debateData.turn === 5) turn = "pros";
       if (debateData.turn === 3 || debateData.turn === 6) turn = "cons";
       if (debateData.turn === 4) turn = "prosCross";
@@ -98,12 +103,12 @@ export const wsConnect = (
     drawNotice(
       canvasRef,
       {
-        notice: isStart ? "곧 토론이 재시작 됩니다." : topic,
+        notice: topic,
         turn: -1,
         timer: -1,
       },
       topic,
-      "notice",
+      "none",
     );
   }
 };
@@ -112,17 +117,15 @@ export const wsConnect = (
 export const wsDisconnect = (
   socket: MutableRefObject<Socket | undefined>,
   reConnect: boolean,
-  setReconnect: (reConnect: boolean) => void,
+  setReconnect: (params: boolean) => void,
   peer: Peer.Instance | undefined,
-  setPeer: (peer: Peer.Instance | undefined) => void,
-  streamRef: MutableRefObject<MediaStream | undefined>,
+  setPeer: (params: Peer.Instance | undefined) => void,
   peerStreamRef: MutableRefObject<MediaStream | undefined>,
-  videoRef: MutableRefObject<HTMLVideoElement | null>,
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
   screenStreamRef: MutableRefObject<MediaStream | undefined>,
-  setIsPeerVideoOn: (isVideoOn: boolean) => void,
-  setIsScreenOn: (isScreenON: boolean) => void,
-  setIsPeerScreenOn: (isScreenON: boolean) => void,
+  setIsPeerVideoOn: (params: boolean) => void,
+  setIsScreenOn: (params: boolean) => void,
+  setIsPeerScreenOn: (params: boolean) => void,
 ) => {
   socket.current?.on("peerDisconnect", () => {
     peer?.destroy();
@@ -131,9 +134,7 @@ export const wsDisconnect = (
     socket.current?.disconnect();
     socket.current = io(`${process.env.NEXT_PUBLIC_API_URL}`);
 
-    streamRef.current = undefined;
     peerStreamRef.current = undefined;
-    if (videoRef.current) videoRef.current.srcObject = null;
     if (peerVideoRef.current) peerVideoRef.current.srcObject = null;
     if (screenStreamRef.current) {
       screenStreamRef.current.getTracks()[0].stop();

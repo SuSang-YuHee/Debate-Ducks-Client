@@ -3,7 +3,7 @@ import { MutableRefObject } from "react";
 export const toggleAudio = (
   streamRef: MutableRefObject<MediaStream | undefined>,
   isAudioOn: boolean,
-  setIsAudioOn: (isMute: boolean) => void,
+  setIsAudioOn: (params: boolean) => void,
 ) => {
   if (streamRef.current) {
     streamRef.current.getAudioTracks()[0].enabled = isAudioOn;
@@ -14,7 +14,7 @@ export const toggleAudio = (
 export const toggleVideo = (
   streamRef: MutableRefObject<MediaStream | undefined>,
   isVideoOn: boolean,
-  setIsVideoOn: (isVideoOn: boolean) => void,
+  setIsVideoOn: (params: boolean) => void,
 ) => {
   if (streamRef.current) {
     streamRef.current.getVideoTracks()[0].enabled = isVideoOn;
@@ -24,7 +24,7 @@ export const toggleVideo = (
 
 export const toggleReady = (
   isReady: boolean,
-  setIsReady: (isReady: boolean) => void,
+  setIsReady: (params: boolean) => void,
 ) => {
   setIsReady(isReady);
 };
