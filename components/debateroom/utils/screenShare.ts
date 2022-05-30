@@ -5,6 +5,7 @@ export const screenShare = async (
   peer: Peer.Instance | undefined,
   streamRef: MutableRefObject<MediaStream | undefined>,
   videoRef: MutableRefObject<HTMLVideoElement | null>,
+  screenStreamRef: MutableRefObject<MediaStream | undefined>,
   setIsScreenOn: (isOn: boolean) => void,
 ) => {
   try {
@@ -12,6 +13,7 @@ export const screenShare = async (
       video: true,
       audio: false,
     });
+    screenStreamRef.current = screenStream;
 
     if (streamRef.current && videoRef.current) {
       peer?.replaceTrack(
@@ -32,6 +34,7 @@ export const screenShare = async (
         );
         videoRef.current.srcObject = streamRef.current;
         setIsScreenOn(false);
+        screenStreamRef.current = undefined;
       }
     };
   } catch (err) {

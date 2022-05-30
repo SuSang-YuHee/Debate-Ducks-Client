@@ -7,20 +7,24 @@ export default function Buttons({
   peer,
   streamRef,
   videoRef,
+  screenStreamRef,
   isAudioOn,
   setIsAudioOn,
   isVideoOn,
   setIsVideoOn,
+  isScreenOn,
   setIsScreenOn,
 }: Pick<
   IDebateroomProps,
   | "peer"
   | "streamRef"
   | "videoRef"
+  | "screenStreamRef"
   | "isAudioOn"
   | "setIsAudioOn"
   | "isVideoOn"
   | "setIsVideoOn"
+  | "isScreenOn"
   | "setIsScreenOn"
 >) {
   return (
@@ -39,11 +43,21 @@ export default function Buttons({
       >
         {isVideoOn ? "VideoOff" : "VideoOn"}
       </button>
-      <button
-        onClick={() => screenShare(peer, streamRef, videoRef, setIsScreenOn)}
-      >
-        ScreenShare
-      </button>
+      {isScreenOn ? null : (
+        <button
+          onClick={() =>
+            screenShare(
+              peer,
+              streamRef,
+              videoRef,
+              screenStreamRef,
+              setIsScreenOn,
+            )
+          }
+        >
+          ScreenShare
+        </button>
+      )}
     </div>
   );
 }
