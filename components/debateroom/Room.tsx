@@ -10,6 +10,8 @@ import {
   wsTransmitScreen,
   wsTransmitReady,
 } from "./utils/webSocket";
+import { offScreen } from "./utils/screenShare";
+import { toggleAudio } from "./utils/toggle";
 
 import Canvas from "./Canvas";
 import Buttons from "./Buttons";
@@ -45,8 +47,8 @@ export default function Room({ debateId, socket }: IRoomProps) {
   const [isReady, setIsReady] = useState<boolean>(false);
   const [isStart, setIsStart] = useState<boolean>(false);
   const [turn, setTurn] = useState<
-    "notice" | "pros" | "cons" | "prosCross" | "consCross"
-  >("notice");
+    "none" | "notice" | "pros" | "cons" | "prosCross" | "consCross"
+  >("none");
 
   //! 임시 변수
   const [dummy] = useState<IDummy>({
@@ -82,12 +84,11 @@ export default function Room({ debateId, socket }: IRoomProps) {
       peerVideoRef,
       setIsPeerVideoOn,
       setIsPeerScreenOn,
-      isStart,
       setIsStart,
       setTurn,
       dummy.topic,
     );
-  }, [debateId, socket, reConnect, isStart, dummy.topic]);
+  }, [debateId, socket, reConnect, dummy.topic]);
 
   //*- Socket and WebRTC 연결 해제
   useEffect(() => {
@@ -97,9 +98,7 @@ export default function Room({ debateId, socket }: IRoomProps) {
       setReconnect,
       peer,
       setPeer,
-      streamRef,
       peerStreamRef,
-      videoRef,
       peerVideoRef,
       screenStreamRef,
       setIsPeerVideoOn,
@@ -121,12 +120,34 @@ export default function Room({ debateId, socket }: IRoomProps) {
     wsTransmitReady(debateId, socket, isReady, isPros);
   }, [debateId, socket, isReady, isPros]);
 
+  //*- 턴 전환 시 오디오 및 화면 공유 끄기
+  useEffect(() => {
+    if (isPros) {
+      if (turn === "pros" || turn === "prosCross") {
+        toggleAudio(streamRef, true, setIsAudioOn);
+      } else {
+        toggleAudio(streamRef, false, setIsAudioOn);
+      }
+    } else {
+      if (turn === "cons" || turn === "consCross") {
+        toggleAudio(streamRef, true, setIsAudioOn);
+      } else {
+        toggleAudio(streamRef, false, setIsAudioOn);
+      }
+    }
+    offScreen(peer, streamRef, videoRef, screenStreamRef, setIsScreenOn);
+  }, [peer, turn, isPros]);
+
+  //*- 상대 화면 공유 시 화면 공유 끄기
+  useEffect(() => {
+    if (isPeerScreenOn)
+      offScreen(peer, streamRef, videoRef, screenStreamRef, setIsScreenOn);
+  }, [peer, isPeerScreenOn]);
+
   //*- 첫 입장 시 비디오 끄기
   useEffect(() => {
     toggleVideo(streamRef, false, setIsAudioOn);
   }, []);
-
-  console.log("재랜더링 테스트"); //!
 
   return (
     <div>
@@ -162,7 +183,6 @@ export default function Room({ debateId, socket }: IRoomProps) {
         isPeerScreenOn={isPeerScreenOn}
         dummy={dummy}
         isPros={isPros}
-        turn={turn}
       />
       <Buttons
         peer={peer}
@@ -178,6 +198,8 @@ export default function Room({ debateId, socket }: IRoomProps) {
         isReady={isReady}
         setIsReady={setIsReady}
         isStart={isStart}
+        turn={turn}
+        isPros={isPros}
       />
       <a ref={downRef} download={`Test`} />
       <button onClick={startRecord}>recordStart</button>
