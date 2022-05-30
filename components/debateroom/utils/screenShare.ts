@@ -41,3 +41,23 @@ export const screenShare = async (
     console.log(err);
   }
 };
+
+export const offScreen = (
+  peer: Peer.Instance | undefined,
+  streamRef: MutableRefObject<MediaStream | undefined>,
+  videoRef: MutableRefObject<HTMLVideoElement | null>,
+  screenStreamRef: MutableRefObject<MediaStream | undefined>,
+  setIsScreenOn: (params: boolean) => void,
+) => {
+  if (streamRef.current && videoRef.current && screenStreamRef.current) {
+    peer?.replaceTrack(
+      screenStreamRef.current.getVideoTracks()[0],
+      streamRef.current.getVideoTracks()[0],
+      streamRef.current,
+    );
+    screenStreamRef.current.getTracks()[0].stop();
+    videoRef.current.srcObject = streamRef.current;
+    setIsScreenOn(false);
+    screenStreamRef.current = undefined;
+  }
+};

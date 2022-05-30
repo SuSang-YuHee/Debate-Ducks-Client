@@ -83,7 +83,6 @@ export const drawContents = (
   isPeerScreenOn: boolean,
   dummy: IDummy,
   isPros: boolean,
-  // turn: "notice" | "pros" | "cons" | "prosCross" | "consCross",
 ) => {
   // * Common Bg
   drawSquare(canvasRef, color.white, 0, 80, 1280, 640);
@@ -175,7 +174,13 @@ export const drawNotice = (
   canvasRef: MutableRefObject<HTMLCanvasElement | null>,
   debateData: IDebateData,
   topic: string,
-  turn: string,
+  turn:
+    | "none"
+    | "notice"
+    | "pros"
+    | "cons"
+    | "prosCross"
+    | "consCross" = "notice",
 ) => {
   const notice =
     debateData.turn === 0

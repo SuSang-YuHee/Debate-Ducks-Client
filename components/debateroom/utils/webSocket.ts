@@ -19,7 +19,7 @@ export const wsConnect = (
   setIsPeerScreenOn: (params: boolean) => void,
   setIsStart: (params: boolean) => void,
   setTurn: (
-    params: "notice" | "pros" | "cons" | "prosCross" | "consCross",
+    params: "none" | "notice" | "pros" | "cons" | "prosCross" | "consCross",
   ) => void,
   topic: string,
 ) => {
@@ -84,8 +84,13 @@ export const wsConnect = (
     });
 
     socket.current.on("debateProgress", (debateData: IDebateData) => {
-      let turn: "notice" | "pros" | "cons" | "prosCross" | "consCross" =
-        "notice";
+      let turn:
+        | "none"
+        | "notice"
+        | "pros"
+        | "cons"
+        | "prosCross"
+        | "consCross" = "notice";
       if (debateData.turn === 1 || debateData.turn === 5) turn = "pros";
       if (debateData.turn === 3 || debateData.turn === 6) turn = "cons";
       if (debateData.turn === 4) turn = "prosCross";
@@ -103,7 +108,7 @@ export const wsConnect = (
         timer: -1,
       },
       topic,
-      "notice",
+      "none",
     );
   }
 };

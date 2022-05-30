@@ -36,9 +36,11 @@ export interface IDebateroomProps {
   setIsReady: (params: boolean) => void;
   isStart: boolean;
   setIsStart: (params: boolean) => void;
-  turn: "notice" | "pros" | "cons" | "prosCross" | "consCross";
+  turn: "none" | "notice" | "pros" | "cons" | "prosCross" | "consCross";
   setIsTurn: Dispatch<
-    SetStateAction<"notice" | "pros" | "cons" | "prosCross" | "consCross">
+    SetStateAction<
+      "none" | "notice" | "pros" | "cons" | "prosCross" | "consCross"
+    >
   >;
   //! 임시 타입
   dummy: IDummy;
