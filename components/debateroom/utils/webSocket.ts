@@ -9,21 +9,21 @@ import { IDebateData, drawNotice } from "./draw";
 export const wsConnect = (
   debateId: string | string[] | undefined,
   socket: MutableRefObject<Socket | undefined>,
-  setPeer: (peer: Peer.Instance | undefined) => void,
+  setPeer: (params: Peer.Instance | undefined) => void,
   canvasRef: MutableRefObject<HTMLCanvasElement | null>,
   streamRef: MutableRefObject<MediaStream | undefined>,
   peerStreamRef: MutableRefObject<MediaStream | undefined>,
   videoRef: MutableRefObject<HTMLVideoElement | null>,
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
-  setIsPeerVideoOn: (isVideoOn: boolean) => void,
-  setIsPeerScreenOn: (isScreenON: boolean) => void,
-  isStart: boolean,
-  setIsStart: (isStart: boolean) => void,
-  setTurn: (
-    turn: "notice" | "pros" | "cons" | "prosCross" | "consCross",
-  ) => void,
+  setIsPeerVideoOn: (params: boolean) => void,
+  setIsPeerScreenOn: (params: boolean) => void,
+  setIsStart: (params: boolean) => void,
+  setTurn: Dispatch<
+    SetStateAction<"notice" | "pros" | "cons" | "prosCross" | "consCross">
+  >,
   topic: string,
 ) => {
+  console.log("연결"); //!
   if (debateId && socket.current) {
     // * 사용자 미디어 획득
     navigator.mediaDevices

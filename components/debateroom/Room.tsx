@@ -82,12 +82,11 @@ export default function Room({ debateId, socket }: IRoomProps) {
       peerVideoRef,
       setIsPeerVideoOn,
       setIsPeerScreenOn,
-      isStart,
       setIsStart,
       setTurn,
       dummy.topic,
     );
-  }, [debateId, socket, reConnect, isStart, dummy.topic]);
+  }, [debateId, socket, reConnect, dummy.topic]);
 
   //*- Socket and WebRTC 연결 해제
   useEffect(() => {
