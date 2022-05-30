@@ -1,10 +1,7 @@
 import { MutableRefObject } from "react";
-import { Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
 export const screenShare = async (
-  debateId: string | string[] | undefined,
-  socket: Socket | undefined,
   peer: Peer.Instance | undefined,
   streamRef: MutableRefObject<MediaStream | undefined>,
   videoRef: MutableRefObject<HTMLVideoElement | null>,
@@ -24,7 +21,6 @@ export const screenShare = async (
       );
       videoRef.current.srcObject = screenStream;
       setIsScreenOn(true);
-      socket?.emit("peerScreen", { debateId, isPeerScreenOn: true });
     }
 
     screenStream.getTracks()[0].onended = () => {
@@ -36,7 +32,6 @@ export const screenShare = async (
         );
         videoRef.current.srcObject = streamRef.current;
         setIsScreenOn(false);
-        socket?.emit("peerScreen", { debateId, isPeerScreenOn: false });
       }
     };
   } catch (err) {

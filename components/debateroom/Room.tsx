@@ -15,6 +15,8 @@ interface IRoomProps {
 
 export default function Room({ debateId, socket }: IRoomProps) {
   const [peer, setPeer] = useState<Peer.Instance>();
+  const recorderRef = useRef<MediaRecorder>();
+  const downRef = useRef<HTMLAnchorElement>(null);
   const streamRef = useRef<MediaStream>();
   const peerStreamRef = useRef<MediaStream>();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -24,18 +26,29 @@ export default function Room({ debateId, socket }: IRoomProps) {
   const [isPeerVideoOn, setIsPeerVideoOn] = useState<boolean>(true);
   const [isScreenOn, setIsScreenOn] = useState<boolean>(false);
   const [isPeerScreenOn, setIsPeerScreenOn] = useState<boolean>(false);
-  const recorderRef = useRef<MediaRecorder>();
-  const downRef = useRef<HTMLAnchorElement>(null);
+  const [isStart, setIsStart] = useState(false);
 
   //! 임시 변수
   const [dummy] = useState<IDummy>({
     topic: "Is Alien Exist?",
     prosName: "이찬성",
     consName: "반대중",
-    isProsTurn: true,
+    prosTurn: "false",
   });
   const [isPros, setIsPros] = useState(true);
-  const [isStart, setIsStart] = useState(false);
+
+  //! 임시 함수
+  function downloadRecord() {
+    downRef.current?.click();
+  }
+
+  function startRecord() {
+    recorderRef.current?.start(1000 / 30);
+  }
+
+  function stopRecord() {
+    recorderRef.current?.stop();
+  }
 
   useEffect(() => {
     if (debateId && socket) {
@@ -91,18 +104,12 @@ export default function Room({ debateId, socket }: IRoomProps) {
     }
   }, [debateId, socket]);
 
-  //! 임시 함수
-  function downloadRecord() {
-    downRef.current?.click();
-  }
-
-  function startRecord() {
-    recorderRef.current?.start(1000 / 30);
-  }
-
-  function stopRecord() {
-    recorderRef.current?.stop();
-  }
+  useEffect(() => {
+    if (peer) {
+      socket?.emit("peerVideo", { debateId, isVideoOn });
+      socket?.emit("peerScreen", { debateId, isScreenOn });
+    }
+  }, [debateId, socket, peer, isVideoOn, isScreenOn]);
 
   return (
     <div>
@@ -136,11 +143,8 @@ export default function Room({ debateId, socket }: IRoomProps) {
         isPeerScreenOn={isPeerScreenOn}
         dummy={dummy}
         isPros={isPros}
-        isStart={isStart}
       />
       <Buttons
-        debateId={debateId}
-        socket={socket}
         peer={peer}
         streamRef={streamRef}
         videoRef={videoRef}

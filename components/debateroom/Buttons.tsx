@@ -4,8 +4,6 @@ import { toggleAudioOnOff, toggleVideoOnOff } from "./utils/toggleOnOff";
 import { IDebateroomProps } from "./types";
 
 export default function Buttons({
-  debateId,
-  socket,
   peer,
   streamRef,
   videoRef,
@@ -16,8 +14,6 @@ export default function Buttons({
   setIsScreenOn,
 }: Pick<
   IDebateroomProps,
-  | "debateId"
-  | "socket"
   | "peer"
   | "streamRef"
   | "videoRef"
@@ -38,28 +34,13 @@ export default function Buttons({
       </button>
       <button
         onClick={() =>
-          toggleVideoOnOff(
-            debateId,
-            socket,
-            streamRef,
-            isVideoOn ? false : true,
-            setIsVideoOn,
-          )
+          toggleVideoOnOff(streamRef, isVideoOn ? false : true, setIsVideoOn)
         }
       >
         {isVideoOn ? "VideoOff" : "VideoOn"}
       </button>
       <button
-        onClick={() =>
-          screenShare(
-            debateId,
-            socket,
-            peer,
-            streamRef,
-            videoRef,
-            setIsScreenOn,
-          )
-        }
+        onClick={() => screenShare(peer, streamRef, videoRef, setIsScreenOn)}
       >
         ScreenShare
       </button>
