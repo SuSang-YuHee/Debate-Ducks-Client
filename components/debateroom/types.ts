@@ -1,4 +1,4 @@
-import { MutableRefObject } from "react";
+import { Dispatch, MutableRefObject, SetStateAction } from "react";
 import { Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
@@ -7,9 +7,9 @@ export interface IDebateroomProps {
   socket: MutableRefObject<Socket | undefined>;
   //*- WebRTC 타입
   reConnect: boolean;
-  setReconnect: (reConnect: boolean) => void;
+  setReconnect: (params: boolean) => void;
   peer: Peer.Instance | undefined;
-  setPeer: (peer: Peer.Instance | undefined) => void;
+  setPeer: (params: Peer.Instance | undefined) => void;
   //*- 캔버스 타입
   canvasRef: MutableRefObject<HTMLCanvasElement | null>;
   //*- 녹화 타입
@@ -22,24 +22,24 @@ export interface IDebateroomProps {
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>;
   screenStreamRef: MutableRefObject<MediaStream | undefined>;
   isAudioOn: boolean;
-  setIsAudioOn: (isAudioOn: boolean) => void;
+  setIsAudioOn: (params: boolean) => void;
   isVideoOn: boolean;
-  setIsVideoOn: (isVideoOn: boolean) => void;
+  setIsVideoOn: (params: boolean) => void;
   isPeerVideoOn: boolean;
-  setIsPeerVideoOn: (isVideoOn: boolean) => void;
+  setIsPeerVideoOn: (params: boolean) => void;
   isScreenOn: boolean;
-  setIsScreenOn: (isScreenON: boolean) => void;
+  setIsScreenOn: (params: boolean) => void;
   isPeerScreenOn: boolean;
-  setIsPeerScreenOn: (isScreenON: boolean) => void;
+  setIsPeerScreenOn: (params: boolean) => void;
   //*- 토론 타입
   isReady: boolean;
-  setIsReady: (isReady: boolean) => void;
+  setIsReady: (params: boolean) => void;
   isStart: boolean;
-  setIsStart: (isStart: boolean) => void;
+  setIsStart: (params: boolean) => void;
   turn: "notice" | "pros" | "cons" | "prosCross" | "consCross";
-  setIsTurn: (
-    turn: "notice" | "pros" | "cons" | "prosCross" | "consCross",
-  ) => void;
+  setIsTurn: Dispatch<
+    SetStateAction<"notice" | "pros" | "cons" | "prosCross" | "consCross">
+  >;
   //! 임시 타입
   dummy: IDummy;
   isPros: boolean;

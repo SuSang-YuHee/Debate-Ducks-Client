@@ -96,9 +96,7 @@ export default function Room({ debateId, socket }: IRoomProps) {
       setReconnect,
       peer,
       setPeer,
-      streamRef,
       peerStreamRef,
-      videoRef,
       peerVideoRef,
       screenStreamRef,
       setIsPeerVideoOn,
@@ -124,8 +122,6 @@ export default function Room({ debateId, socket }: IRoomProps) {
   useEffect(() => {
     toggleVideo(streamRef, false, setIsAudioOn);
   }, []);
-
-  console.log("재랜더링 테스트"); //!
 
   return (
     <div>

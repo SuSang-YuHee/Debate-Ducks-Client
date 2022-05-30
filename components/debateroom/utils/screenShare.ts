@@ -6,14 +6,13 @@ export const screenShare = async (
   streamRef: MutableRefObject<MediaStream | undefined>,
   videoRef: MutableRefObject<HTMLVideoElement | null>,
   screenStreamRef: MutableRefObject<MediaStream | undefined>,
-  setIsScreenOn: (isOn: boolean) => void,
+  setIsScreenOn: (params: boolean) => void,
 ) => {
   try {
     const screenStream = await navigator.mediaDevices.getDisplayMedia({
       video: true,
       audio: false,
     });
-    screenStreamRef.current = screenStream;
 
     if (streamRef.current && videoRef.current) {
       peer?.replaceTrack(
@@ -23,6 +22,7 @@ export const screenShare = async (
       );
       videoRef.current.srcObject = screenStream;
       setIsScreenOn(true);
+      screenStreamRef.current = screenStream;
     }
 
     screenStream.getTracks()[0].onended = () => {

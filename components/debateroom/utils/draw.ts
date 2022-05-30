@@ -83,14 +83,13 @@ export const drawContents = (
   isPeerScreenOn: boolean,
   dummy: IDummy,
   isPros: boolean,
-  turn: "notice" | "pros" | "cons" | "prosCross" | "consCross",
+  // turn: "notice" | "pros" | "cons" | "prosCross" | "consCross",
 ) => {
   // * Common Bg
   drawSquare(canvasRef, color.white, 0, 80, 1280, 640);
 
-  //! 로직 변경 필요
   // * My screen share
-  if (isScreenOn && String(isPros) === turn) {
+  if (isScreenOn) {
     if (videoRef.current) {
       drawSquare(canvasRef, color.black, 0, 80, 1280, 640);
       const [w, h] = resize(videoRef.current);
@@ -99,7 +98,7 @@ export const drawContents = (
         ?.drawImage(videoRef.current, 640 - w / 2, 440 - h / 2, w, h);
     }
     // * Peer screen share
-  } else if (isPeerScreenOn && String(!isPros) === turn) {
+  } else if (isPeerScreenOn) {
     if (peerVideoRef.current) {
       drawSquare(canvasRef, color.black, 0, 80, 1280, 640);
       const [w, h] = resize(peerVideoRef.current);
