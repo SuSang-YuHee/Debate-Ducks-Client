@@ -5,15 +5,17 @@ import Peer from "simple-peer";
 export interface IDebateroomProps {
   debateId: string | string[] | undefined;
   socket: MutableRefObject<Socket | undefined>;
-  //* WebRTC 타입
+  //*- WebRTC 타입
   reConnect: boolean;
   setReconnect: (reConnect: boolean) => void;
   peer: Peer.Instance | undefined;
   setPeer: (peer: Peer.Instance | undefined) => void;
-  //* 녹화 타입
+  //*- 캔버스 타입
+  canvasRef: MutableRefObject<HTMLCanvasElement | null>;
+  //*- 녹화 타입
   recorderRef: MutableRefObject<MediaRecorder | undefined>;
   downRef: MutableRefObject<HTMLAnchorElement | null>;
-  //* 스트림 타입
+  //*- 스트림 타입
   streamRef: MutableRefObject<MediaStream | undefined>;
   peerStreamRef: MutableRefObject<MediaStream | undefined>;
   videoRef: MutableRefObject<HTMLVideoElement | null>;
@@ -29,11 +31,15 @@ export interface IDebateroomProps {
   setIsScreenOn: (isScreenON: boolean) => void;
   isPeerScreenOn: boolean;
   setIsPeerScreenOn: (isScreenON: boolean) => void;
-  //* Etc.
+  //*- 토론 타입
   isReady: boolean;
   setIsReady: (isReady: boolean) => void;
-  isDebate: boolean;
-  setIsDebate: (isDebate: boolean) => void;
+  isStart: boolean;
+  setIsStart: (isStart: boolean) => void;
+  turn: "notice" | "pros" | "cons" | "prosCross" | "consCross";
+  setIsTurn: (
+    turn: "notice" | "pros" | "cons" | "prosCross" | "consCross",
+  ) => void;
   //! 임시 타입
   dummy: IDummy;
   isPros: boolean;
@@ -44,5 +50,4 @@ export interface IDummy {
   topic: string;
   prosName: string;
   consName: string;
-  prosTurn: "none" | "turn" | "false";
 }

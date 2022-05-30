@@ -1,12 +1,13 @@
 import { useRef, useEffect } from "react";
 
-import { draw } from "../debateroom/utils/draw";
+import { drawContents } from "../debateroom/utils/draw";
 import { useSetInterval } from "../debateroom/utils/useSetInterval";
 
 import { IDebateroomProps } from "./types";
 
 export default function Canvas({
   peer,
+  canvasRef,
   recorderRef,
   downRef,
   videoRef,
@@ -17,9 +18,11 @@ export default function Canvas({
   isPeerScreenOn,
   dummy,
   isPros,
+  turn,
 }: Pick<
   IDebateroomProps,
   | "peer"
+  | "canvasRef"
   | "recorderRef"
   | "downRef"
   | "videoRef"
@@ -30,12 +33,12 @@ export default function Canvas({
   | "isPeerScreenOn"
   | "dummy"
   | "isPros"
+  | "turn"
 >) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const blobsRef = useRef<Blob[]>([]);
   const [drawStart, drawStop] = useSetInterval(
     () =>
-      draw(
+      drawContents(
         canvasRef,
         peer,
         videoRef,
@@ -46,10 +49,12 @@ export default function Canvas({
         isPeerScreenOn,
         dummy,
         isPros,
+        turn,
       ),
     1000 / 30,
   );
 
+  //*- 녹화
   useEffect(() => {
     let mergedTracks, mergedStream, blob, url;
     const canvasStream = canvasRef.current?.captureStream(30);
@@ -71,8 +76,9 @@ export default function Canvas({
         if (downRef.current) downRef.current.href = url;
       };
     }
-  }, [recorderRef, downRef]);
+  }, [canvasRef, recorderRef, downRef]);
 
+  //*- 내용 그리기
   useEffect(() => {
     drawStop();
     drawStart();
@@ -93,7 +99,7 @@ export default function Canvas({
         ref={canvasRef}
         width="1280px"
         height="720px"
-        style={{ border: "2px solid red", width: "100vw" }}
+        style={{ border: "2px solid red", width: "100vw" }} //!
       ></canvas>
     </div>
   );

@@ -3,22 +3,29 @@ import { io, Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
 import { connectHostPeer, connectGuestPeer } from "./simple-peer";
+import { IDebateData, drawNotice } from "./draw";
 
-//* Room and WebRTC 연결
+//*- Socket and WebRTC 연결
 export const wsConnect = (
   debateId: string | string[] | undefined,
   socket: MutableRefObject<Socket | undefined>,
   setPeer: (peer: Peer.Instance | undefined) => void,
+  canvasRef: MutableRefObject<HTMLCanvasElement | null>,
   streamRef: MutableRefObject<MediaStream | undefined>,
   peerStreamRef: MutableRefObject<MediaStream | undefined>,
   videoRef: MutableRefObject<HTMLVideoElement | null>,
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
   setIsPeerVideoOn: (isVideoOn: boolean) => void,
   setIsPeerScreenOn: (isScreenON: boolean) => void,
-  setIsDebate: (isDebate: boolean) => void,
+  isStart: boolean,
+  setIsStart: (isStart: boolean) => void,
+  setTurn: (
+    turn: "notice" | "pros" | "cons" | "prosCross" | "consCross",
+  ) => void,
+  topic: string,
 ) => {
   if (debateId && socket.current) {
-    //* 사용자 미디어 획득
+    // * 사용자 미디어 획득
     navigator.mediaDevices
       .getUserMedia({
         video: { facingMode: "user", width: 500, height: 500 },
@@ -31,15 +38,15 @@ export const wsConnect = (
         }
       });
 
-    //* 방 입장
+    // * 방 입장
     socket.current.emit("join", { debateId });
 
-    //* 방 입장 거절
+    // * 방 입장 거절
     socket.current.on("overcapacity", () => {
       console.log("overcapacity"); //! 추가 처리 필요
     });
 
-    //* offer and answer
+    // * WebRTC 연결
     socket.current.on("guestJoin", () => {
       connectHostPeer(
         debateId,
@@ -63,7 +70,7 @@ export const wsConnect = (
       );
     });
 
-    //* 정보 수신
+    // * 정보 수신
     socket.current.on("peerVideo", (isPeerVideoOn: boolean) => {
       setIsPeerVideoOn(isPeerVideoOn);
     });
@@ -72,13 +79,36 @@ export const wsConnect = (
       setIsPeerScreenOn(isPeerScreenOn);
     });
 
-    socket.current.on("debate", () => {
-      setIsDebate(true);
+    socket.current.on("debateStart", () => {
+      setIsStart(true);
     });
+
+    socket.current.on("debateProgress", (debateData: IDebateData) => {
+      let turn: "notice" | "pros" | "cons" | "prosCross" | "consCross" =
+        "notice";
+      if (debateData.turn === 1 || debateData.turn === 5) turn = "pros";
+      if (debateData.turn === 3 || debateData.turn === 6) turn = "cons";
+      if (debateData.turn === 4) turn = "prosCross";
+      if (debateData.turn === 2) turn = "consCross";
+      setTurn(turn);
+      drawNotice(canvasRef, debateData, topic, turn);
+    });
+
+    // * 첫 공지
+    drawNotice(
+      canvasRef,
+      {
+        notice: isStart ? "곧 토론이 재시작 됩니다." : topic,
+        turn: -1,
+        timer: -1,
+      },
+      topic,
+      "notice",
+    );
   }
 };
 
-//* Room and WebRTC 연결 해제
+//*- Socket and WebRTC 연결 해제
 export const wsDisconnect = (
   socket: MutableRefObject<Socket | undefined>,
   reConnect: boolean,
@@ -97,6 +127,7 @@ export const wsDisconnect = (
   socket.current?.on("peerDisconnect", () => {
     peer?.destroy();
     setPeer(undefined);
+
     socket.current?.disconnect();
     socket.current = io(`${process.env.NEXT_PUBLIC_API_URL}`);
 
@@ -115,19 +146,30 @@ export const wsDisconnect = (
   });
 };
 
-//* 정보 송신
-export const wsTransmit = (
+//*- 정보 송신
+export const wsTransmitVideo = (
   debateId: string | string[] | undefined,
   socket: MutableRefObject<Socket | undefined>,
   peer: Peer.Instance | undefined,
   isVideoOn: boolean,
+) => {
+  if (peer) socket.current?.emit("peerVideo", { debateId, isVideoOn });
+};
+
+export const wsTransmitScreen = (
+  debateId: string | string[] | undefined,
+  socket: MutableRefObject<Socket | undefined>,
+  peer: Peer.Instance | undefined,
   isScreenOn: boolean,
+) => {
+  if (peer) socket.current?.emit("peerScreen", { debateId, isScreenOn });
+};
+
+export const wsTransmitReady = (
+  debateId: string | string[] | undefined,
+  socket: MutableRefObject<Socket | undefined>,
   isReady: boolean,
   isPros: boolean,
 ) => {
-  if (peer) {
-    socket.current?.emit("peerVideo", { debateId, isVideoOn });
-    socket.current?.emit("peerScreen", { debateId, isScreenOn });
-  }
   socket.current?.emit("ready", { debateId, isReady, isPros });
 };
