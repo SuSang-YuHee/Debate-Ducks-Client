@@ -178,3 +178,11 @@ export const wsTransmitReady = (
 ) => {
   socket.current?.emit("ready", { debateId, isReady, isPros });
 };
+
+export const wsTransmitSkip = (
+  debateId: string | string[] | undefined,
+  socket: MutableRefObject<Socket | undefined>,
+  isPros: boolean,
+) => {
+  socket.current?.emit("skip", { debateId, isPros });
+};

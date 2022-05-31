@@ -184,6 +184,8 @@ export default function Room({ debateId, socket }: IRoomProps) {
         isPros={isPros}
       />
       <Buttons
+        debateId={debateId}
+        socket={socket}
         peer={peer}
         streamRef={streamRef}
         videoRef={videoRef}

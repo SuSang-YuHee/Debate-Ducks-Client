@@ -1,9 +1,12 @@
 import { screenShare } from "./utils/screenShare";
 import { toggleMic, toggleReady, toggleVideo } from "./utils/toggle";
+import { wsTransmitSkip } from "./utils/webSocket";
 
 import { IDebateroomProps } from "./types";
 
 export default function Buttons({
+  debateId,
+  socket,
   peer,
   streamRef,
   videoRef,
@@ -21,6 +24,8 @@ export default function Buttons({
   isPros,
 }: Pick<
   IDebateroomProps,
+  | "debateId"
+  | "socket"
   | "peer"
   | "streamRef"
   | "videoRef"
@@ -79,7 +84,13 @@ export default function Buttons({
         </button>
       )}
       {isStart ? (
-        <button></button>
+        <button
+          onClick={() => {
+            wsTransmitSkip(debateId, socket, isPros);
+          }}
+        >
+          Skip Turn
+        </button>
       ) : (
         <button
           onClick={() => {
