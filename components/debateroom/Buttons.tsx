@@ -1,5 +1,5 @@
 import { screenShare } from "./utils/screenShare";
-import { toggleAudio, toggleReady, toggleVideo } from "./utils/toggle";
+import { toggleMic, toggleReady, toggleVideo } from "./utils/toggle";
 
 import { IDebateroomProps } from "./types";
 
@@ -8,8 +8,8 @@ export default function Buttons({
   streamRef,
   videoRef,
   screenStreamRef,
-  isAudioOn,
-  setIsAudioOn,
+  isMicOn,
+  setIsMicOn,
   isVideoOn,
   setIsVideoOn,
   isScreenOn,
@@ -25,8 +25,8 @@ export default function Buttons({
   | "streamRef"
   | "videoRef"
   | "screenStreamRef"
-  | "isAudioOn"
-  | "setIsAudioOn"
+  | "isMicOn"
+  | "setIsMicOn"
   | "isVideoOn"
   | "setIsVideoOn"
   | "isScreenOn"
@@ -58,10 +58,10 @@ export default function Buttons({
       ) : (
         <button
           onClick={() =>
-            toggleAudio(streamRef, isAudioOn ? false : true, setIsAudioOn)
+            toggleMic(streamRef, isMicOn ? false : true, setIsMicOn)
           }
         >
-          {isAudioOn ? "AudioOn" : "AudioOff"}
+          {isMicOn ? "AudioOn" : "AudioOff"}
         </button>
       )}
       <button

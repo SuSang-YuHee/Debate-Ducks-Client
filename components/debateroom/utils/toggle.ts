@@ -1,13 +1,13 @@
 import { MutableRefObject } from "react";
 
-export const toggleAudio = (
+export const toggleMic = (
   streamRef: MutableRefObject<MediaStream | undefined>,
-  isAudioOn: boolean,
-  setIsAudioOn: (params: boolean) => void,
+  isMicOn: boolean,
+  setIsMicOn: (params: boolean) => void,
 ) => {
   if (streamRef.current) {
-    streamRef.current.getAudioTracks()[0].enabled = isAudioOn;
-    setIsAudioOn(isAudioOn);
+    streamRef.current.getAudioTracks()[0].enabled = isMicOn;
+    setIsMicOn(isMicOn);
   }
 };
 
