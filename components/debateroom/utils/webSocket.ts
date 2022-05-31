@@ -97,7 +97,7 @@ export const wsConnect = (
       if (debateData.turn === 2) turn = "consCross";
       setTurn(turn);
       drawNotice(canvasRef, debateData, topic, turn);
-      if (debateData.timer < 4) beep();
+      if (debateData.timer === 10 || debateData.timer === 3) beep();
     });
 
     // * 기본 공지
