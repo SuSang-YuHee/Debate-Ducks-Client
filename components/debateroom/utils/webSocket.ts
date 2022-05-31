@@ -4,6 +4,7 @@ import Peer from "simple-peer";
 
 import { connectHostPeer, connectGuestPeer } from "./simple-peer";
 import { IDebateData, drawNotice } from "./draw";
+import { beep } from "./beep";
 
 //*- Socket and WebRTC 연결
 export const wsConnect = (
@@ -96,6 +97,7 @@ export const wsConnect = (
       if (debateData.turn === 2) turn = "consCross";
       setTurn(turn);
       drawNotice(canvasRef, debateData, topic, turn);
+      if (debateData.timer < 4) beep();
     });
 
     // * 기본 공지
