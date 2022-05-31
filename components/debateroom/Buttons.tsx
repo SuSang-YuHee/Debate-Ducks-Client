@@ -56,19 +56,11 @@ export default function Buttons({
       {checkAudioDisable() ? (
         "AudioOff"
       ) : (
-        <button
-          onClick={() =>
-            toggleMic(streamRef, isMicOn ? false : true, setIsMicOn)
-          }
-        >
+        <button onClick={() => toggleMic(streamRef, !isMicOn, setIsMicOn)}>
           {isMicOn ? "AudioOn" : "AudioOff"}
         </button>
       )}
-      <button
-        onClick={() =>
-          toggleVideo(streamRef, isVideoOn ? false : true, setIsVideoOn)
-        }
-      >
+      <button onClick={() => toggleVideo(streamRef, !isVideoOn, setIsVideoOn)}>
         {isVideoOn ? "VideoOn" : "VideoOff"}
       </button>
       {checkScreenDisable() ? null : (
@@ -86,10 +78,12 @@ export default function Buttons({
           ScreenShare
         </button>
       )}
-      {isStart ? null : (
+      {isStart ? (
+        <button></button>
+      ) : (
         <button
           onClick={() => {
-            toggleReady(isReady ? false : true, setIsReady);
+            toggleReady(!isReady, setIsReady);
           }}
         >
           {isReady ? "Cancel" : "Ready"}
