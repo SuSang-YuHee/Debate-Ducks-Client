@@ -23,7 +23,6 @@ export const wsConnect = (
   ) => void,
   topic: string,
 ) => {
-  console.log("연결"); //!
   if (debateId && socket.current) {
     // * 사용자 미디어 획득
     navigator.mediaDevices
@@ -99,7 +98,7 @@ export const wsConnect = (
       drawNotice(canvasRef, debateData, topic, turn);
     });
 
-    // * 첫 공지
+    // * 기본 공지
     drawNotice(
       canvasRef,
       {
@@ -128,20 +127,25 @@ export const wsDisconnect = (
   setIsPeerScreenOn: (params: boolean) => void,
 ) => {
   socket.current?.on("peerDisconnect", () => {
+    // * Peer 파괴
     peer?.destroy();
     setPeer(undefined);
 
+    // * Socket 연결 해제 및 재연결
     socket.current?.disconnect();
     socket.current = io(`${process.env.NEXT_PUBLIC_API_URL}`);
 
+    // * Peer 관련 정보 초기화
     peerStreamRef.current = undefined;
     if (peerVideoRef.current) peerVideoRef.current.srcObject = null;
-    if (screenStreamRef.current) {
-      screenStreamRef.current.getTracks()[0].stop();
-    }
     setIsPeerVideoOn(false);
     setIsScreenOn(false);
     setIsPeerScreenOn(false);
+
+    // * 화면 공유 끄기
+    if (screenStreamRef.current) {
+      screenStreamRef.current.getTracks()[0].stop();
+    }
 
     setReconnect(!reConnect);
   });

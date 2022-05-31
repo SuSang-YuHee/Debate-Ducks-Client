@@ -33,7 +33,6 @@ export default function Canvas({
   | "dummy"
   | "isPros"
 >) {
-  const blobsRef = useRef<Blob[]>([]);
   const [drawStart, drawStop] = useSetInterval(
     () =>
       drawContents(
@@ -50,6 +49,21 @@ export default function Canvas({
       ),
     1000 / 30,
   );
+  const blobsRef = useRef<Blob[]>([]);
+
+  //*- 내용 표시
+  useEffect(() => {
+    drawStop();
+    drawStart();
+  }, [
+    drawStart,
+    drawStop,
+    peer,
+    isVideoOn,
+    isPeerVideoOn,
+    isScreenOn,
+    isPeerScreenOn,
+  ]);
 
   //*- 녹화
   useEffect(() => {
@@ -74,20 +88,6 @@ export default function Canvas({
       };
     }
   }, [canvasRef, recorderRef, downRef]);
-
-  //*- 내용 그리기
-  useEffect(() => {
-    drawStop();
-    drawStart();
-  }, [
-    drawStart,
-    drawStop,
-    peer,
-    isVideoOn,
-    isPeerVideoOn,
-    isScreenOn,
-    isPeerScreenOn,
-  ]);
 
   return (
     <div>

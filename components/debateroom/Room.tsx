@@ -2,7 +2,8 @@ import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
-import { toggleVideo } from "./utils/toggle";
+import { toggleMic, toggleVideo } from "./utils/toggle";
+import { offScreen } from "./utils/screenShare";
 import {
   wsConnect,
   wsDisconnect,
@@ -10,8 +11,6 @@ import {
   wsTransmitScreen,
   wsTransmitReady,
 } from "./utils/webSocket";
-import { offScreen } from "./utils/screenShare";
-import { toggleMic } from "./utils/toggle";
 
 import Canvas from "./Canvas";
 import Buttons from "./Buttons";

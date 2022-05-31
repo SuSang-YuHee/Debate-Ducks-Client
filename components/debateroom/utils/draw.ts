@@ -13,6 +13,7 @@ export interface IDebateData {
   timer: number;
 }
 
+//*- 컬러 객체
 const color: IColor = {
   white: "#F8FBFD",
   black: "#292929",
@@ -20,6 +21,7 @@ const color: IColor = {
   cons: "#6667ab",
 };
 
+//*- 사각형 그리기
 const drawSquare = (
   canvasRef: MutableRefObject<HTMLCanvasElement | null>,
   color: string,
@@ -35,6 +37,7 @@ const drawSquare = (
   }
 };
 
+//*- 텍스트 그리기
 const drawText = (
   canvasRef: MutableRefObject<HTMLCanvasElement | null>,
   color: string,
@@ -52,6 +55,7 @@ const drawText = (
   }
 };
 
+//*- 비율 조정
 const resize = (screen: HTMLVideoElement) => {
   let w = 0;
   let h = 0;
@@ -71,7 +75,7 @@ const resize = (screen: HTMLVideoElement) => {
   return [w, h];
 };
 
-//*- 내용 그리기
+//*- 내용 표시
 export const drawContents = (
   canvasRef: MutableRefObject<HTMLCanvasElement | null>,
   peer: Peer.Instance | undefined,
@@ -169,7 +173,7 @@ export const drawContents = (
   }
 };
 
-//*- 공지 그리기
+//*- 공지 표시
 export const drawNotice = (
   canvasRef: MutableRefObject<HTMLCanvasElement | null>,
   debateData: IDebateData,
