@@ -2,7 +2,7 @@ import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
-import { toggleMic, toggleVideo } from "./utils/toggle";
+import { toggleMic } from "./utils/toggle";
 import { offScreen } from "./utils/screenShare";
 import {
   wsConnect,
@@ -142,11 +142,6 @@ export default function Room({ debateId, socket }: IRoomProps) {
     if (isPeerScreenOn)
       offScreen(peerRef, stream, videoRef, screenStreamRef, setIsScreenOn);
   }, [stream, isPeerScreenOn]);
-
-  //*- 첫 연결 시 비디오 끄기
-  useEffect(() => {
-    toggleVideo(stream, false, setIsMicOn);
-  }, [stream]);
 
   return (
     <div>
