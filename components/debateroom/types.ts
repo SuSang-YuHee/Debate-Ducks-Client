@@ -8,16 +8,17 @@ export interface IDebateroomProps {
   //*- WebRTC 타입
   reConnect: boolean;
   setReconnect: (params: boolean) => void;
-  peer: Peer.Instance | undefined;
-  setPeer: (params: Peer.Instance | undefined) => void;
+  peerRef: MutableRefObject<Peer.Instance | undefined>;
   //*- 캔버스 타입
   canvasRef: MutableRefObject<HTMLCanvasElement | null>;
   //*- 녹화 타입
   recorderRef: MutableRefObject<MediaRecorder | undefined>;
   downRef: MutableRefObject<HTMLAnchorElement | null>;
   //*- 스트림 타입
-  streamRef: MutableRefObject<MediaStream | undefined>;
-  peerStreamRef: MutableRefObject<MediaStream | undefined>;
+  stream: MediaStream | undefined;
+  setStream: (params: MediaStream | undefined) => void;
+  peerStream: MediaStream | undefined;
+  setPeerStream: (params: MediaStream | undefined) => void;
   videoRef: MutableRefObject<HTMLVideoElement | null>;
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>;
   screenStreamRef: MutableRefObject<MediaStream | undefined>;

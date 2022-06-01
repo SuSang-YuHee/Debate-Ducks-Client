@@ -7,13 +7,13 @@ import { IDebateData, drawNotice } from "./draw";
 import { beep } from "./beep";
 
 //*- Socket and WebRTC 연결
-export const wsConnect = (
+export const wsConnect = async (
   debateId: string | string[] | undefined,
   socket: MutableRefObject<Socket | undefined>,
-  setPeer: (params: Peer.Instance | undefined) => void,
+  peerRef: MutableRefObject<Peer.Instance | undefined>,
   canvasRef: MutableRefObject<HTMLCanvasElement | null>,
-  streamRef: MutableRefObject<MediaStream | undefined>,
-  peerStreamRef: MutableRefObject<MediaStream | undefined>,
+  setStream: (params: MediaStream | undefined) => void,
+  setPeerStream: (params: MediaStream | undefined) => void,
   videoRef: MutableRefObject<HTMLVideoElement | null>,
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
   setIsPeerVideoOn: (params: boolean) => void,
@@ -26,17 +26,16 @@ export const wsConnect = (
 ) => {
   if (debateId && socket.current) {
     // * 사용자 미디어 획득
-    navigator.mediaDevices
-      .getUserMedia({
-        video: { facingMode: "user", width: 500, height: 500 },
-        audio: { echoCancellation: true, noiseSuppression: true },
-      })
-      .then((stream) => {
-        streamRef.current = stream;
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
-      });
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "user", width: 500, height: 500 },
+      audio: { echoCancellation: true, noiseSuppression: true },
+    });
+
+    // * 사용자 미디어 저장 및 비디오로 표시
+    setStream(stream);
+    if (videoRef.current) {
+      videoRef.current.srcObject = stream;
+    }
 
     // * 방 입장
     socket.current.emit("join", { debateId });
@@ -51,9 +50,9 @@ export const wsConnect = (
       connectHostPeer(
         debateId,
         socket,
-        setPeer,
-        streamRef,
-        peerStreamRef,
+        peerRef,
+        stream,
+        setPeerStream,
         peerVideoRef,
       );
     });
@@ -62,9 +61,9 @@ export const wsConnect = (
       connectGuestPeer(
         debateId,
         socket,
-        setPeer,
-        streamRef,
-        peerStreamRef,
+        peerRef,
+        stream,
+        setPeerStream,
         peerVideoRef,
         signal,
       );
@@ -119,9 +118,8 @@ export const wsDisconnect = (
   socket: MutableRefObject<Socket | undefined>,
   reConnect: boolean,
   setReconnect: (params: boolean) => void,
-  peer: Peer.Instance | undefined,
-  setPeer: (params: Peer.Instance | undefined) => void,
-  peerStreamRef: MutableRefObject<MediaStream | undefined>,
+  peerRef: MutableRefObject<Peer.Instance | undefined>,
+  setPeerStream: (params: MediaStream | undefined) => void,
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
   screenStreamRef: MutableRefObject<MediaStream | undefined>,
   setIsPeerVideoOn: (params: boolean) => void,
@@ -130,15 +128,15 @@ export const wsDisconnect = (
 ) => {
   socket.current?.on("peerDisconnect", () => {
     // * Peer 파괴
-    peer?.destroy();
-    setPeer(undefined);
+    peerRef.current?.destroy();
+    peerRef.current = undefined;
 
     // * Socket 연결 해제 및 재연결
     socket.current?.disconnect();
     socket.current = io(`${process.env.NEXT_PUBLIC_API_URL}`);
 
     // * Peer 관련 정보 초기화
-    peerStreamRef.current = undefined;
+    setPeerStream(undefined);
     if (peerVideoRef.current) peerVideoRef.current.srcObject = null;
     setIsPeerVideoOn(false);
     setIsScreenOn(false);
@@ -157,19 +155,21 @@ export const wsDisconnect = (
 export const wsTransmitVideo = (
   debateId: string | string[] | undefined,
   socket: MutableRefObject<Socket | undefined>,
-  peer: Peer.Instance | undefined,
+  peerRef: MutableRefObject<Peer.Instance | undefined>,
   isVideoOn: boolean,
 ) => {
-  if (peer) socket.current?.emit("peerVideo", { debateId, isVideoOn });
+  if (peerRef.current)
+    socket.current?.emit("peerVideo", { debateId, isVideoOn });
 };
 
 export const wsTransmitScreen = (
   debateId: string | string[] | undefined,
   socket: MutableRefObject<Socket | undefined>,
-  peer: Peer.Instance | undefined,
+  peerRef: MutableRefObject<Peer.Instance | undefined>,
   isScreenOn: boolean,
 ) => {
-  if (peer) socket.current?.emit("peerScreen", { debateId, isScreenOn });
+  if (peerRef.current)
+    socket.current?.emit("peerScreen", { debateId, isScreenOn });
 };
 
 export const wsTransmitReady = (
@@ -178,6 +178,7 @@ export const wsTransmitReady = (
   isReady: boolean,
   isPros: boolean,
 ) => {
+  console.log("??");
   socket.current?.emit("ready", { debateId, isReady, isPros });
 };
 

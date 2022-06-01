@@ -6,7 +6,7 @@ import { useSetInterval } from "../debateroom/utils/useSetInterval";
 import { IDebateroomProps } from "./types";
 
 export default function Canvas({
-  peer,
+  peerRef,
   canvasRef,
   recorderRef,
   downRef,
@@ -20,7 +20,7 @@ export default function Canvas({
   isPros,
 }: Pick<
   IDebateroomProps,
-  | "peer"
+  | "peerRef"
   | "canvasRef"
   | "recorderRef"
   | "downRef"
@@ -37,7 +37,7 @@ export default function Canvas({
     () =>
       drawContents(
         canvasRef,
-        peer,
+        peerRef,
         videoRef,
         peerVideoRef,
         isVideoOn,
@@ -58,7 +58,6 @@ export default function Canvas({
   }, [
     drawStart,
     drawStop,
-    peer,
     isVideoOn,
     isPeerVideoOn,
     isScreenOn,

@@ -7,8 +7,8 @@ import { IDebateroomProps } from "./types";
 export default function Buttons({
   debateId,
   socket,
-  peer,
-  streamRef,
+  peerRef,
+  stream,
   videoRef,
   screenStreamRef,
   isMicOn,
@@ -26,8 +26,8 @@ export default function Buttons({
   IDebateroomProps,
   | "debateId"
   | "socket"
-  | "peer"
-  | "streamRef"
+  | "peerRef"
+  | "stream"
   | "videoRef"
   | "screenStreamRef"
   | "isMicOn"
@@ -61,19 +61,19 @@ export default function Buttons({
       {checkAudioDisable() ? (
         "AudioOff"
       ) : (
-        <button onClick={() => toggleMic(streamRef, !isMicOn, setIsMicOn)}>
+        <button onClick={() => toggleMic(stream, !isMicOn, setIsMicOn)}>
           {isMicOn ? "AudioOn" : "AudioOff"}
         </button>
       )}
-      <button onClick={() => toggleVideo(streamRef, !isVideoOn, setIsVideoOn)}>
+      <button onClick={() => toggleVideo(stream, !isVideoOn, setIsVideoOn)}>
         {isVideoOn ? "VideoOn" : "VideoOff"}
       </button>
       {checkScreenDisable() ? null : (
         <button
           onClick={() =>
             screenShare(
-              peer,
-              streamRef,
+              peerRef,
+              stream,
               videoRef,
               screenStreamRef,
               setIsScreenOn,

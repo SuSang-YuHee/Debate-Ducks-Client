@@ -3,8 +3,8 @@ import Peer from "simple-peer";
 
 //*- 화면 공유
 export const screenShare = async (
-  peer: Peer.Instance | undefined,
-  streamRef: MutableRefObject<MediaStream | undefined>,
+  peerRef: MutableRefObject<Peer.Instance | undefined>,
+  stream: MediaStream | undefined,
   videoRef: MutableRefObject<HTMLVideoElement | null>,
   screenStreamRef: MutableRefObject<MediaStream | undefined>,
   setIsScreenOn: (params: boolean) => void,
@@ -16,11 +16,11 @@ export const screenShare = async (
     });
 
     // * 화면 공유 켜졌을 때
-    if (streamRef.current && videoRef.current) {
-      peer?.replaceTrack(
-        streamRef.current.getVideoTracks()[0],
+    if (stream && videoRef.current) {
+      peerRef.current?.replaceTrack(
+        stream.getVideoTracks()[0],
         screenStream.getVideoTracks()[0],
-        streamRef.current,
+        stream,
       );
       videoRef.current.srcObject = screenStream;
       setIsScreenOn(true);
@@ -29,13 +29,13 @@ export const screenShare = async (
 
     // * 화면 공유 꺼졌을 때
     screenStream.getTracks()[0].onended = () => {
-      if (streamRef.current && videoRef.current) {
-        peer?.replaceTrack(
+      if (stream && videoRef.current) {
+        peerRef.current?.replaceTrack(
           screenStream.getVideoTracks()[0],
-          streamRef.current.getVideoTracks()[0],
-          streamRef.current,
+          stream.getVideoTracks()[0],
+          stream,
         );
-        videoRef.current.srcObject = streamRef.current;
+        videoRef.current.srcObject = stream;
         setIsScreenOn(false);
         screenStreamRef.current = undefined;
       }
@@ -47,20 +47,20 @@ export const screenShare = async (
 
 //*- 화면 공유 끄기
 export const offScreen = (
-  peer: Peer.Instance | undefined,
-  streamRef: MutableRefObject<MediaStream | undefined>,
+  peerRef: MutableRefObject<Peer.Instance | undefined>,
+  stream: MediaStream | undefined,
   videoRef: MutableRefObject<HTMLVideoElement | null>,
   screenStreamRef: MutableRefObject<MediaStream | undefined>,
   setIsScreenOn: (params: boolean) => void,
 ) => {
-  if (streamRef.current && videoRef.current && screenStreamRef.current) {
-    peer?.replaceTrack(
+  if (stream && videoRef.current && screenStreamRef.current) {
+    peerRef.current?.replaceTrack(
       screenStreamRef.current.getVideoTracks()[0],
-      streamRef.current.getVideoTracks()[0],
-      streamRef.current,
+      stream.getVideoTracks()[0],
+      stream,
     );
     screenStreamRef.current.getTracks()[0].stop();
-    videoRef.current.srcObject = streamRef.current;
+    videoRef.current.srcObject = stream;
     setIsScreenOn(false);
     screenStreamRef.current = undefined;
   }

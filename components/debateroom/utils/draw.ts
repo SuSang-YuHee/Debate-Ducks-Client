@@ -78,7 +78,7 @@ const resize = (screen: HTMLVideoElement) => {
 //*- 내용 표시
 export const drawContents = (
   canvasRef: MutableRefObject<HTMLCanvasElement | null>,
-  peer: Peer.Instance | undefined,
+  peerRef: MutableRefObject<Peer.Instance | undefined>,
   videoRef: MutableRefObject<HTMLVideoElement | null>,
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
   isVideoOn: boolean,
@@ -128,7 +128,7 @@ export const drawContents = (
       canvasRef,
       color.white,
       "bold 32px san-serif",
-      peer ? "Camera Off" : isPros ? "Camera Off" : "Not connected",
+      peerRef.current ? "Camera Off" : isPros ? "Camera Off" : "Not connected",
       300,
       380,
     );
@@ -148,7 +148,7 @@ export const drawContents = (
       canvasRef,
       color.white,
       "bold 32px san-serif",
-      peer ? "Camera Off" : !isPros ? "Camera Off" : "Not connected",
+      peerRef.current ? "Camera Off" : !isPros ? "Camera Off" : "Not connected",
       980,
       380,
     );

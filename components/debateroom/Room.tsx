@@ -25,15 +25,15 @@ interface IRoomProps {
 export default function Room({ debateId, socket }: IRoomProps) {
   //*- WebRTC 변수
   const [reConnect, setReconnect] = useState<boolean>(false);
-  const [peer, setPeer] = useState<Peer.Instance | undefined>();
+  const peerRef = useRef<Peer.Instance | undefined>();
   //*- 캔버스 변수
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   //*- 녹화 변수
   const recorderRef = useRef<MediaRecorder | undefined>();
   const downRef = useRef<HTMLAnchorElement | null>(null);
   //*- 스트림 변수
-  const streamRef = useRef<MediaStream | undefined>();
-  const peerStreamRef = useRef<MediaStream | undefined>();
+  const [stream, setStream] = useState<MediaStream | undefined>();
+  const [peerStream, setPeerStream] = useState<MediaStream | undefined>();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const peerVideoRef = useRef<HTMLVideoElement | null>(null);
   const screenStreamRef = useRef<MediaStream | undefined>();
@@ -75,10 +75,10 @@ export default function Room({ debateId, socket }: IRoomProps) {
     wsConnect(
       debateId,
       socket,
-      setPeer,
+      peerRef,
       canvasRef,
-      streamRef,
-      peerStreamRef,
+      setStream,
+      setPeerStream,
       videoRef,
       peerVideoRef,
       setIsPeerVideoOn,
@@ -95,25 +95,24 @@ export default function Room({ debateId, socket }: IRoomProps) {
       socket,
       reConnect,
       setReconnect,
-      peer,
-      setPeer,
-      peerStreamRef,
+      peerRef,
+      setPeerStream,
       peerVideoRef,
       screenStreamRef,
       setIsPeerVideoOn,
       setIsScreenOn,
       setIsPeerScreenOn,
     );
-  }, [debateId, socket, reConnect, peer]);
+  }, [debateId, socket, reConnect]);
 
   //*- 정보 송신
   useEffect(() => {
-    wsTransmitVideo(debateId, socket, peer, isVideoOn);
-  }, [debateId, socket, peer, isVideoOn]);
+    wsTransmitVideo(debateId, socket, peerRef, isVideoOn);
+  }, [debateId, socket, isVideoOn]);
 
   useEffect(() => {
-    wsTransmitScreen(debateId, socket, peer, isScreenOn);
-  }, [debateId, socket, peer, isScreenOn]);
+    wsTransmitScreen(debateId, socket, peerRef, isScreenOn);
+  }, [debateId, socket, isScreenOn]);
 
   useEffect(() => {
     wsTransmitReady(debateId, socket, isReady, isPros);
@@ -124,30 +123,30 @@ export default function Room({ debateId, socket }: IRoomProps) {
     if (turn === "none") {
     } else if (isPros) {
       if (turn === "pros" || turn === "prosCross") {
-        toggleMic(streamRef, true, setIsMicOn);
+        toggleMic(stream, true, setIsMicOn);
       } else {
-        toggleMic(streamRef, false, setIsMicOn);
+        toggleMic(stream, false, setIsMicOn);
       }
     } else {
       if (turn === "cons" || turn === "consCross") {
-        toggleMic(streamRef, true, setIsMicOn);
+        toggleMic(stream, true, setIsMicOn);
       } else {
-        toggleMic(streamRef, false, setIsMicOn);
+        toggleMic(stream, false, setIsMicOn);
       }
     }
-    offScreen(peer, streamRef, videoRef, screenStreamRef, setIsScreenOn);
-  }, [peer, turn, isPros]);
+    offScreen(peerRef, stream, videoRef, screenStreamRef, setIsScreenOn);
+  }, [stream, turn, isPros]);
 
   //*- 상대 화면 공유 시 화면 공유 끄기
   useEffect(() => {
     if (isPeerScreenOn)
-      offScreen(peer, streamRef, videoRef, screenStreamRef, setIsScreenOn);
-  }, [peer, isPeerScreenOn]);
+      offScreen(peerRef, stream, videoRef, screenStreamRef, setIsScreenOn);
+  }, [stream, isPeerScreenOn]);
 
-  //*- 첫 입장 시 비디오 끄기
+  //*- 첫 연결 시 비디오 끄기
   useEffect(() => {
-    toggleVideo(streamRef, false, setIsMicOn);
-  }, []);
+    toggleVideo(stream, false, setIsMicOn);
+  }, [stream]);
 
   return (
     <div>
@@ -171,7 +170,7 @@ export default function Room({ debateId, socket }: IRoomProps) {
         style={{ position: "sticky", top: 0 }}
       ></video>
       <Canvas
-        peer={peer}
+        peerRef={peerRef}
         canvasRef={canvasRef}
         recorderRef={recorderRef}
         downRef={downRef}
@@ -187,8 +186,8 @@ export default function Room({ debateId, socket }: IRoomProps) {
       <Buttons
         debateId={debateId}
         socket={socket}
-        peer={peer}
-        streamRef={streamRef}
+        peerRef={peerRef}
+        stream={stream}
         videoRef={videoRef}
         screenStreamRef={screenStreamRef}
         isMicOn={isMicOn}
