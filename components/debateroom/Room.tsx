@@ -121,7 +121,8 @@ export default function Room({ debateId, socket }: IRoomProps) {
 
   //*- 턴 전환 시 오디오 및 화면 공유 끄기
   useEffect(() => {
-    if (isPros) {
+    if (turn === "none") {
+    } else if (isPros) {
       if (turn === "pros" || turn === "prosCross") {
         toggleMic(streamRef, true, setIsMicOn);
       } else {
