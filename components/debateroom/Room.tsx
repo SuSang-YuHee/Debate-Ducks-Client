@@ -108,7 +108,7 @@ export default function Room({ debateId, socket }: IRoomProps) {
   //*- 정보 송신
   useEffect(() => {
     wsTransmitVideo(debateId, socket, peerRef, isVideoOn);
-  }, [debateId, socket, isVideoOn]);
+  }, [debateId, socket, peerStream, isVideoOn]);
 
   useEffect(() => {
     wsTransmitScreen(debateId, socket, peerRef, isScreenOn);
@@ -142,6 +142,16 @@ export default function Room({ debateId, socket }: IRoomProps) {
     if (isPeerScreenOn)
       offScreen(peerRef, stream, videoRef, screenStreamRef, setIsScreenOn);
   }, [stream, isPeerScreenOn]);
+
+  //*- 재연결 시 화면 공유 끄기
+  useEffect(() => {
+    if (stream && videoRef.current && screenStreamRef.current) {
+      screenStreamRef.current.getTracks()[0].stop();
+      videoRef.current.srcObject = stream;
+      setIsScreenOn(false);
+      screenStreamRef.current = undefined;
+    }
+  }, [stream, peerStream]);
 
   return (
     <div>

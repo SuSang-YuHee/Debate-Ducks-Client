@@ -15,31 +15,49 @@ export const screenShare = async (
       audio: false,
     });
 
-    // * 화면 공유 켜졌을 때
-    if (stream && videoRef.current) {
-      peerRef.current?.replaceTrack(
-        stream.getVideoTracks()[0],
-        screenStream.getVideoTracks()[0],
-        stream,
-      );
-      videoRef.current.srcObject = screenStream;
-      setIsScreenOn(true);
-      screenStreamRef.current = screenStream;
-    }
-
-    // * 화면 공유 꺼졌을 때
-    screenStream.getTracks()[0].onended = () => {
+    // * Peer가 있을 때
+    if (peerRef.current) {
+      // ** 화면 공유 켜졌을 때
       if (stream && videoRef.current) {
-        peerRef.current?.replaceTrack(
-          screenStream.getVideoTracks()[0],
+        peerRef.current.replaceTrack(
           stream.getVideoTracks()[0],
+          screenStream.getVideoTracks()[0],
           stream,
         );
-        videoRef.current.srcObject = stream;
-        setIsScreenOn(false);
-        screenStreamRef.current = undefined;
+        videoRef.current.srcObject = screenStream;
+        setIsScreenOn(true);
+        screenStreamRef.current = screenStream;
       }
-    };
+      // ** 화면 공유 꺼졌을 때
+      screenStream.getTracks()[0].onended = () => {
+        if (stream && videoRef.current) {
+          peerRef.current?.replaceTrack(
+            screenStream.getVideoTracks()[0],
+            stream.getVideoTracks()[0],
+            stream,
+          );
+          videoRef.current.srcObject = stream;
+          setIsScreenOn(false);
+          screenStreamRef.current = undefined;
+        }
+      };
+      // * Peer가 없을 때
+    } else {
+      // ** 화면 공유 켜졌을 때
+      if (stream && videoRef.current) {
+        videoRef.current.srcObject = screenStream;
+        setIsScreenOn(true);
+        screenStreamRef.current = screenStream;
+      }
+      // ** 화면 공유 꺼졌을 때
+      screenStream.getTracks()[0].onended = () => {
+        if (stream && videoRef.current) {
+          videoRef.current.srcObject = stream;
+          setIsScreenOn(false);
+          screenStreamRef.current = undefined;
+        }
+      };
+    }
   } catch (err) {
     console.log(err);
   }
