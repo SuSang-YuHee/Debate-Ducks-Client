@@ -11,9 +11,6 @@ export interface IDebateroomProps {
   peerRef: MutableRefObject<Peer.Instance | undefined>;
   //*- 캔버스 타입
   canvasRef: MutableRefObject<HTMLCanvasElement | null>;
-  //*- 녹화 타입
-  recorderRef: MutableRefObject<MediaRecorder | undefined>;
-  downRef: MutableRefObject<HTMLAnchorElement | null>;
   //*- 스트림 타입
   stream: MediaStream | undefined;
   setStream: (params: MediaStream | undefined) => void;
@@ -43,6 +40,13 @@ export interface IDebateroomProps {
       "none" | "notice" | "pros" | "cons" | "prosCross" | "consCross"
     >
   >;
+  //*- 녹화 타입
+  isRecorder: boolean;
+  setIsRecorder: (params: boolean) => void;
+  mergedAudioTracks: MediaStreamTrack[];
+  setMergedAudioTracks: (params: MediaStreamTrack[]) => void;
+  recorderRef: MutableRefObject<MediaRecorder | undefined>;
+
   //! 임시 타입
   dummy: IDummy;
   isPros: boolean;

@@ -22,6 +22,7 @@ export const wsConnect = async (
   setTurn: (
     params: "none" | "notice" | "pros" | "cons" | "prosCross" | "consCross",
   ) => void,
+  setIsRecorder: (params: boolean) => void,
   topic: string,
 ) => {
   if (debateId && socket.current) {
@@ -90,13 +91,21 @@ export const wsConnect = async (
         | "cons"
         | "prosCross"
         | "consCross" = "notice";
-      if (debateData.turn === 1 || debateData.turn === 5) turn = "pros";
-      if (debateData.turn === 3 || debateData.turn === 6) turn = "cons";
-      if (debateData.turn === 4) turn = "prosCross";
-      if (debateData.turn === 2) turn = "consCross";
-      setTurn(turn);
-      drawNotice(canvasRef, debateData, topic, turn);
-      if (debateData.timer === 10 || debateData.timer === 3) beep();
+      if (debateData.turn === 7 && debateData.timer < 0) {
+        socket.current?.emit("debateDone", { debateId });
+      } else {
+        if (debateData.turn === 1 || debateData.turn === 5) turn = "pros";
+        if (debateData.turn === 3 || debateData.turn === 6) turn = "cons";
+        if (debateData.turn === 4) turn = "prosCross";
+        if (debateData.turn === 2) turn = "consCross";
+        setTurn(turn);
+        drawNotice(canvasRef, debateData, topic, turn);
+        if (debateData.timer === 10 || debateData.timer === 3) beep();
+      }
+    });
+
+    socket.current.on("recorder", () => {
+      setIsRecorder(true);
     });
 
     // * 기본 공지
@@ -139,10 +148,10 @@ export const wsDisconnect = (
     setPeerStream(undefined);
     if (peerVideoRef.current) peerVideoRef.current.srcObject = null;
     setIsPeerVideoOn(false);
-    setIsScreenOn(false);
     setIsPeerScreenOn(false);
 
     // * 화면 공유 끄기
+    setIsScreenOn(false);
     if (screenStreamRef.current) {
       screenStreamRef.current.getTracks()[0].stop();
     }
@@ -178,7 +187,6 @@ export const wsTransmitReady = (
   isReady: boolean,
   isPros: boolean,
 ) => {
-  console.log("??");
   socket.current?.emit("ready", { debateId, isReady, isPros });
 };
 
