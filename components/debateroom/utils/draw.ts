@@ -189,7 +189,7 @@ export const drawNotice = (
   const notice =
     debateData.turn === 0
       ? `${topic} ( ${debateData.timer}초 후 시작 )`
-      : debateData.timer < 1
+      : debateData.timer < 1 || debateData.turn === 7
       ? debateData.notice
       : `${debateData.notice} ( ${debateData.timer}초 )`;
   let bgColor = color.black;
