@@ -5,6 +5,7 @@ import Peer from "simple-peer";
 export interface IDebateroomProps {
   debateId: string | string[] | undefined;
   socket: MutableRefObject<Socket | undefined>;
+  isPros: boolean; //! 임시 타입
   //*- WebRTC 타입
   reConnect: boolean;
   setReconnect: (params: boolean) => void;
@@ -49,7 +50,6 @@ export interface IDebateroomProps {
 
   //! 임시 타입
   dummy: IDummy;
-  isPros: boolean;
 }
 
 //! 임시 타입

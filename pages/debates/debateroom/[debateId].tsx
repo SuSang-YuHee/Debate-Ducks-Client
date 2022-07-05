@@ -6,12 +6,18 @@ import Room from "../../../components/debateroom/Room";
 
 export default function Debateroom() {
   const router = useRouter();
-  const { debateId } = router.query;
+  const { debateId, isPros } = router.query; //!
   const socketRef = useRef<Socket>();
 
   useEffect(() => {
     socketRef.current = io(`${process.env.NEXT_PUBLIC_API_URL}`);
   }, []);
 
-  return <Room debateId={debateId} socket={socketRef} />;
+  return (
+    <Room
+      debateId={debateId}
+      socket={socketRef}
+      isPros={isPros === "true" ? true : false} //!
+    />
+  );
 }

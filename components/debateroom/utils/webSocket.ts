@@ -184,8 +184,8 @@ export const wsTransmitScreen = (
 export const wsTransmitReady = (
   debateId: string | string[] | undefined,
   socket: MutableRefObject<Socket | undefined>,
-  isReady: boolean,
   isPros: boolean,
+  isReady: boolean,
 ) => {
   socket.current?.emit("ready", { debateId, isReady, isPros });
 };

@@ -22,9 +22,10 @@ import { IDummy } from "./types";
 interface IRoomProps {
   debateId: string | string[] | undefined;
   socket: MutableRefObject<Socket | undefined>;
+  isPros: boolean; //!
 }
 
-export default function Room({ debateId, socket }: IRoomProps) {
+export default function Room({ debateId, socket, isPros }: IRoomProps) {
   //*- WebRTC 변수
   const [reConnect, setReconnect] = useState<boolean>(false);
   const peerRef = useRef<Peer.Instance | undefined>();
@@ -60,7 +61,6 @@ export default function Room({ debateId, socket }: IRoomProps) {
     prosName: "이찬성",
     consName: "반대중",
   });
-  const [isPros, setIsPros] = useState(true);
   const testARef = useRef<HTMLAnchorElement | null>(null);
   const testBlobsRef = useRef<Blob[]>([]);
 
@@ -135,8 +135,9 @@ export default function Room({ debateId, socket }: IRoomProps) {
   //*- 끄기/켜기 처리
   // * 턴 전환 시 오디오 및 화면 공유 끄기
   useEffect(() => {
-    if (turn === "none") {
-    } else if (isPros) {
+    if (turn === "none") return;
+
+    if (isPros) {
       if (turn === "pros" || turn === "prosCross") {
         toggleMic(stream, true, setIsMicOn);
       } else {
@@ -212,6 +213,7 @@ export default function Room({ debateId, socket }: IRoomProps) {
         style={{ position: "sticky", top: 0 }}
       ></video>
       <Canvas
+        isPros={isPros}
         peerRef={peerRef}
         canvasRef={canvasRef}
         videoRef={videoRef}
@@ -221,11 +223,11 @@ export default function Room({ debateId, socket }: IRoomProps) {
         isScreenOn={isScreenOn}
         isPeerScreenOn={isPeerScreenOn}
         dummy={dummy}
-        isPros={isPros}
       />
       <Buttons
         debateId={debateId}
         socket={socket}
+        isPros={isPros}
         peerRef={peerRef}
         stream={stream}
         videoRef={videoRef}
@@ -240,11 +242,7 @@ export default function Room({ debateId, socket }: IRoomProps) {
         setIsReady={setIsReady}
         isStart={isStart}
         turn={turn}
-        isPros={isPros}
       />
-      <button onClick={() => setIsPros(!isPros)}>
-        {isPros ? "Now pros" : "Now cons"}
-      </button>
       {isStart ? "start" : "waiting"}
       <a ref={testARef} download={dummy.topic} />
       <button onClick={download}>Down</button>

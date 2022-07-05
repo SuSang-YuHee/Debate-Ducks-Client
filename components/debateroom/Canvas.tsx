@@ -6,6 +6,7 @@ import { useSetInterval } from "../debateroom/utils/useSetInterval";
 import { IDebateroomProps } from "./types";
 
 export default function Canvas({
+  isPros,
   peerRef,
   canvasRef,
   videoRef,
@@ -15,9 +16,9 @@ export default function Canvas({
   isScreenOn,
   isPeerScreenOn,
   dummy,
-  isPros,
 }: Pick<
   IDebateroomProps,
+  | "isPros"
   | "peerRef"
   | "canvasRef"
   | "videoRef"
@@ -27,11 +28,11 @@ export default function Canvas({
   | "isScreenOn"
   | "isPeerScreenOn"
   | "dummy"
-  | "isPros"
 >) {
   const [drawStart, drawStop] = useSetInterval(
     () =>
       drawContents(
+        isPros,
         canvasRef,
         peerRef,
         videoRef,
@@ -41,7 +42,6 @@ export default function Canvas({
         isScreenOn,
         isPeerScreenOn,
         dummy,
-        isPros,
       ),
     1000 / 30,
   );

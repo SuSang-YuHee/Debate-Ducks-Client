@@ -7,6 +7,7 @@ import { IDebateroomProps } from "./types";
 export default function Buttons({
   debateId,
   socket,
+  isPros,
   peerRef,
   stream,
   videoRef,
@@ -21,11 +22,11 @@ export default function Buttons({
   setIsReady,
   isStart,
   turn,
-  isPros,
 }: Pick<
   IDebateroomProps,
   | "debateId"
   | "socket"
+  | "isPros"
   | "peerRef"
   | "stream"
   | "videoRef"
@@ -40,7 +41,6 @@ export default function Buttons({
   | "setIsReady"
   | "isStart"
   | "turn"
-  | "isPros"
 >) {
   const checkAudioDisable = () => {
     if (turn === "notice") return true;

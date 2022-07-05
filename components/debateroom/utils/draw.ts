@@ -77,6 +77,7 @@ const resize = (screen: HTMLVideoElement) => {
 
 //*- 내용 표시
 export const drawContents = (
+  isPros: boolean,
   canvasRef: MutableRefObject<HTMLCanvasElement | null>,
   peerRef: MutableRefObject<Peer.Instance | undefined>,
   videoRef: MutableRefObject<HTMLVideoElement | null>,
@@ -86,7 +87,6 @@ export const drawContents = (
   isScreenOn: boolean,
   isPeerScreenOn: boolean,
   dummy: IDummy,
-  isPros: boolean,
 ) => {
   // * Common Bg
   drawSquare(canvasRef, color.white, 0, 80, 1280, 640);
