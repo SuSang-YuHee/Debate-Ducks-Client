@@ -10,6 +10,7 @@ import { beep } from "./beep";
 export const wsConnect = async (
   debateId: string | string[] | undefined,
   socket: MutableRefObject<Socket | undefined>,
+  isPros: boolean,
   peerRef: MutableRefObject<Peer.Instance | undefined>,
   canvasRef: MutableRefObject<HTMLCanvasElement | null>,
   setStream: (params: MediaStream | undefined) => void,
@@ -39,7 +40,7 @@ export const wsConnect = async (
     }
 
     // * 방 입장
-    socket.current.emit("join", { debateId });
+    socket.current.emit("join", { debateId, isPros });
 
     // * 방 입장 거절
     socket.current.on("overcapacity", () => {

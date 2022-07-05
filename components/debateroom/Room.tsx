@@ -74,6 +74,7 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
     wsConnect(
       debateId,
       socket,
+      isPros,
       peerRef,
       canvasRef,
       setStream,
@@ -101,7 +102,7 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
       console.log(url);
       if (testARef.current) testARef.current.href = url;
     });
-  }, [debateId, socket, reConnect, dummy.topic]);
+  }, [debateId, socket, isPros, reConnect, dummy.topic]);
 
   //*- Socket and WebRTC 연결 해제
   useEffect(() => {
@@ -129,8 +130,8 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
   }, [debateId, socket, isScreenOn]);
 
   useEffect(() => {
-    wsTransmitReady(debateId, socket, isReady, isPros);
-  }, [debateId, socket, isReady, isPros]);
+    wsTransmitReady(debateId, socket, isPros, isReady);
+  }, [debateId, socket, isPros, isReady]);
 
   //*- 끄기/켜기 처리
   // * 턴 전환 시 오디오 및 화면 공유 끄기
