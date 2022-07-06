@@ -11,8 +11,6 @@ import {
   wsTransmitScreen,
   wsTransmitReady,
 } from "./utils/webSocket";
-import { mergeAudioTracks } from "./utils/mergeAudioTracks";
-import { record } from "./utils/record";
 
 import Canvas from "./Canvas";
 import Buttons from "./Buttons";
@@ -48,12 +46,6 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
   const [turn, setTurn] = useState<
     "none" | "notice" | "pros" | "cons" | "prosCross" | "consCross"
   >("none");
-  //*- 녹화 변수
-  const [isRecorder, setIsRecorder] = useState<boolean>(false);
-  const [mergedAudioTracks, setMergedAudioTracks] = useState<
-    MediaStreamTrack[] | undefined
-  >();
-  const recorderRef = useRef<MediaRecorder | undefined>();
 
   //! 임시 변수
   const [dummy] = useState<IDummy>({
@@ -61,13 +53,6 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
     prosName: "이찬성",
     consName: "반대중",
   });
-  const testARef = useRef<HTMLAnchorElement | null>(null);
-  const testBlobsRef = useRef<Blob[]>([]);
-
-  //! 임시 함수
-  function download() {
-    testARef.current?.click();
-  }
 
   //*- Socket and WebRTC 연결
   useEffect(() => {
@@ -85,23 +70,8 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
       setIsPeerScreenOn,
       setIsStart,
       setTurn,
-      setIsRecorder,
       dummy.topic,
     );
-    //! 임시 이벤트
-    socket.current?.on("testDown", (blob: Blob) => {
-      console.log(blob);
-      testBlobsRef.current.push(blob);
-    });
-    socket.current?.on("testDown2", async () => {
-      const mergedBlob = await new Blob(testBlobsRef.current, {
-        type: "video/webm",
-      });
-      console.log(mergedBlob);
-      const url = window.URL.createObjectURL(mergedBlob);
-      console.log(url);
-      if (testARef.current) testARef.current.href = url;
-    });
   }, [debateId, socket, isPros, reConnect, dummy.topic]);
 
   //*- Socket and WebRTC 연결 해제
@@ -170,29 +140,6 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
     }
   }, [stream, peerStream]);
 
-  //*- 녹화
-  // * 오디오 합치기
-  useEffect(() => {
-    mergeAudioTracks(stream, peerStream, setMergedAudioTracks);
-  }, [stream, peerStream]);
-
-  // * 녹화 준비
-  useEffect(() => {
-    record(debateId, socket, canvasRef, mergedAudioTracks, recorderRef);
-  }, [debateId, socket, mergedAudioTracks]);
-
-  // * 녹화 시작
-  useEffect(() => {
-    if (isStart && isRecorder) {
-      recorderRef.current?.start(1000 / 30);
-      socket.current?.on("recordDone", () => {
-        if (recorderRef.current?.state === "recording") {
-          recorderRef.current?.stop();
-        }
-      });
-    }
-  }, [socket, isStart, mergedAudioTracks, isRecorder]);
-
   return (
     <div>
       <h1>Room</h1>
@@ -245,8 +192,6 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
         turn={turn}
       />
       {isStart ? "start" : "waiting"}
-      <a ref={testARef} download={dummy.topic} />
-      <button onClick={download}>Down</button>
     </div>
   );
 }

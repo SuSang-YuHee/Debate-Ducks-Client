@@ -23,7 +23,6 @@ export const wsConnect = async (
   setTurn: (
     params: "none" | "notice" | "pros" | "cons" | "prosCross" | "consCross",
   ) => void,
-  setIsRecorder: (params: boolean) => void,
   topic: string,
 ) => {
   if (debateId && socket.current) {
@@ -103,10 +102,6 @@ export const wsConnect = async (
         drawNotice(canvasRef, debateData, topic, turn);
         if (debateData.timer === 10 || debateData.timer === 1) beep();
       }
-    });
-
-    socket.current.on("recorder", () => {
-      setIsRecorder(true);
     });
 
     // * 기본 공지

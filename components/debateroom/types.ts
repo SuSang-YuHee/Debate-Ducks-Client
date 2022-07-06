@@ -41,12 +41,6 @@ export interface IDebateroomProps {
       "none" | "notice" | "pros" | "cons" | "prosCross" | "consCross"
     >
   >;
-  //*- 녹화 타입
-  isRecorder: boolean;
-  setIsRecorder: (params: boolean) => void;
-  mergedAudioTracks: MediaStreamTrack[];
-  setMergedAudioTracks: (params: MediaStreamTrack[]) => void;
-  recorderRef: MutableRefObject<MediaRecorder | undefined>;
 
   //! 임시 타입
   dummy: IDummy;
