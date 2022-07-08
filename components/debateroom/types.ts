@@ -2,17 +2,17 @@ import { Dispatch, MutableRefObject, SetStateAction } from "react";
 import { Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
-export interface IDebateroomProps {
+export interface IDebateroom {
   debateId: string | string[] | undefined;
   socket: MutableRefObject<Socket | undefined>;
   isPros: boolean; //! 임시 타입
-  //*- WebRTC 타입
+  // * WebRTC 타입
   reConnect: boolean;
   setReconnect: (params: boolean) => void;
   peerRef: MutableRefObject<Peer.Instance | undefined>;
-  //*- 캔버스 타입
+  // * 캔버스 타입
   canvasRef: MutableRefObject<HTMLCanvasElement | null>;
-  //*- 스트림 타입
+  // * 스트림 타입
   stream: MediaStream | undefined;
   setStream: (params: MediaStream | undefined) => void;
   peerStream: MediaStream | undefined;
@@ -20,6 +20,7 @@ export interface IDebateroomProps {
   videoRef: MutableRefObject<HTMLVideoElement | null>;
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>;
   screenStreamRef: MutableRefObject<MediaStream | undefined>;
+  // * 토글 타입
   isMicOn: boolean;
   setIsMicOn: (params: boolean) => void;
   isVideoOn: boolean;
@@ -30,13 +31,13 @@ export interface IDebateroomProps {
   setIsScreenOn: (params: boolean) => void;
   isPeerScreenOn: boolean;
   setIsPeerScreenOn: (params: boolean) => void;
-  //*- 토론 타입
   isReady: boolean;
   setIsReady: (params: boolean) => void;
+  // * 토론 타입
   isStart: boolean;
   setIsStart: (params: boolean) => void;
   turn: "none" | "notice" | "pros" | "cons" | "prosCross" | "consCross";
-  setIsTurn: Dispatch<
+  setTurn: Dispatch<
     SetStateAction<
       "none" | "notice" | "pros" | "cons" | "prosCross" | "consCross"
     >
@@ -46,7 +47,12 @@ export interface IDebateroomProps {
   dummy: IDummy;
 }
 
-//! 임시 타입
+export interface IDebateData {
+  notice: string;
+  turn: number;
+  timer: number;
+}
+
 export interface IDummy {
   topic: string;
   prosName: string;

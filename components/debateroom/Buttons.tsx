@@ -1,8 +1,8 @@
 import { screenShare } from "./utils/screenShare";
 import { toggleMic, toggleReady, toggleVideo } from "./utils/toggle";
-import { wsTransmitSkip } from "./utils/webSocket";
+import { wsTransmitSkip } from "./utils/useWebSocket";
 
-import { IDebateroomProps } from "./types";
+import { IDebateroom } from "./types";
 
 export default function Buttons({
   debateId,
@@ -23,7 +23,7 @@ export default function Buttons({
   isStart,
   turn,
 }: Pick<
-  IDebateroomProps,
+  IDebateroom,
   | "debateId"
   | "socket"
   | "isPros"
@@ -61,23 +61,29 @@ export default function Buttons({
       {checkAudioDisable() ? (
         "AudioOff"
       ) : (
-        <button onClick={() => toggleMic(stream, !isMicOn, setIsMicOn)}>
+        <button
+          onClick={() => toggleMic({ stream, isMicOn: !isMicOn, setIsMicOn })}
+        >
           {isMicOn ? "AudioOn" : "AudioOff"}
         </button>
       )}
-      <button onClick={() => toggleVideo(stream, !isVideoOn, setIsVideoOn)}>
+      <button
+        onClick={() =>
+          toggleVideo({ stream, isVideoOn: !isVideoOn, setIsVideoOn })
+        }
+      >
         {isVideoOn ? "VideoOn" : "VideoOff"}
       </button>
       {checkScreenDisable() ? null : (
         <button
           onClick={() =>
-            screenShare(
+            screenShare({
               peerRef,
               stream,
               videoRef,
               screenStreamRef,
               setIsScreenOn,
-            )
+            })
           }
         >
           ScreenShare
@@ -86,7 +92,7 @@ export default function Buttons({
       {isStart ? (
         <button
           onClick={() => {
-            wsTransmitSkip(debateId, socket, isPros);
+            wsTransmitSkip({ debateId, socket, isPros });
           }}
         >
           Skip Turn
@@ -94,7 +100,7 @@ export default function Buttons({
       ) : (
         <button
           onClick={() => {
-            toggleReady(!isReady, setIsReady);
+            toggleReady({ isReady: !isReady, setIsReady });
           }}
         >
           {isReady ? "Cancel" : "Ready"}

@@ -15,5 +15,6 @@ export const useSetInterval = (callback: () => void, ms: number) => {
     clearInterval(intervalRef.current);
     intervalRef.current = null;
   }, []);
+
   return [start, stop];
 };

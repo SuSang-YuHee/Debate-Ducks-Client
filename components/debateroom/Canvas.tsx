@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { drawContents } from "../debateroom/utils/draw";
 import { useSetInterval } from "../debateroom/utils/useSetInterval";
 
-import { IDebateroomProps } from "./types";
+import { IDebateroom } from "./types";
 
 export default function Canvas({
   isPros,
@@ -17,7 +17,7 @@ export default function Canvas({
   isPeerScreenOn,
   dummy,
 }: Pick<
-  IDebateroomProps,
+  IDebateroom,
   | "isPros"
   | "peerRef"
   | "canvasRef"
@@ -31,7 +31,7 @@ export default function Canvas({
 >) {
   const [drawStart, drawStop] = useSetInterval(
     () =>
-      drawContents(
+      drawContents({
         isPros,
         canvasRef,
         peerRef,
@@ -42,11 +42,10 @@ export default function Canvas({
         isScreenOn,
         isPeerScreenOn,
         dummy,
-      ),
+      }),
     1000 / 30,
   );
 
-  //*- 내용 표시
   useEffect(() => {
     drawStop();
     drawStart();
@@ -66,7 +65,7 @@ export default function Canvas({
         ref={canvasRef}
         width="1280px"
         height="720px"
-        style={{ border: "2px solid red", width: "100vw" }} //!
+        style={{ border: "2px solid red", width: "100vw" }} //! 임시 스타일
       ></canvas>
     </div>
   );

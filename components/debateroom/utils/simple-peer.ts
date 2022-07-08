@@ -1,15 +1,23 @@
-import { MutableRefObject } from "react";
-import { Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
-export const connectHostPeer = (
-  debateId: string | string[],
-  socket: MutableRefObject<Socket | undefined>,
-  peerRef: MutableRefObject<Peer.Instance | undefined>,
-  stream: MediaStream | undefined,
-  setPeerStream: (params: MediaStream | undefined) => void,
-  peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
-) => {
+import { IDebateroom } from "../types";
+
+export const connectHostPeer = ({
+  debateId,
+  socket,
+  peerRef,
+  stream,
+  setPeerStream,
+  peerVideoRef,
+}: Pick<
+  IDebateroom,
+  | "debateId"
+  | "socket"
+  | "peerRef"
+  | "stream"
+  | "setPeerStream"
+  | "peerVideoRef"
+>) => {
   const simplePeer = new Peer({
     initiator: true,
     trickle: false,
@@ -49,12 +57,22 @@ export const connectHostPeer = (
 };
 
 export const connectGuestPeer = (
-  debateId: string | string[],
-  socket: MutableRefObject<Socket | undefined>,
-  peerRef: MutableRefObject<Peer.Instance | undefined>,
-  stream: MediaStream | undefined,
-  setPeerStream: (params: MediaStream | undefined) => void,
-  peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
+  {
+    debateId,
+    socket,
+    peerRef,
+    stream,
+    setPeerStream,
+    peerVideoRef,
+  }: Pick<
+    IDebateroom,
+    | "debateId"
+    | "socket"
+    | "peerRef"
+    | "stream"
+    | "setPeerStream"
+    | "peerVideoRef"
+  >,
   signal: Peer.SignalData,
 ) => {
   const simplePeer = new Peer({
