@@ -18,29 +18,30 @@ interface IRoomProps {
 }
 
 export default function Room({ debateId, socket, isPros }: IRoomProps) {
-  // * WebRTC 변수
+  //* WebRTC 변수
   const [reConnect, setReconnect] = useState<boolean>(false);
   const peerRef = useRef<Peer.Instance | undefined>();
-  // * 캔버스 변수
+  //* 캔버스 변수
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  // * 스트림 변수
+  //* 스트림 변수
   const [stream, setStream] = useState<MediaStream | undefined>();
   const [peerStream, setPeerStream] = useState<MediaStream | undefined>();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const peerVideoRef = useRef<HTMLVideoElement | null>(null);
   const screenStreamRef = useRef<MediaStream | undefined>();
-  // * 토글 변수
+  //* 토글 변수
   const [isMicOn, setIsMicOn] = useState<boolean>(true);
   const [isVideoOn, setIsVideoOn] = useState<boolean>(false);
   const [isPeerVideoOn, setIsPeerVideoOn] = useState<boolean>(false);
   const [isScreenOn, setIsScreenOn] = useState<boolean>(false);
   const [isPeerScreenOn, setIsPeerScreenOn] = useState<boolean>(false);
   const [isReady, setIsReady] = useState<boolean>(false);
-  // * 토론 변수
+  //* 토론 변수
   const [isStart, setIsStart] = useState<boolean>(false);
   const [turn, setTurn] = useState<
     "none" | "notice" | "pros" | "cons" | "prosCross" | "consCross"
   >("none");
+  //* 녹화 변수
 
   //! 임시 변수
   const [dummy] = useState<IDummy>({

@@ -16,7 +16,7 @@ export const screenShare = async ({
       audio: false,
     });
 
-    // * 화면 공유 켜졌을 때
+    //* 화면 공유 켜졌을 때
     if (!stream || !videoRef.current) return;
 
     peerRef.current?.replaceTrack(
@@ -29,7 +29,7 @@ export const screenShare = async ({
     setIsScreenOn(true);
     screenStreamRef.current = screenStream;
 
-    // * 화면 공유 꺼졌을 때
+    //* 화면 공유 꺼졌을 때
     screenStream.getTracks()[0].onended = () => {
       if (!stream || !videoRef.current) return;
 

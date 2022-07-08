@@ -101,7 +101,7 @@ export const useWebSocket = ({
         });
       });
 
-    // * 정보 수신
+    //* 정보 수신
     socket.current?.on("peerVideo", (isPeerVideoOn: boolean) => {
       setIsPeerVideoOn(isPeerVideoOn);
     });
@@ -114,7 +114,7 @@ export const useWebSocket = ({
       setIsStart(true);
     });
 
-    // * 최초 공지
+    //* 최초 공지
     drawNotice(
       { canvasRef, turn: "none" },
       {
@@ -125,7 +125,7 @@ export const useWebSocket = ({
       dummy.topic,
     );
 
-    // * 토론 진행 및 공지
+    //* 토론 진행 및 공지
     socket.current?.on("debate", (debateData: IDebateData) => {
       let turn:
         | "none"
