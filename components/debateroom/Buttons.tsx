@@ -1,6 +1,6 @@
 import { screenShare } from "./utils/screenShare";
 import { toggleMic, toggleReady, toggleVideo } from "./utils/toggle";
-import { wsTransmitSkip } from "./utils/useWebSocket";
+import { wsTransmitSkip } from "./utils/webSocket";
 
 import { IDebateroom } from "./types";
 

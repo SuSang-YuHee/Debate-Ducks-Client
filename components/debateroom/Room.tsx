@@ -1,10 +1,9 @@
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { MutableRefObject, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
-import { toggleMic } from "./utils/toggle";
-import { offScreenShare } from "./utils/screenShare";
-import { useWebSocket } from "./utils/useWebSocket";
+import { useWebSocket } from "./utils/webSocket";
+import { useOffScreenShare } from "./utils/useOffScreenShare";
 
 import Canvas from "./Canvas";
 import Buttons from "./Buttons";
@@ -77,44 +76,18 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
     dummy,
   });
 
-  //*- 턴 전환 시 오디오 및 화면 공유 끄기
-  useEffect(() => {
-    if (turn === "none") return;
-
-    if (isPros) {
-      if (turn === "pros" || turn === "prosCross") {
-        toggleMic({ stream, isMicOn: true, setIsMicOn });
-      } else {
-        toggleMic({ stream, isMicOn: false, setIsMicOn });
-      }
-    } else {
-      if (turn === "cons" || turn === "consCross") {
-        toggleMic({ stream, isMicOn: true, setIsMicOn });
-      } else {
-        toggleMic({ stream, isMicOn: false, setIsMicOn });
-      }
-    }
-    offScreenShare({
-      peerRef,
-      stream,
-      videoRef,
-      screenStreamRef,
-      setIsScreenOn,
-    });
-  }, [stream, turn, isPros]);
-
-  //*- 상대 화면 공유 및 재연결 시 화면 공유 끄기
-  useEffect(() => {
-    if (isPeerScreenOn) {
-      offScreenShare({
-        peerRef,
-        stream,
-        videoRef,
-        screenStreamRef,
-        setIsScreenOn,
-      });
-    }
-  }, [stream, isPeerScreenOn, peerStream]); // dependency로 peerStream 필요
+  useOffScreenShare({
+    isPros,
+    peerRef,
+    stream,
+    peerStream,
+    videoRef,
+    screenStreamRef,
+    setIsMicOn,
+    setIsScreenOn,
+    isPeerScreenOn,
+    turn,
+  });
 
   return (
     <div>
