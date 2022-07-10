@@ -7,56 +7,6 @@ const color = {
   cons: "#6667ab",
 };
 
-const drawSquare = (
-  { canvasRef }: Pick<IDebateroom, "canvasRef">,
-  color: string,
-  dx: number,
-  dy: number,
-  w: number,
-  h: number,
-) => {
-  const ctx = canvasRef.current?.getContext("2d");
-  if (!ctx) return;
-  ctx.fillStyle = color;
-  ctx.fillRect(dx, dy, w, h);
-};
-
-const drawText = (
-  { canvasRef }: Pick<IDebateroom, "canvasRef">,
-  color: string,
-  font: string,
-  text: string,
-  w: number,
-  h: number,
-) => {
-  const ctx = canvasRef.current?.getContext("2d");
-  if (!ctx) return;
-  ctx.fillStyle = color;
-  ctx.textAlign = "center";
-  ctx.font = font;
-  ctx.fillText(text, w, h);
-};
-
-const resize = (screen: HTMLVideoElement) => {
-  let w = 0;
-  let h = 0;
-
-  if (screen.videoWidth >= screen.videoHeight) {
-    w = 1280;
-    h = (1280 * screen.videoHeight) / screen.videoWidth;
-
-    if (h > 720) {
-      w = (1280 * 720) / h;
-      h = 720;
-    }
-  } else {
-    w = (720 * screen.videoWidth) / screen.videoHeight;
-    h = 720;
-  }
-
-  return [w, h];
-};
-
 export const drawContents = ({
   isPros,
   canvasRef,
@@ -183,3 +133,53 @@ export const drawNotice = (
     50,
   );
 };
+
+function drawSquare(
+  { canvasRef }: Pick<IDebateroom, "canvasRef">,
+  color: string,
+  dx: number,
+  dy: number,
+  w: number,
+  h: number,
+) {
+  const ctx = canvasRef.current?.getContext("2d");
+  if (!ctx) return;
+  ctx.fillStyle = color;
+  ctx.fillRect(dx, dy, w, h);
+}
+
+function drawText(
+  { canvasRef }: Pick<IDebateroom, "canvasRef">,
+  color: string,
+  font: string,
+  text: string,
+  w: number,
+  h: number,
+) {
+  const ctx = canvasRef.current?.getContext("2d");
+  if (!ctx) return;
+  ctx.fillStyle = color;
+  ctx.textAlign = "center";
+  ctx.font = font;
+  ctx.fillText(text, w, h);
+}
+
+function resize(screen: HTMLVideoElement) {
+  let w = 0;
+  let h = 0;
+
+  if (screen.videoWidth >= screen.videoHeight) {
+    w = 1280;
+    h = (1280 * screen.videoHeight) / screen.videoWidth;
+
+    if (h > 720) {
+      w = (1280 * 720) / h;
+      h = 720;
+    }
+  } else {
+    w = (720 * screen.videoWidth) / screen.videoHeight;
+    h = 720;
+  }
+
+  return [w, h];
+}
