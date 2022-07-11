@@ -19,7 +19,7 @@ interface IRoomProps {
 
 export default function Room({ debateId, socket, isPros }: IRoomProps) {
   //* WebRTC 변수
-  const [reConnect, setReconnect] = useState<boolean>(false);
+  const [reconnect, setReconnect] = useState<boolean>(false);
   const peerRef = useRef<Peer.Instance | undefined>();
   //* 캔버스 변수
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -61,7 +61,7 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
     debateId,
     socket,
     isPros,
-    reConnect,
+    reconnect,
     setReconnect,
     peerRef,
     canvasRef,

@@ -7,35 +7,35 @@ export interface IDebateroom {
   socket: MutableRefObject<Socket | undefined>;
   isPros: boolean; //! 임시 타입
   //* WebRTC 타입
-  reConnect: boolean;
-  setReconnect: (params: boolean) => void;
+  reconnect: boolean;
+  setReconnect: Dispatch<SetStateAction<boolean>>;
   peerRef: MutableRefObject<Peer.Instance | undefined>;
   //* 캔버스 타입
   canvasRef: MutableRefObject<HTMLCanvasElement | null>;
   //* 스트림 타입
   stream: MediaStream | undefined;
-  setStream: (params: MediaStream | undefined) => void;
+  setStream: Dispatch<SetStateAction<MediaStream | undefined>>;
   peerStream: MediaStream | undefined;
-  setPeerStream: (params: MediaStream | undefined) => void;
+  setPeerStream: Dispatch<SetStateAction<MediaStream | undefined>>;
   videoRef: MutableRefObject<HTMLVideoElement | null>;
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>;
   screenStreamRef: MutableRefObject<MediaStream | undefined>;
   //* 토글 타입
   isMicOn: boolean;
-  setIsMicOn: (params: boolean) => void;
+  setIsMicOn: Dispatch<SetStateAction<boolean>>;
   isVideoOn: boolean;
-  setIsVideoOn: (params: boolean) => void;
+  setIsVideoOn: Dispatch<SetStateAction<boolean>>;
   isPeerVideoOn: boolean;
-  setIsPeerVideoOn: (params: boolean) => void;
+  setIsPeerVideoOn: Dispatch<SetStateAction<boolean>>;
   isScreenOn: boolean;
-  setIsScreenOn: (params: boolean) => void;
+  setIsScreenOn: Dispatch<SetStateAction<boolean>>;
   isPeerScreenOn: boolean;
-  setIsPeerScreenOn: (params: boolean) => void;
+  setIsPeerScreenOn: Dispatch<SetStateAction<boolean>>;
   isReady: boolean;
-  setIsReady: (params: boolean) => void;
+  setIsReady: Dispatch<SetStateAction<boolean>>;
   //* 토론 타입
   isStart: boolean;
-  setIsStart: (params: boolean) => void;
+  setIsStart: Dispatch<SetStateAction<boolean>>;
   turn: "none" | "notice" | "pros" | "cons" | "prosCross" | "consCross";
   setTurn: Dispatch<
     SetStateAction<

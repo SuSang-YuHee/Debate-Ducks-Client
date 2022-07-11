@@ -68,7 +68,6 @@ export const useOffScreenShare = ({
   //*- 상대 화면 공유 및 재연결 시 화면 공유 끄기
   useEffect(() => {
     if (!isPeerScreenOn) return;
-
     offScreenShare({
       peerRef,
       stream,
@@ -84,5 +83,5 @@ export const useOffScreenShare = ({
     videoRef,
     screenStreamRef,
     setIsScreenOn,
-  ]); // dependency로 peerStream 필요
+  ]); // dependency에 peerStream 필요
 };

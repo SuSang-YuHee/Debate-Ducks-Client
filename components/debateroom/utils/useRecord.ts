@@ -37,7 +37,7 @@ export const useRecord = ({
   useEffect(() => {
     if (!isStart || recorderRef.current?.state === "recording") return;
     recorderRef.current?.start(1000 / 30);
-  }, [isStart, recorderRef, reRecord]); // dependency로 reRecord 필요
+  }, [isStart, recorderRef, reRecord]); // dependency에 reRecord 필요
 };
 
 function mergeAudio({

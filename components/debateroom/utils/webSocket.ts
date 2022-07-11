@@ -12,7 +12,7 @@ export const useWebSocket = ({
   debateId,
   socket,
   isPros,
-  reConnect,
+  reconnect,
   setReconnect,
   peerRef,
   canvasRef,
@@ -41,7 +41,7 @@ export const useWebSocket = ({
   | "debateId"
   | "socket"
   | "isPros"
-  | "reConnect"
+  | "reconnect"
   | "setReconnect"
   | "peerRef"
   | "canvasRef"
@@ -77,9 +77,7 @@ export const useWebSocket = ({
       })
       .then((stream) => {
         setStream(stream);
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
+        if (videoRef.current) videoRef.current.srcObject = stream;
 
         socket.current?.emit("join", { debateId });
 
@@ -181,18 +179,16 @@ export const useWebSocket = ({
     setIsStart,
     setTurn,
     dummy.topic,
-    reConnect,
+    reconnect,
     recorderRef,
     blobsRef,
     testARef,
-  ]); // dependency로 reConnect 필요
+  ]); // dependency에 reconnect 필요
 
   //*- 연결 해제
   useEffect(() => {
     socket.current?.on("peerDisconnect", () => {
-      if (peerVideoRef.current) {
-        peerVideoRef.current.srcObject = null;
-      }
+      if (peerVideoRef.current) peerVideoRef.current.srcObject = null;
       setPeerStream(undefined);
       setIsPeerVideoOn(false);
       setIsPeerScreenOn(false);
@@ -212,12 +208,11 @@ export const useWebSocket = ({
       socket.current?.disconnect();
       socket.current = io(`${process.env.NEXT_PUBLIC_API_URL}`);
 
-      setReconnect(!reConnect);
+      setReconnect((state) => !state);
     });
   }, [
     peerRef,
     peerVideoRef,
-    reConnect,
     screenStreamRef,
     setIsPeerScreenOn,
     setIsPeerVideoOn,
@@ -233,7 +228,7 @@ export const useWebSocket = ({
   //*- 정보 송신
   useEffect(() => {
     socket.current?.emit("peerVideo", { debateId, isVideoOn });
-  }, [debateId, isVideoOn, peerRef, socket, peerStream]); // dependency로 peerStream 필요
+  }, [debateId, isVideoOn, peerRef, socket, peerStream]); // dependency에 peerStream 필요
 
   useEffect(() => {
     socket.current?.emit("peerScreen", { debateId, isScreenOn });

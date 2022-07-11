@@ -35,7 +35,6 @@ export const drawContents = ({
 
   if (isScreenOn) {
     if (!videoRef.current) return;
-
     drawSquare({ canvasRef }, color.black, 0, 80, 1280, 640);
     const [w, h] = resize(videoRef.current);
     canvasRef.current
@@ -43,7 +42,6 @@ export const drawContents = ({
       ?.drawImage(videoRef.current, 640 - w / 2, 440 - h / 2, w, h);
   } else if (isPeerScreenOn) {
     if (!peerVideoRef.current) return;
-
     drawSquare({ canvasRef }, color.black, 0, 80, 1280, 640);
     const [w, h] = resize(peerVideoRef.current);
     canvasRef.current
@@ -90,21 +88,22 @@ export const drawContents = ({
       380,
     );
 
-    if (videoRef.current && peerVideoRef.current) {
-      const prosVideo = isPros ? videoRef.current : peerVideoRef.current;
-      const consVideo = isPros ? peerVideoRef.current : videoRef.current;
-      const IsProsVideoOn = isPros ? isVideoOn : isPeerVideoOn;
-      const IsConsVideoOn = isPros ? isPeerVideoOn : isVideoOn;
-      if (IsProsVideoOn) {
-        canvasRef.current
-          ?.getContext("2d")
-          ?.drawImage(prosVideo, 50, 120, 500, 500);
-      }
-      if (IsConsVideoOn) {
-        canvasRef.current
-          ?.getContext("2d")
-          ?.drawImage(consVideo, 730, 120, 500, 500);
-      }
+    if (!videoRef.current || !peerVideoRef.current) return;
+
+    const prosVideo = isPros ? videoRef.current : peerVideoRef.current;
+    const consVideo = isPros ? peerVideoRef.current : videoRef.current;
+    const IsProsVideoOn = isPros ? isVideoOn : isPeerVideoOn;
+    const IsConsVideoOn = isPros ? isPeerVideoOn : isVideoOn;
+
+    if (IsProsVideoOn) {
+      canvasRef.current
+        ?.getContext("2d")
+        ?.drawImage(prosVideo, 50, 120, 500, 500);
+    }
+    if (IsConsVideoOn) {
+      canvasRef.current
+        ?.getContext("2d")
+        ?.drawImage(consVideo, 730, 120, 500, 500);
     }
   }
 };
