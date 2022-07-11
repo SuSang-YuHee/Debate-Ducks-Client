@@ -46,6 +46,7 @@ export const useOffScreenShare = ({
         toggleMic({ stream, isMicOn: false, setIsMicOn });
       }
     }
+
     offScreenShare({
       peerRef,
       stream,
@@ -66,15 +67,15 @@ export const useOffScreenShare = ({
 
   //*- 상대 화면 공유 및 재연결 시 화면 공유 끄기
   useEffect(() => {
-    if (isPeerScreenOn) {
-      offScreenShare({
-        peerRef,
-        stream,
-        videoRef,
-        screenStreamRef,
-        setIsScreenOn,
-      });
-    }
+    if (!isPeerScreenOn) return;
+
+    offScreenShare({
+      peerRef,
+      stream,
+      videoRef,
+      screenStreamRef,
+      setIsScreenOn,
+    });
   }, [
     stream,
     isPeerScreenOn,
