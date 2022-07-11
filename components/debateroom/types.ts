@@ -42,9 +42,18 @@ export interface IDebateroom {
       "none" | "notice" | "pros" | "cons" | "prosCross" | "consCross"
     >
   >;
+  //* 녹화 타입
+  mergedAudio: MediaStreamTrack[] | undefined;
+  setMergedAudio: Dispatch<SetStateAction<MediaStreamTrack[] | undefined>>;
+  recorderRef: MutableRefObject<MediaRecorder | undefined>;
+  reRecord: boolean;
+  setReRecord: Dispatch<SetStateAction<boolean>>;
+  blobsRef: MutableRefObject<Blob[]>;
+  mergedBlobRef: MutableRefObject<Blob | undefined>;
 
   //! 임시 타입
   dummy: IDummy;
+  testARef: MutableRefObject<HTMLAnchorElement | null>;
 }
 
 export interface IDebateData {

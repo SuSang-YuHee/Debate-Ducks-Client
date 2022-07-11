@@ -32,7 +32,10 @@ export const useWebSocket = ({
   setIsReady,
   setIsStart,
   setTurn,
+  recorderRef,
+  blobsRef,
   dummy,
+  testARef,
 }: Pick<
   IDebateroom,
   | "debateId"
@@ -58,7 +61,10 @@ export const useWebSocket = ({
   | "setIsReady"
   | "setIsStart"
   | "setTurn"
+  | "recorderRef"
+  | "blobsRef"
   | "dummy"
+  | "testARef"
 >) => {
   //*- 연결
   useEffect(() => {
@@ -145,6 +151,22 @@ export const useWebSocket = ({
         if (debateData.timer === 10 || debateData.timer === 1) beep();
       }
     });
+
+    //* 토론 종료
+    socket.current?.on("debateDone", async (isRecorder: boolean) => {
+      if (recorderRef.current?.state === "recording") {
+        recorderRef.current?.stop();
+      }
+
+      const mergedBlob = await new Blob(blobsRef.current, {
+        type: "video/webm",
+      });
+      const url = window.URL.createObjectURL(mergedBlob);
+      if (testARef.current) testARef.current.href = url;
+
+      if (!isRecorder) return;
+      //! 동영상 올리는 로직
+    });
   }, [
     debateId,
     socket,
@@ -160,6 +182,9 @@ export const useWebSocket = ({
     setTurn,
     dummy.topic,
     reConnect,
+    recorderRef,
+    blobsRef,
+    testARef,
   ]); // dependency로 reConnect 필요
 
   //*- 연결 해제
