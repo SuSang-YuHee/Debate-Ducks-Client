@@ -55,14 +55,14 @@ export const useOffScreenShare = ({
       setIsScreenOn,
     });
   }, [
-    stream,
-    turn,
     isPros,
     peerRef,
-    videoRef,
     screenStreamRef,
-    setIsScreenOn,
     setIsMicOn,
+    setIsScreenOn,
+    stream,
+    turn,
+    videoRef,
   ]);
 
   //*- 상대 화면 공유 및 재연결 시 화면 공유 끄기
@@ -76,12 +76,12 @@ export const useOffScreenShare = ({
       setIsScreenOn,
     });
   }, [
-    stream,
     isPeerScreenOn,
-    peerStream,
     peerRef,
-    videoRef,
+    peerStream,
     screenStreamRef,
     setIsScreenOn,
+    stream,
+    videoRef,
   ]); // dependency에 peerStream 필요
 };

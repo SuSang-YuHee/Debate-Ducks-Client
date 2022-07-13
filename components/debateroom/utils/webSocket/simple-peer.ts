@@ -9,7 +9,6 @@ export const connectHostPeer = ({
   stream,
   setPeerStream,
   peerVideoRef,
-  blobsRef,
 }: Pick<
   IDebateroom,
   | "debateId"
@@ -18,7 +17,6 @@ export const connectHostPeer = ({
   | "stream"
   | "setPeerStream"
   | "peerVideoRef"
-  | "blobsRef"
 >) => {
   const simplePeer = new Peer({
     initiator: true,
@@ -49,17 +47,6 @@ export const connectHostPeer = ({
     }
   });
 
-  //! 개발중
-  simplePeer.on("connect", () => {
-    console.log("connect"); //!
-    const blobs = blobsRef.current;
-    blobs.reverse().forEach((blob) => {
-      new Response(blob).arrayBuffer().then((arrayBuffer) => {
-        peerRef.current?.send(arrayBuffer);
-      });
-    });
-  });
-
   simplePeer.on("error", (err) => {
     console.log(err);
   });
@@ -77,7 +64,6 @@ export const connectGuestPeer = (
     stream,
     setPeerStream,
     peerVideoRef,
-    blobsRef,
   }: Pick<
     IDebateroom,
     | "debateId"
@@ -86,7 +72,6 @@ export const connectGuestPeer = (
     | "stream"
     | "setPeerStream"
     | "peerVideoRef"
-    | "blobsRef"
   >,
   signal: Peer.SignalData,
 ) => {
@@ -107,14 +92,6 @@ export const connectGuestPeer = (
     if (peerVideoRef.current) {
       peerVideoRef.current.srcObject = stream;
     }
-  });
-
-  //! 개발중
-  simplePeer.on("data", (arrayBuffer) => {
-    const blob = new Blob([new Uint8Array(arrayBuffer)], {
-      type: "video/x-matroska;codecs=avc1,opus",
-    });
-    blobsRef.current.unshift(blob);
   });
 
   simplePeer.on("error", (err) => {

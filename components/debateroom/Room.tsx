@@ -2,9 +2,8 @@ import { MutableRefObject, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
-import { useWebSocket } from "./utils/webSocket/webSocket";
+import { useWebSocket } from "./utils/webSocket/useWebSocket";
 import { useOffScreenShare } from "./utils/useOffScreenShare";
-import { useRecord } from "./utils/useRecord";
 
 import Canvas from "./Canvas";
 import Buttons from "./Buttons";
@@ -19,7 +18,6 @@ interface IRoomProps {
 
 export default function Room({ debateId, socket, isPros }: IRoomProps) {
   //* WebRTC 변수
-  const [reconnect, setReconnect] = useState<boolean>(false);
   const peerRef = useRef<Peer.Instance | undefined>();
   //* 캔버스 변수
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -39,20 +37,9 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
   //* 토론 변수
   const [isStart, setIsStart] = useState<boolean>(false);
   const [isPause, setIsPause] = useState<boolean>(false);
-  const pauseRef = useRef<{ timer: NodeJS.Timer | null; time: number }>({
-    timer: null,
-    time: -1,
-  });
   const [turn, setTurn] = useState<
-    "none" | "notice" | "pros" | "cons" | "prosCross" | "consCross"
+    "none" | "pros" | "cons" | "prosCross" | "consCross"
   >("none");
-  //* 녹화 변수
-  const [mergedAudio, setMergedAudio] = useState<
-    MediaStreamTrack[] | undefined
-  >();
-  const recorderRef = useRef<MediaRecorder | undefined>();
-  const [reRecord, setReRecord] = useState<boolean>(false);
-  const blobsRef = useRef<Blob[]>([]);
 
   //! 임시 변수
   const [dummy] = useState<IDummy>({
@@ -66,8 +53,6 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
     debateId,
     socket,
     isPros,
-    reconnect,
-    setReconnect,
     peerRef,
     canvasRef,
     stream,
@@ -86,12 +71,8 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
     setIsReady,
     setIsStart,
     setIsPause,
-    pauseRef,
     setTurn,
-    recorderRef,
-    blobsRef,
     dummy,
-    testARef,
   });
 
   useOffScreenShare({
@@ -106,22 +87,6 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
     isPeerScreenOn,
     turn,
   });
-
-  useRecord({
-    canvasRef,
-    stream,
-    peerStream,
-    isStart,
-    isPause,
-    mergedAudio,
-    setMergedAudio,
-    recorderRef,
-    reRecord,
-    setReRecord,
-    blobsRef,
-  });
-
-  console.log(peerStream); //!
 
   return (
     <div>
@@ -174,7 +139,7 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
         isStart={isStart}
         turn={turn}
       />
-      {isStart ? "start" : "waiting"}
+      {isStart ? (isPause ? "pause" : "start") : "waiting"}
       <a ref={testARef} download={dummy.topic} />
       <button
         onClick={() => {
@@ -182,13 +147,6 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
         }}
       >
         Down
-      </button>
-      <button
-        onClick={() => {
-          console.log(blobsRef.current);
-        }}
-      >
-        테스트
       </button>
     </div>
   );

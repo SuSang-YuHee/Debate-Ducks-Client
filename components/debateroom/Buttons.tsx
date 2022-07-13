@@ -42,20 +42,6 @@ export default function Buttons({
   | "isStart"
   | "turn"
 >) {
-  const checkAudioDisable = () => {
-    if (turn === "notice") return true;
-    if (isPros && turn === "cons") return true;
-    if (!isPros && turn === "pros") return true;
-    return false;
-  };
-
-  const checkScreenDisable = () => {
-    if (isScreenOn) return true;
-    if (isPros && turn === "cons") return true;
-    if (!isPros && turn === "pros") return true;
-    return false;
-  };
-
   return (
     <div>
       {checkAudioDisable() ? (
@@ -108,4 +94,19 @@ export default function Buttons({
       )}
     </div>
   );
+
+  //*- utils
+  function checkAudioDisable() {
+    if (turn === "none") return true;
+    if (isPros && turn === "cons") return true;
+    if (!isPros && turn === "pros") return true;
+    return false;
+  }
+
+  function checkScreenDisable() {
+    if (isScreenOn) return true;
+    if (isPros && turn === "cons") return true;
+    if (!isPros && turn === "pros") return true;
+    return false;
+  }
 }

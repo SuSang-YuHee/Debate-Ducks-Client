@@ -109,7 +109,7 @@ export const drawContents = ({
 };
 
 export const drawNotice = (
-  { canvasRef, turn = "notice" }: Pick<IDebateroom, "canvasRef" | "turn">,
+  { canvasRef, turn = "none" }: Pick<IDebateroom, "canvasRef" | "turn">,
   debateData: IDebateData,
   topic: string,
 ) => {
@@ -133,6 +133,7 @@ export const drawNotice = (
   );
 };
 
+//*- utils
 function drawSquare(
   { canvasRef }: Pick<IDebateroom, "canvasRef">,
   color: string,

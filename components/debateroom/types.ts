@@ -7,8 +7,6 @@ export interface IDebateroom {
   socket: MutableRefObject<Socket | undefined>;
   isPros: boolean; //! 임시 타입
   //* WebRTC 타입
-  reconnect: boolean;
-  setReconnect: Dispatch<SetStateAction<boolean>>;
   peerRef: MutableRefObject<Peer.Instance | undefined>;
   //* 캔버스 타입
   canvasRef: MutableRefObject<HTMLCanvasElement | null>;
@@ -38,20 +36,10 @@ export interface IDebateroom {
   setIsStart: Dispatch<SetStateAction<boolean>>;
   isPause: boolean;
   setIsPause: Dispatch<SetStateAction<boolean>>;
-  pauseRef: MutableRefObject<{ timer: NodeJS.Timer | null; time: number }>;
-  turn: "none" | "notice" | "pros" | "cons" | "prosCross" | "consCross";
+  turn: "none" | "pros" | "cons" | "prosCross" | "consCross";
   setTurn: Dispatch<
-    SetStateAction<
-      "none" | "notice" | "pros" | "cons" | "prosCross" | "consCross"
-    >
+    SetStateAction<"none" | "pros" | "cons" | "prosCross" | "consCross">
   >;
-  //* 녹화 타입
-  mergedAudio: MediaStreamTrack[] | undefined;
-  setMergedAudio: Dispatch<SetStateAction<MediaStreamTrack[] | undefined>>;
-  recorderRef: MutableRefObject<MediaRecorder | undefined>;
-  reRecord: boolean;
-  setReRecord: Dispatch<SetStateAction<boolean>>;
-  blobsRef: MutableRefObject<Blob[]>;
 
   //! 임시 타입
   dummy: IDummy;
