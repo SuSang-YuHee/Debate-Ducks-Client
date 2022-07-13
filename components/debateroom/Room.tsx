@@ -2,7 +2,7 @@ import { MutableRefObject, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
-import { useWebSocket } from "./utils/webSocket/useWebSocket";
+import { useWebSocket } from "./utils/webSocket/webSocket";
 import { useOffScreenShare } from "./utils/useOffScreenShare";
 
 import Canvas from "./Canvas";
