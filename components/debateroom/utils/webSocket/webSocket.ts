@@ -2,11 +2,12 @@ import { useEffect } from "react";
 import { io } from "socket.io-client";
 import Peer from "simple-peer";
 
-import { drawNotice } from "./draw";
-import { beep } from "./beep";
-import { offScreenShare } from "./screenShare";
+import { drawNotice } from "../draw";
+import { beep } from "../beep";
+import { offScreenShare } from "../screenShare";
+import { connectHostPeer, connectGuestPeer } from "./simple-peer";
 
-import { IDebateroom, IDebateData } from "../types";
+import { IDebateroom, IDebateData } from "../../types";
 
 export const useWebSocket = ({
   debateId,
@@ -31,6 +32,8 @@ export const useWebSocket = ({
   isReady,
   setIsReady,
   setIsStart,
+  setIsPause,
+  pauseRef,
   setTurn,
   recorderRef,
   blobsRef,
@@ -60,6 +63,8 @@ export const useWebSocket = ({
   | "isReady"
   | "setIsReady"
   | "setIsStart"
+  | "setIsPause"
+  | "pauseRef"
   | "setTurn"
   | "recorderRef"
   | "blobsRef"
@@ -93,12 +98,21 @@ export const useWebSocket = ({
             stream,
             setPeerStream,
             peerVideoRef,
+            blobsRef,
           });
         });
 
         socket.current?.on("offer", (signal: Peer.SignalData) => {
           connectGuestPeer(
-            { debateId, socket, peerRef, stream, setPeerStream, peerVideoRef },
+            {
+              debateId,
+              socket,
+              peerRef,
+              stream,
+              setPeerStream,
+              peerVideoRef,
+              blobsRef,
+            },
             signal,
           );
         });
@@ -113,8 +127,45 @@ export const useWebSocket = ({
       setIsPeerScreenOn(isPeerScreenOn);
     });
 
+    //* 토론
     socket.current?.on("debateStart", () => {
       setIsStart(true);
+    });
+
+    socket.current?.on("debatePause", (isPause: boolean) => {
+      setIsPause(isPause);
+
+      if (isPause) {
+        pauseRef.current.time = 30;
+        pauseRef.current.timer = setInterval(() => {
+          drawNotice(
+            { canvasRef, turn: "none" },
+            {
+              notice:
+                pauseRef.current.time > 0
+                  ? "상대 토론자를 기다리는 중입니다."
+                  : "토론이 종료 되었습니다.",
+              turn: -1,
+              timer: pauseRef.current.time,
+            },
+            dummy.topic,
+          );
+          pauseRef.current.time -= 1;
+
+          if (pauseRef.current.time >= 0) return;
+          socket.current?.emit("debateDone", { debateId, winner: isPros });
+
+          if (!pauseRef.current.timer) return;
+          clearInterval(pauseRef.current.timer);
+          pauseRef.current.timer = null;
+          pauseRef.current.time = -1;
+        }, 1000);
+      } else {
+        if (!pauseRef.current.timer) return;
+        clearInterval(pauseRef.current.timer);
+        pauseRef.current.timer = null;
+        pauseRef.current.time = -1;
+      }
     });
 
     //* 최초 공지
@@ -138,7 +189,7 @@ export const useWebSocket = ({
         | "prosCross"
         | "consCross" = "notice";
       if (debateData.turn === 7 && debateData.timer < 0) {
-        socket.current?.emit("debateDone", { debateId });
+        socket.current?.emit("debateDone", { debateId, winner: null });
       } else {
         if (debateData.turn === 1 || debateData.turn === 5) turn = "pros";
         if (debateData.turn === 3 || debateData.turn === 6) turn = "cons";
@@ -183,6 +234,9 @@ export const useWebSocket = ({
     recorderRef,
     blobsRef,
     testARef,
+    setIsPause,
+    pauseRef,
+    isPros,
   ]); // dependency에 reconnect 필요
 
   //*- 연결 해제
@@ -213,6 +267,7 @@ export const useWebSocket = ({
   }, [
     peerRef,
     peerVideoRef,
+    recorderRef,
     screenStreamRef,
     setIsPeerScreenOn,
     setIsPeerVideoOn,
@@ -246,102 +301,3 @@ export const wsTransmitSkip = ({
 }: Pick<IDebateroom, "debateId" | "socket" | "isPros">) => {
   socket.current?.emit("skip", { debateId, isPros });
 };
-
-function connectHostPeer({
-  debateId,
-  socket,
-  peerRef,
-  stream,
-  setPeerStream,
-  peerVideoRef,
-}: Pick<
-  IDebateroom,
-  | "debateId"
-  | "socket"
-  | "peerRef"
-  | "stream"
-  | "setPeerStream"
-  | "peerVideoRef"
->) {
-  const simplePeer = new Peer({
-    initiator: true,
-    trickle: false,
-    config: {
-      iceServers: [
-        { urls: "stun:stun.l.google.com:19302" },
-        { urls: "stun:stun1.l.google.com:19302" },
-        { urls: "stun:stun2.l.google.com:19302" },
-        { urls: "stun:stun3.l.google.com:19302" },
-        { urls: "stun:stun4.l.google.com:19302" },
-        { urls: "stun:stun.nextcloud.com:443" },
-      ],
-    },
-    stream,
-  });
-
-  peerRef.current = simplePeer;
-
-  simplePeer.on("signal", (signal) => {
-    socket.current?.emit("offer", { debateId, signal });
-  });
-
-  simplePeer.on("stream", (stream) => {
-    setPeerStream(stream);
-    if (peerVideoRef.current) {
-      peerVideoRef.current.srcObject = stream;
-    }
-  });
-
-  simplePeer.on("error", (err) => {
-    console.log(err);
-  });
-
-  socket.current?.on("answer", (signal: Peer.SignalData) => {
-    simplePeer.signal(signal);
-  });
-}
-
-function connectGuestPeer(
-  {
-    debateId,
-    socket,
-    peerRef,
-    stream,
-    setPeerStream,
-    peerVideoRef,
-  }: Pick<
-    IDebateroom,
-    | "debateId"
-    | "socket"
-    | "peerRef"
-    | "stream"
-    | "setPeerStream"
-    | "peerVideoRef"
-  >,
-  signal: Peer.SignalData,
-) {
-  const simplePeer = new Peer({
-    initiator: false,
-    trickle: false,
-    stream,
-  });
-
-  peerRef.current = simplePeer;
-
-  simplePeer.on("signal", (signal) => {
-    socket.current?.emit("answer", { debateId, signal });
-  });
-
-  simplePeer.on("stream", (stream) => {
-    setPeerStream(stream);
-    if (peerVideoRef.current) {
-      peerVideoRef.current.srcObject = stream;
-    }
-  });
-
-  simplePeer.on("error", (err) => {
-    console.log(err);
-  });
-
-  simplePeer.signal(signal);
-}

@@ -7,6 +7,7 @@ export const useRecord = ({
   stream,
   peerStream,
   isStart,
+  isPause,
   mergedAudio,
   setMergedAudio,
   recorderRef,
@@ -19,6 +20,7 @@ export const useRecord = ({
   | "stream"
   | "peerStream"
   | "isStart"
+  | "isPause"
   | "mergedAudio"
   | "setMergedAudio"
   | "recorderRef"
@@ -31,13 +33,26 @@ export const useRecord = ({
   }, [peerStream, setMergedAudio, stream]);
 
   useEffect(() => {
-    record({ canvasRef, mergedAudio, recorderRef, setReRecord, blobsRef });
-  }, [mergedAudio, canvasRef, recorderRef, blobsRef, setReRecord]);
+    setRecorder({
+      canvasRef,
+      mergedAudio,
+      recorderRef,
+      setReRecord,
+      blobsRef,
+    });
+  }, [canvasRef, recorderRef, blobsRef, mergedAudio, setReRecord]);
 
   useEffect(() => {
-    if (!isStart || recorderRef.current?.state === "recording") return;
-    recorderRef.current?.start(1000 / 30);
-  }, [isStart, recorderRef, reRecord]); // dependency에 reRecord 필요
+    if (recorderRef.current?.state === "recording") {
+      console.log("녹화 중지1"); //!
+      recorderRef.current?.stop();
+    }
+
+    if (isStart && !isPause && recorderRef.current) {
+      console.log("녹화 시작"); //!
+      recorderRef.current?.start(1000 / 30);
+    }
+  }, [isPause, isStart, recorderRef, reRecord]); // dependency에 reRecord 필요
 };
 
 function mergeAudio({
@@ -49,37 +64,26 @@ function mergeAudio({
     stream,
     peerStream,
   }: Pick<IDebateroom, "stream" | "peerStream">) => {
-    if (stream && peerStream) {
-      const ctx = new AudioContext();
-      const destination = ctx.createMediaStreamDestination();
+    if (!stream || !peerStream) return;
 
-      const source1 = ctx.createMediaStreamSource(stream);
-      const source1Gain = ctx.createGain();
-      source1.connect(source1Gain).connect(destination);
+    const ctx = new AudioContext();
+    const destination = ctx.createMediaStreamDestination();
 
-      const source2 = ctx.createMediaStreamSource(peerStream);
-      const source2Gain = ctx.createGain();
-      source2.connect(source2Gain).connect(destination);
+    const source1 = ctx.createMediaStreamSource(stream);
+    const source1Gain = ctx.createGain();
+    source1.connect(source1Gain).connect(destination);
 
-      return destination.stream.getAudioTracks();
-    }
+    const source2 = ctx.createMediaStreamSource(peerStream);
+    const source2Gain = ctx.createGain();
+    source2.connect(source2Gain).connect(destination);
 
-    if (stream) {
-      const ctx = new AudioContext();
-      const destination = ctx.createMediaStreamDestination();
-
-      const source = ctx.createMediaStreamSource(stream);
-      const sourceGain = ctx.createGain();
-      source.connect(sourceGain).connect(destination);
-
-      return destination.stream.getAudioTracks();
-    }
+    return destination.stream.getAudioTracks();
   };
 
   setMergedAudio(merge({ stream, peerStream }));
 }
 
-function record({
+function setRecorder({
   canvasRef,
   mergedAudio,
   recorderRef,
@@ -103,12 +107,14 @@ function record({
   });
 
   if (!recorder) return;
-  if (recorderRef.current?.state === "recording") {
-    recorderRef.current?.stop();
-  }
+  // if (recorderRef.current?.state === "recording") {
+  //   console.log("녹화 중지2"); //!
+  //   recorderRef.current?.stop();
+  // }
   recorderRef.current = recorder;
   recorderRef.current.ondataavailable = (ev) => {
     blobsRef.current?.push(ev.data);
   };
+
   setReRecord((state) => !state);
 }

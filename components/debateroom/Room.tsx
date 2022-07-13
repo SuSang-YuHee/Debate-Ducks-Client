@@ -2,7 +2,7 @@ import { MutableRefObject, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
-import { useWebSocket } from "./utils/webSocket";
+import { useWebSocket } from "./utils/webSocket/webSocket";
 import { useOffScreenShare } from "./utils/useOffScreenShare";
 import { useRecord } from "./utils/useRecord";
 
@@ -38,6 +38,11 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
   const [isReady, setIsReady] = useState<boolean>(false);
   //* 토론 변수
   const [isStart, setIsStart] = useState<boolean>(false);
+  const [isPause, setIsPause] = useState<boolean>(false);
+  const pauseRef = useRef<{ timer: NodeJS.Timer | null; time: number }>({
+    timer: null,
+    time: -1,
+  });
   const [turn, setTurn] = useState<
     "none" | "notice" | "pros" | "cons" | "prosCross" | "consCross"
   >("none");
@@ -80,6 +85,8 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
     isReady,
     setIsReady,
     setIsStart,
+    setIsPause,
+    pauseRef,
     setTurn,
     recorderRef,
     blobsRef,
@@ -105,6 +112,7 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
     stream,
     peerStream,
     isStart,
+    isPause,
     mergedAudio,
     setMergedAudio,
     recorderRef,
@@ -112,6 +120,8 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
     setReRecord,
     blobsRef,
   });
+
+  console.log(peerStream); //!
 
   return (
     <div>
@@ -172,6 +182,13 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
         }}
       >
         Down
+      </button>
+      <button
+        onClick={() => {
+          console.log(blobsRef.current);
+        }}
+      >
+        테스트
       </button>
     </div>
   );

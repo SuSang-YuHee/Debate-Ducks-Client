@@ -36,6 +36,9 @@ export interface IDebateroom {
   //* 토론 타입
   isStart: boolean;
   setIsStart: Dispatch<SetStateAction<boolean>>;
+  isPause: boolean;
+  setIsPause: Dispatch<SetStateAction<boolean>>;
+  pauseRef: MutableRefObject<{ timer: NodeJS.Timer | null; time: number }>;
   turn: "none" | "notice" | "pros" | "cons" | "prosCross" | "consCross";
   setTurn: Dispatch<
     SetStateAction<
@@ -49,7 +52,6 @@ export interface IDebateroom {
   reRecord: boolean;
   setReRecord: Dispatch<SetStateAction<boolean>>;
   blobsRef: MutableRefObject<Blob[]>;
-  mergedBlobRef: MutableRefObject<Blob | undefined>;
 
   //! 임시 타입
   dummy: IDummy;
