@@ -4,6 +4,7 @@ import Peer from "simple-peer";
 
 import { useWebSocket } from "./utils/webSocket/webSocket";
 import { useOffScreenShare } from "./utils/useOffScreenShare";
+import { useSetRecorder } from "./utils/webSocket/useSetRecorder";
 
 import Canvas from "./Canvas";
 import Buttons from "./Buttons";
@@ -19,6 +20,7 @@ interface IRoomProps {
 export default function Room({ debateId, socket, isPros }: IRoomProps) {
   //* WebRTC 변수
   const peerRef = useRef<Peer.Instance | undefined>();
+  const [isHost, setIsHost] = useState<boolean>(false);
   //* 캔버스 변수
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   //* 스트림 변수
@@ -36,7 +38,8 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
   const [isReady, setIsReady] = useState<boolean>(false);
   //* 토론 변수
   const [isStart, setIsStart] = useState<boolean>(false);
-  const [isPause, setIsPause] = useState<boolean>(false);
+  const mergedAudioRef = useRef<MediaStreamTrack[] | undefined>();
+  const recorderRef = useRef<MediaRecorder | undefined>();
   const [turn, setTurn] = useState<
     "none" | "pros" | "cons" | "prosCross" | "consCross"
   >("none");
@@ -48,11 +51,13 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
     consName: "반대중",
   });
   const testARef = useRef<HTMLAnchorElement | null>(null);
+  const blobsRef = useRef<Blob[]>([]);
 
   useWebSocket({
     debateId,
     socket,
     isPros,
+    setIsHost,
     peerRef,
     canvasRef,
     stream,
@@ -70,9 +75,11 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
     isReady,
     setIsReady,
     setIsStart,
-    setIsPause,
+    mergedAudioRef,
+    recorderRef,
     setTurn,
     dummy,
+    blobsRef,
   });
 
   useOffScreenShare({
@@ -86,6 +93,18 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
     setIsScreenOn,
     isPeerScreenOn,
     turn,
+  });
+
+  useSetRecorder({
+    debateId,
+    socket,
+    isHost,
+    canvasRef,
+    stream,
+    peerStream,
+    isStart,
+    mergedAudioRef,
+    recorderRef,
   });
 
   return (
@@ -139,14 +158,37 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
         isStart={isStart}
         turn={turn}
       />
-      {isStart ? (isPause ? "pause" : "start") : "waiting"}
+      {isStart ? "start" : "waiting"}
       <a ref={testARef} download={dummy.topic} />
+      <button
+        onClick={() => {
+          // const mergedBlob = new Blob(blobsRef.current, {
+          //   type: "video/webm",
+          // });
+          const mergedBlob = blobsRef.current.reduce(
+            (a, b) => new Blob([a, b], { type: "video/webm" }),
+          );
+          const url = window.URL.createObjectURL(mergedBlob);
+          if (testARef.current) testARef.current.href = url;
+
+          console.log(mergedBlob); //! console
+        }}
+      >
+        merge
+      </button>
       <button
         onClick={() => {
           testARef.current?.click();
         }}
       >
         Down
+      </button>
+      <button
+        onClick={() => {
+          console.log(blobsRef.current);
+        }}
+      >
+        test
       </button>
     </div>
   );

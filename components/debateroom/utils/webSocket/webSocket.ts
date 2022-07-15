@@ -14,6 +14,7 @@ export const useWebSocket = ({
   socket,
   isPros,
   peerRef,
+  setIsHost,
   canvasRef,
   stream,
   setStream,
@@ -30,15 +31,18 @@ export const useWebSocket = ({
   isReady,
   setIsReady,
   setIsStart,
-  setIsPause,
+  mergedAudioRef,
+  recorderRef,
   setTurn,
   dummy,
+  blobsRef,
 }: Pick<
   IDebateroom,
   | "debateId"
   | "socket"
   | "isPros"
   | "peerRef"
+  | "setIsHost"
   | "canvasRef"
   | "stream"
   | "setStream"
@@ -55,9 +59,11 @@ export const useWebSocket = ({
   | "isReady"
   | "setIsReady"
   | "setIsStart"
-  | "setIsPause"
+  | "mergedAudioRef"
+  | "recorderRef"
   | "setTurn"
   | "dummy"
+  | "blobsRef"
 >) => {
   const [reconnect, setReconnect] = useState<boolean>(false);
   const pauseRef = useRef<{ timer: NodeJS.Timer | null; time: number }>({
@@ -111,6 +117,10 @@ export const useWebSocket = ({
       });
 
     //* 정보 수신
+    socket.current?.on("isHost", () => {
+      setIsHost(true);
+    });
+
     socket.current?.on("peerVideo", (isPeerVideoOn: boolean) => {
       setIsPeerVideoOn(isPeerVideoOn);
     });
@@ -124,7 +134,6 @@ export const useWebSocket = ({
     });
 
     socket.current?.on("debatePause", (isPause: boolean) => {
-      setIsPause(isPause);
       if (isPause) {
         pauseRef.current.time = 30;
         pauseRef.current.timer = setInterval(() => {
@@ -161,7 +170,25 @@ export const useWebSocket = ({
         if (debateData.timer === 10 || debateData.timer === 1) beep();
       }
     });
+
+    //* 토론 종료
+    socket.current?.on("debateDone", () => {
+      if (recorderRef.current?.state === "recording") {
+        console.log("녹화 종료"); //! console
+        recorderRef.current?.stop();
+      }
+
+      //Todo: 종료 로직
+      console.log("토론 종료");
+    });
+
+    //! 임시
+    socket.current?.on("tempRecord", (blob: Blob) => {
+      blobsRef.current.push(blob);
+      console.log("blob");
+    });
   }, [
+    blobsRef,
     canvasRef,
     debateId,
     dummy,
@@ -169,7 +196,8 @@ export const useWebSocket = ({
     peerRef,
     peerVideoRef,
     reconnect,
-    setIsPause,
+    recorderRef,
+    setIsHost,
     setIsPeerScreenOn,
     setIsPeerVideoOn,
     setIsStart,
@@ -183,6 +211,11 @@ export const useWebSocket = ({
   //*- 연결 해제
   useEffect(() => {
     socket.current?.on("peerDisconnect", () => {
+      if (recorderRef.current?.state === "recording") {
+        console.log("녹화 중지(해제)"); //! console
+        recorderRef.current?.stop();
+      }
+
       offScreenShare({
         peerRef,
         stream,
@@ -191,11 +224,15 @@ export const useWebSocket = ({
         setIsScreenOn,
       });
 
+      setIsHost(false);
       setPeerStream(undefined);
       if (peerVideoRef.current) peerVideoRef.current.srcObject = null;
       setIsPeerVideoOn(false);
       setIsPeerScreenOn(false);
       setIsReady(false);
+      setIsStart(false);
+      mergedAudioRef.current = undefined;
+      recorderRef.current = undefined;
 
       peerRef.current?.destroy();
       peerRef.current = undefined;
@@ -206,13 +243,17 @@ export const useWebSocket = ({
       setReconnect((state) => !state);
     });
   }, [
+    mergedAudioRef,
     peerRef,
     peerVideoRef,
+    recorderRef,
     screenStreamRef,
+    setIsHost,
     setIsPeerScreenOn,
     setIsPeerVideoOn,
     setIsReady,
     setIsScreenOn,
+    setIsStart,
     setPeerStream,
     socket,
     stream,
@@ -233,6 +274,7 @@ export const useWebSocket = ({
   }, [debateId, isPros, isReady, socket]);
 };
 
+//*- skip 정보 송신
 export const wsTransmitSkip = ({
   debateId,
   socket,

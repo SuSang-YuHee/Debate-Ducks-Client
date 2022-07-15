@@ -8,6 +8,8 @@ export interface IDebateroom {
   isPros: boolean; //! 임시 타입
   //* WebRTC 타입
   peerRef: MutableRefObject<Peer.Instance | undefined>;
+  isHost: boolean;
+  setIsHost: Dispatch<SetStateAction<boolean>>;
   //* 캔버스 타입
   canvasRef: MutableRefObject<HTMLCanvasElement | null>;
   //* 스트림 타입
@@ -34,8 +36,8 @@ export interface IDebateroom {
   //* 토론 타입
   isStart: boolean;
   setIsStart: Dispatch<SetStateAction<boolean>>;
-  isPause: boolean;
-  setIsPause: Dispatch<SetStateAction<boolean>>;
+  mergedAudioRef: MutableRefObject<MediaStreamTrack[] | undefined>;
+  recorderRef: MutableRefObject<MediaRecorder | undefined>;
   turn: "none" | "pros" | "cons" | "prosCross" | "consCross";
   setTurn: Dispatch<
     SetStateAction<"none" | "pros" | "cons" | "prosCross" | "consCross">
@@ -44,6 +46,7 @@ export interface IDebateroom {
   //! 임시 타입
   dummy: IDummy;
   testARef: MutableRefObject<HTMLAnchorElement | null>;
+  blobsRef: MutableRefObject<Blob[]>;
 }
 
 export interface IDebateData {
