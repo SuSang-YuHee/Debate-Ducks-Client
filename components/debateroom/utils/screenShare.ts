@@ -1,6 +1,7 @@
 import { MutableRefObject } from "react";
 import Peer from "simple-peer";
 
+//*- 화면 공유
 export const screenShare = async (
   peer: Peer.Instance | undefined,
   streamRef: MutableRefObject<MediaStream | undefined>,
@@ -14,6 +15,7 @@ export const screenShare = async (
       audio: false,
     });
 
+    // * 화면 공유 켜졌을 때
     if (streamRef.current && videoRef.current) {
       peer?.replaceTrack(
         streamRef.current.getVideoTracks()[0],
@@ -25,6 +27,7 @@ export const screenShare = async (
       screenStreamRef.current = screenStream;
     }
 
+    // * 화면 공유 꺼졌을 때
     screenStream.getTracks()[0].onended = () => {
       if (streamRef.current && videoRef.current) {
         peer?.replaceTrack(
@@ -42,6 +45,7 @@ export const screenShare = async (
   }
 };
 
+//*- 화면 공유 끄기
 export const offScreen = (
   peer: Peer.Instance | undefined,
   streamRef: MutableRefObject<MediaStream | undefined>,

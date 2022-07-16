@@ -2,7 +2,8 @@ import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
-import { toggleVideo } from "./utils/toggle";
+import { toggleMic, toggleVideo } from "./utils/toggle";
+import { offScreen } from "./utils/screenShare";
 import {
   wsConnect,
   wsDisconnect,
@@ -10,8 +11,6 @@ import {
   wsTransmitScreen,
   wsTransmitReady,
 } from "./utils/webSocket";
-import { offScreen } from "./utils/screenShare";
-import { toggleAudio } from "./utils/toggle";
 
 import Canvas from "./Canvas";
 import Buttons from "./Buttons";
@@ -38,7 +37,7 @@ export default function Room({ debateId, socket }: IRoomProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const peerVideoRef = useRef<HTMLVideoElement | null>(null);
   const screenStreamRef = useRef<MediaStream | undefined>();
-  const [isAudioOn, setIsAudioOn] = useState<boolean>(true);
+  const [isMicOn, setIsMicOn] = useState<boolean>(true);
   const [isVideoOn, setIsVideoOn] = useState<boolean>(false);
   const [isPeerVideoOn, setIsPeerVideoOn] = useState<boolean>(false);
   const [isScreenOn, setIsScreenOn] = useState<boolean>(false);
@@ -124,15 +123,15 @@ export default function Room({ debateId, socket }: IRoomProps) {
   useEffect(() => {
     if (isPros) {
       if (turn === "pros" || turn === "prosCross") {
-        toggleAudio(streamRef, true, setIsAudioOn);
+        toggleMic(streamRef, true, setIsMicOn);
       } else {
-        toggleAudio(streamRef, false, setIsAudioOn);
+        toggleMic(streamRef, false, setIsMicOn);
       }
     } else {
       if (turn === "cons" || turn === "consCross") {
-        toggleAudio(streamRef, true, setIsAudioOn);
+        toggleMic(streamRef, true, setIsMicOn);
       } else {
-        toggleAudio(streamRef, false, setIsAudioOn);
+        toggleMic(streamRef, false, setIsMicOn);
       }
     }
     offScreen(peer, streamRef, videoRef, screenStreamRef, setIsScreenOn);
@@ -146,7 +145,7 @@ export default function Room({ debateId, socket }: IRoomProps) {
 
   //*- 첫 입장 시 비디오 끄기
   useEffect(() => {
-    toggleVideo(streamRef, false, setIsAudioOn);
+    toggleVideo(streamRef, false, setIsMicOn);
   }, []);
 
   return (
@@ -185,12 +184,14 @@ export default function Room({ debateId, socket }: IRoomProps) {
         isPros={isPros}
       />
       <Buttons
+        debateId={debateId}
+        socket={socket}
         peer={peer}
         streamRef={streamRef}
         videoRef={videoRef}
         screenStreamRef={screenStreamRef}
-        isAudioOn={isAudioOn}
-        setIsAudioOn={setIsAudioOn}
+        isMicOn={isMicOn}
+        setIsMicOn={setIsMicOn}
         isVideoOn={isVideoOn}
         setIsVideoOn={setIsVideoOn}
         isScreenOn={isScreenOn}

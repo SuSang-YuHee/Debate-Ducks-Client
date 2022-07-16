@@ -1,15 +1,18 @@
 import { screenShare } from "./utils/screenShare";
-import { toggleAudio, toggleReady, toggleVideo } from "./utils/toggle";
+import { toggleMic, toggleReady, toggleVideo } from "./utils/toggle";
+import { wsTransmitSkip } from "./utils/webSocket";
 
 import { IDebateroomProps } from "./types";
 
 export default function Buttons({
+  debateId,
+  socket,
   peer,
   streamRef,
   videoRef,
   screenStreamRef,
-  isAudioOn,
-  setIsAudioOn,
+  isMicOn,
+  setIsMicOn,
   isVideoOn,
   setIsVideoOn,
   isScreenOn,
@@ -21,12 +24,14 @@ export default function Buttons({
   isPros,
 }: Pick<
   IDebateroomProps,
+  | "debateId"
+  | "socket"
   | "peer"
   | "streamRef"
   | "videoRef"
   | "screenStreamRef"
-  | "isAudioOn"
-  | "setIsAudioOn"
+  | "isMicOn"
+  | "setIsMicOn"
   | "isVideoOn"
   | "setIsVideoOn"
   | "isScreenOn"
@@ -56,19 +61,11 @@ export default function Buttons({
       {checkAudioDisable() ? (
         "AudioOff"
       ) : (
-        <button
-          onClick={() =>
-            toggleAudio(streamRef, isAudioOn ? false : true, setIsAudioOn)
-          }
-        >
-          {isAudioOn ? "AudioOn" : "AudioOff"}
+        <button onClick={() => toggleMic(streamRef, !isMicOn, setIsMicOn)}>
+          {isMicOn ? "AudioOn" : "AudioOff"}
         </button>
       )}
-      <button
-        onClick={() =>
-          toggleVideo(streamRef, isVideoOn ? false : true, setIsVideoOn)
-        }
-      >
+      <button onClick={() => toggleVideo(streamRef, !isVideoOn, setIsVideoOn)}>
         {isVideoOn ? "VideoOn" : "VideoOff"}
       </button>
       {checkScreenDisable() ? null : (
@@ -86,10 +83,18 @@ export default function Buttons({
           ScreenShare
         </button>
       )}
-      {isStart ? null : (
+      {isStart ? (
         <button
           onClick={() => {
-            toggleReady(isReady ? false : true, setIsReady);
+            wsTransmitSkip(debateId, socket, isPros);
+          }}
+        >
+          Skip Turn
+        </button>
+      ) : (
+        <button
+          onClick={() => {
+            toggleReady(!isReady, setIsReady);
           }}
         >
           {isReady ? "Cancel" : "Ready"}
