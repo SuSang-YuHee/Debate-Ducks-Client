@@ -1,4 +1,4 @@
-import { IDebateroom, IDebateData } from "./../types";
+import { IDebateroom, IDebateData } from "../types";
 
 const color = {
   white: "#F8FBFD",
