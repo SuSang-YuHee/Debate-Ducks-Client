@@ -5,11 +5,10 @@ import Peer from "simple-peer";
 export interface IDebateroom {
   debateId: string | string[] | undefined;
   socket: MutableRefObject<Socket | undefined>;
-  isPros: boolean; //! 임시 타입
+  isPros: boolean; //! 임시
   //* WebRTC 타입
   peerRef: MutableRefObject<Peer.Instance | undefined>;
-  isHost: boolean;
-  setIsHost: Dispatch<SetStateAction<boolean>>;
+  isHostRef: MutableRefObject<boolean>;
   //* 캔버스 타입
   canvasRef: MutableRefObject<HTMLCanvasElement | null>;
   //* 스트림 타입
@@ -36,23 +35,33 @@ export interface IDebateroom {
   //* 토론 타입
   isStart: boolean;
   setIsStart: Dispatch<SetStateAction<boolean>>;
+  isDoneRef: MutableRefObject<boolean>;
+  turn: TTurn;
+  setTurn: Dispatch<SetStateAction<TTurn>>;
+  timeRef: MutableRefObject<number>;
+  //* 녹화 타입
   mergedAudioRef: MutableRefObject<MediaStreamTrack[] | undefined>;
   recorderRef: MutableRefObject<MediaRecorder | undefined>;
-  turn: "none" | "pros" | "cons" | "prosCross" | "consCross";
-  setTurn: Dispatch<
-    SetStateAction<"none" | "pros" | "cons" | "prosCross" | "consCross">
-  >;
+  blobsRef: MutableRefObject<Blob[]>;
+  blobRef: MutableRefObject<Blob | undefined>;
 
-  //! 임시 타입
+  //! 임시
   dummy: IDummy;
   testARef: MutableRefObject<HTMLAnchorElement | null>;
-  blobsRef: MutableRefObject<Blob[]>;
 }
+
+export type TTurn =
+  | "none"
+  | "notice"
+  | "pros"
+  | "cons"
+  | "prosCross"
+  | "consCross";
 
 export interface IDebateData {
   notice: string;
-  turn: number;
-  timer: number;
+  turn: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  time: number;
 }
 
 export interface IDummy {

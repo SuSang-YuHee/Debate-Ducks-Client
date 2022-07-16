@@ -115,9 +115,9 @@ export const drawNotice = (
 ) => {
   const notice =
     debateData.turn === 0
-      ? `${topic} ( ${debateData.timer}초 후 시작 )`
-      : debateData.timer >= 1 && debateData.turn !== 7
-      ? `${debateData.notice} ( ${debateData.timer}초 )`
+      ? `${topic} ( ${debateData.time}초 후 시작 )`
+      : debateData.time >= 1 && debateData.turn !== 7
+      ? `${debateData.notice} ( ${debateData.time}초 )`
       : debateData.notice;
   let bgColor = color.black;
   if (turn === "pros" || turn === "prosCross") bgColor = color.pros;

@@ -65,7 +65,7 @@ export default function Canvas({
         ref={canvasRef}
         width="1280px"
         height="720px"
-        style={{ border: "2px solid red", width: "100vw" }} //! 임시 스타일
+        style={{ border: "2px solid red", width: "100vw" }} //! 임시
       ></canvas>
     </div>
   );

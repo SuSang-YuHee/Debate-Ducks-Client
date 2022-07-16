@@ -1,6 +1,6 @@
 import { screenShare } from "./utils/screenShare";
 import { toggleMic, toggleReady, toggleVideo } from "./utils/toggle";
-import { wsTransmitSkip } from "./utils/webSocket/webSocket";
+import { wsTransmitSkip } from "./utils/webSocket";
 
 import { IDebateroom } from "./types";
 
@@ -22,6 +22,7 @@ export default function Buttons({
   setIsReady,
   isStart,
   turn,
+  timeRef,
 }: Pick<
   IDebateroom,
   | "debateId"
@@ -41,6 +42,7 @@ export default function Buttons({
   | "setIsReady"
   | "isStart"
   | "turn"
+  | "timeRef"
 >) {
   return (
     <div>
@@ -60,7 +62,9 @@ export default function Buttons({
       >
         {isVideoOn ? "VideoOn" : "VideoOff"}
       </button>
-      {checkScreenDisable() ? null : (
+      {checkScreenShareDisable() ? (
+        "ScreenShare X"
+      ) : (
         <button
           onClick={() =>
             screenShare({
@@ -78,7 +82,7 @@ export default function Buttons({
       {isStart ? (
         <button
           onClick={() => {
-            wsTransmitSkip({ debateId, socket, isPros });
+            wsTransmitSkip({ debateId, socket, isPros, timeRef });
           }}
         >
           Skip Turn
@@ -97,14 +101,16 @@ export default function Buttons({
 
   //*- utils
   function checkAudioDisable() {
-    if (turn === "none") return true;
+    if (turn === "notice") return true;
     if (isPros && turn === "cons") return true;
     if (!isPros && turn === "pros") return true;
     return false;
   }
 
-  function checkScreenDisable() {
+  function checkScreenShareDisable() {
     if (isScreenOn) return true;
+    if (!isStart && isReady) return true;
+    if (turn === "notice") return true;
     if (isPros && turn === "cons") return true;
     if (!isPros && turn === "pros") return true;
     return false;

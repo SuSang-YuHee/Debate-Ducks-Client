@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 
-import { toggleMic } from "../utils/toggle";
-import { offScreenShare } from "../utils/screenShare";
+import { toggleMic } from "./toggle";
+import { offScreenShare } from "./screenShare";
 
-import { IDebateroom } from "./../types";
+import { IDebateroom } from "../types";
 
-export const useOffScreenShare = ({
+export const useAutoOff = ({
   isPros,
   peerRef,
   stream,
@@ -15,6 +15,7 @@ export const useOffScreenShare = ({
   setIsMicOn,
   setIsScreenOn,
   isPeerScreenOn,
+  isReady,
   turn,
 }: Pick<
   IDebateroom,
@@ -27,10 +28,19 @@ export const useOffScreenShare = ({
   | "setIsMicOn"
   | "setIsScreenOn"
   | "isPeerScreenOn"
+  | "isReady"
   | "turn"
 >) => {
   //*- 턴 전환 시 오디오 및 화면 공유 끄기
   useEffect(() => {
+    offScreenShare({
+      peerRef,
+      stream,
+      videoRef,
+      screenStreamRef,
+      setIsScreenOn,
+    });
+
     if (turn === "none") return;
 
     if (isPros) {
@@ -46,16 +56,9 @@ export const useOffScreenShare = ({
         toggleMic({ stream, isMicOn: false, setIsMicOn });
       }
     }
-
-    offScreenShare({
-      peerRef,
-      stream,
-      videoRef,
-      screenStreamRef,
-      setIsScreenOn,
-    });
   }, [
     isPros,
+    isReady,
     peerRef,
     screenStreamRef,
     setIsMicOn,
@@ -63,7 +66,7 @@ export const useOffScreenShare = ({
     stream,
     turn,
     videoRef,
-  ]);
+  ]); // dependency에 isReady 필요
 
   //*- 상대 화면 공유 및 재연결 시 화면 공유 끄기
   useEffect(() => {

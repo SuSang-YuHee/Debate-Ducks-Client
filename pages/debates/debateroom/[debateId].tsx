@@ -6,7 +6,7 @@ import Room from "../../../components/debateroom/Room";
 
 export default function Debateroom() {
   const router = useRouter();
-  const { debateId, isPros } = router.query; //! 임시 쿼리
+  const { debateId, isPros } = router.query; //! 임시 (isPros)
   const socketRef = useRef<Socket>();
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function Debateroom() {
     <Room
       debateId={debateId}
       socket={socketRef}
-      isPros={isPros === "true" ? true : false} //! 임시 props
+      isPros={isPros === "true" ? true : false}
     />
   );
 }

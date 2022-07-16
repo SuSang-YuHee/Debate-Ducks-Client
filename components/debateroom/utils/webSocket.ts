@@ -1,20 +1,20 @@
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import Peer from "simple-peer";
 
-import { drawNotice } from "../draw";
-import { beep } from "../beep";
-import { offScreenShare } from "../screenShare";
+import { drawNotice } from "./draw";
+import { beep } from "./beep";
+import { offScreenShare } from "./screenShare";
 import { connectHostPeer, connectGuestPeer } from "./simple-peer";
 
-import { IDebateroom, IDebateData } from "../../types";
+import { IDebateroom, IDebateData, TTurn } from "../types";
 
 export const useWebSocket = ({
   debateId,
   socket,
   isPros,
   peerRef,
-  setIsHost,
+  isHostRef,
   canvasRef,
   stream,
   setStream,
@@ -31,18 +31,20 @@ export const useWebSocket = ({
   isReady,
   setIsReady,
   setIsStart,
+  isDoneRef,
+  setTurn,
+  timeRef,
   mergedAudioRef,
   recorderRef,
-  setTurn,
-  dummy,
   blobsRef,
+  dummy,
 }: Pick<
   IDebateroom,
   | "debateId"
   | "socket"
   | "isPros"
   | "peerRef"
-  | "setIsHost"
+  | "isHostRef"
   | "canvasRef"
   | "stream"
   | "setStream"
@@ -59,17 +61,15 @@ export const useWebSocket = ({
   | "isReady"
   | "setIsReady"
   | "setIsStart"
+  | "isDoneRef"
+  | "setTurn"
+  | "timeRef"
   | "mergedAudioRef"
   | "recorderRef"
-  | "setTurn"
-  | "dummy"
   | "blobsRef"
+  | "dummy"
 >) => {
   const [reconnect, setReconnect] = useState<boolean>(false);
-  const pauseRef = useRef<{ timer: NodeJS.Timer | null; time: number }>({
-    timer: null,
-    time: -1,
-  });
 
   //*- 연결
   useEffect(() => {
@@ -84,13 +84,14 @@ export const useWebSocket = ({
       .then((stream) => {
         setStream(stream);
         if (videoRef.current) videoRef.current.srcObject = stream;
-        socket.current?.emit("join", { debateId, isPros });
+        socket.current?.emit("join", { debateId });
 
         socket.current?.on("overcapacity", () => {
-          console.log("overcapacity"); //Todo:
+          //Todo: 입장 초과 모달
+          console.log("overcapacity");
         });
 
-        socket.current?.on("guestJoin", () => {
+        socket.current?.on("peerJoin", () => {
           connectHostPeer({
             debateId,
             socket,
@@ -99,6 +100,7 @@ export const useWebSocket = ({
             setPeerStream,
             peerVideoRef,
           });
+          isHostRef.current = true;
         });
 
         socket.current?.on("offer", (signal: Peer.SignalData) => {
@@ -117,10 +119,6 @@ export const useWebSocket = ({
       });
 
     //* 정보 수신
-    socket.current?.on("isHost", () => {
-      setIsHost(true);
-    });
-
     socket.current?.on("peerVideo", (isPeerVideoOn: boolean) => {
       setIsPeerVideoOn(isPeerVideoOn);
     });
@@ -133,71 +131,51 @@ export const useWebSocket = ({
       setIsStart(true);
     });
 
-    socket.current?.on("debatePause", (isPause: boolean) => {
-      if (isPause) {
-        pauseRef.current.time = 30;
-        pauseRef.current.timer = setInterval(() => {
-          pause({ socket, debateId, isPros, canvasRef, dummy }, pauseRef);
-        }, 1000);
-      } else {
-        cancelPause(pauseRef);
-      }
-    });
-
     //* 최초 공지
     drawNotice(
       { canvasRef, turn: "none" },
       {
         notice: dummy.topic,
-        turn: -1,
-        timer: -1,
+        turn: 7,
+        time: 0,
       },
       dummy.topic,
     );
 
     //* 토론 및 공지
     socket.current?.on("debate", (debateData: IDebateData) => {
-      let turn: "none" | "pros" | "cons" | "prosCross" | "consCross" = "none";
-      if (debateData.turn === 7 && debateData.timer < 0) {
-        socket.current?.emit("debateDone", { debateId, winner: null });
+      let turn: TTurn = "notice";
+      if (debateData.turn === 7 && debateData.time < 0) {
+        isDoneRef.current = true;
+        if (recorderRef.current?.state === "recording") {
+          recorderRef.current?.stop();
+        }
       } else {
         if (debateData.turn === 1 || debateData.turn === 5) turn = "pros";
         if (debateData.turn === 3 || debateData.turn === 6) turn = "cons";
         if (debateData.turn === 4) turn = "prosCross";
         if (debateData.turn === 2) turn = "consCross";
         setTurn(turn);
+        timeRef.current = debateData.time;
         drawNotice({ canvasRef, turn }, debateData, dummy.topic);
-        if (debateData.timer === 10 || debateData.timer === 1) beep();
+        if (debateData.time === 10 || debateData.time === 1) beep();
       }
     });
 
-    //* 토론 종료
     socket.current?.on("debateDone", () => {
-      if (recorderRef.current?.state === "recording") {
-        console.log("녹화 종료"); //! console
-        recorderRef.current?.stop();
-      }
-
-      //Todo: 종료 로직
-      console.log("토론 종료");
-    });
-
-    //! 임시
-    socket.current?.on("tempRecord", (blob: Blob) => {
-      blobsRef.current.push(blob);
-      console.log("blob");
+      //Todo: 토론 종료 모달
+      console.log("토론 종료 모달");
     });
   }, [
-    blobsRef,
     canvasRef,
     debateId,
-    dummy,
-    isPros,
+    dummy.topic,
+    isDoneRef,
+    isHostRef,
     peerRef,
     peerVideoRef,
     reconnect,
     recorderRef,
-    setIsHost,
     setIsPeerScreenOn,
     setIsPeerVideoOn,
     setIsStart,
@@ -205,6 +183,7 @@ export const useWebSocket = ({
     setStream,
     setTurn,
     socket,
+    timeRef,
     videoRef,
   ]); // dependency에 reconnect 필요
 
@@ -212,7 +191,6 @@ export const useWebSocket = ({
   useEffect(() => {
     socket.current?.on("peerDisconnect", () => {
       if (recorderRef.current?.state === "recording") {
-        console.log("녹화 중지(해제)"); //! console
         recorderRef.current?.stop();
       }
 
@@ -224,13 +202,14 @@ export const useWebSocket = ({
         setIsScreenOn,
       });
 
-      setIsHost(false);
       setPeerStream(undefined);
       if (peerVideoRef.current) peerVideoRef.current.srcObject = null;
       setIsPeerVideoOn(false);
       setIsPeerScreenOn(false);
       setIsReady(false);
       setIsStart(false);
+      setTurn("none");
+      timeRef.current = 0;
       mergedAudioRef.current = undefined;
       recorderRef.current = undefined;
 
@@ -243,20 +222,22 @@ export const useWebSocket = ({
       setReconnect((state) => !state);
     });
   }, [
+    blobsRef,
     mergedAudioRef,
     peerRef,
     peerVideoRef,
     recorderRef,
     screenStreamRef,
-    setIsHost,
     setIsPeerScreenOn,
     setIsPeerVideoOn,
     setIsReady,
     setIsScreenOn,
     setIsStart,
     setPeerStream,
+    setTurn,
     socket,
     stream,
+    timeRef,
     videoRef,
   ]);
 
@@ -271,58 +252,19 @@ export const useWebSocket = ({
 
   useEffect(() => {
     socket.current?.emit("ready", { debateId, isReady, isPros });
-  }, [debateId, isPros, isReady, socket]);
+  }, [debateId, isReady, socket, isPros]);
 };
 
-//*- skip 정보 송신
 export const wsTransmitSkip = ({
   debateId,
   socket,
   isPros,
-}: Pick<IDebateroom, "debateId" | "socket" | "isPros">) => {
-  socket.current?.emit("skip", { debateId, isPros });
-};
-
-//*- utils
-function cancelPause(
-  pauseRef: MutableRefObject<{ timer: NodeJS.Timer | null; time: number }>,
-) {
-  if (!pauseRef.current.timer) return;
-  clearInterval(pauseRef.current.timer);
-  pauseRef.current.timer = null;
-  pauseRef.current.time = -1;
-}
-
-function pause(
-  {
-    socket,
-    debateId,
-    isPros,
-    canvasRef,
-    dummy,
-  }: Pick<
-    IDebateroom,
-    "socket" | "debateId" | "isPros" | "canvasRef" | "dummy"
-  >,
-  pauseRef: MutableRefObject<{ timer: NodeJS.Timer | null; time: number }>,
-) {
-  drawNotice(
-    { canvasRef, turn: "none" },
-    {
-      notice:
-        pauseRef.current.time > 0
-          ? "상대 토론자를 기다리는 중입니다."
-          : "토론이 종료 되었습니다.",
-      turn: -1,
-      timer: pauseRef.current.time,
-    },
-    dummy.topic,
-  );
-
-  pauseRef.current.time -= 1;
-
-  if (pauseRef.current.time < 0) {
-    socket.current?.emit("debateDone", { debateId, winner: isPros });
-    cancelPause(pauseRef);
+  timeRef,
+}: Pick<IDebateroom, "debateId" | "socket" | "isPros" | "timeRef">) => {
+  socket.current?.emit("skip", { debateId, isPros }); //!
+  if (timeRef.current < 60 && timeRef.current > 1) {
+    socket.current?.emit("skip", { debateId, isPros });
+  } else {
+    //Todo: 스킵 안내 모달
   }
-}
+};

@@ -2,25 +2,25 @@ import { MutableRefObject, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
-import { useWebSocket } from "./utils/webSocket/webSocket";
-import { useOffScreenShare } from "./utils/useOffScreenShare";
-import { useSetRecorder } from "./utils/webSocket/useSetRecorder";
+import { useWebSocket } from "./utils/webSocket";
+import { useAutoOff } from "./utils/useAutoOff";
+import { useSetRecorder } from "./utils/useSetRecorder";
 
 import Canvas from "./Canvas";
 import Buttons from "./Buttons";
 
-import { IDummy } from "./types";
+import { IDummy, TTurn } from "./types";
 
 interface IRoomProps {
   debateId: string | string[] | undefined;
   socket: MutableRefObject<Socket | undefined>;
-  isPros: boolean; //! 임시 props 타입
+  isPros: boolean;
 }
 
 export default function Room({ debateId, socket, isPros }: IRoomProps) {
   //* WebRTC 변수
   const peerRef = useRef<Peer.Instance | undefined>();
-  const [isHost, setIsHost] = useState<boolean>(false);
+  const isHostRef = useRef<boolean>(false);
   //* 캔버스 변수
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   //* 스트림 변수
@@ -38,27 +38,29 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
   const [isReady, setIsReady] = useState<boolean>(false);
   //* 토론 변수
   const [isStart, setIsStart] = useState<boolean>(false);
+  const isDoneRef = useRef<boolean>(false);
+  const [turn, setTurn] = useState<TTurn>("none");
+  const timeRef = useRef<number>(0);
+  //* 녹화 변수
   const mergedAudioRef = useRef<MediaStreamTrack[] | undefined>();
   const recorderRef = useRef<MediaRecorder | undefined>();
-  const [turn, setTurn] = useState<
-    "none" | "pros" | "cons" | "prosCross" | "consCross"
-  >("none");
+  const blobsRef = useRef<Blob[]>([]); //Todo: 재시작 시 비우기
+  const blobRef = useRef<Blob | undefined>();
 
-  //! 임시 변수
+  //! 임시
   const [dummy] = useState<IDummy>({
     topic: "Is Alien Exist?",
     prosName: "이찬성",
     consName: "반대중",
   });
   const testARef = useRef<HTMLAnchorElement | null>(null);
-  const blobsRef = useRef<Blob[]>([]);
 
   useWebSocket({
     debateId,
     socket,
     isPros,
-    setIsHost,
     peerRef,
+    isHostRef,
     canvasRef,
     stream,
     setStream,
@@ -75,14 +77,16 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
     isReady,
     setIsReady,
     setIsStart,
+    isDoneRef,
+    setTurn,
+    timeRef,
     mergedAudioRef,
     recorderRef,
-    setTurn,
-    dummy,
     blobsRef,
+    dummy,
   });
 
-  useOffScreenShare({
+  useAutoOff({
     isPros,
     peerRef,
     stream,
@@ -92,19 +96,23 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
     setIsMicOn,
     setIsScreenOn,
     isPeerScreenOn,
+    isReady,
     turn,
   });
 
   useSetRecorder({
-    debateId,
     socket,
-    isHost,
+    debateId,
+    isHostRef,
     canvasRef,
     stream,
     peerStream,
     isStart,
+    isDoneRef,
     mergedAudioRef,
     recorderRef,
+    blobsRef,
+    blobRef,
   });
 
   return (
@@ -157,38 +165,20 @@ export default function Room({ debateId, socket, isPros }: IRoomProps) {
         setIsReady={setIsReady}
         isStart={isStart}
         turn={turn}
+        timeRef={timeRef}
       />
-      {isStart ? "start" : "waiting"}
       <a ref={testARef} download={dummy.topic} />
       <button
         onClick={() => {
-          // const mergedBlob = new Blob(blobsRef.current, {
-          //   type: "video/webm",
-          // });
-          const mergedBlob = blobsRef.current.reduce(
-            (a, b) => new Blob([a, b], { type: "video/webm" }),
-          );
-          const url = window.URL.createObjectURL(mergedBlob);
-          if (testARef.current) testARef.current.href = url;
-
-          console.log(mergedBlob); //! console
-        }}
-      >
-        merge
-      </button>
-      <button
-        onClick={() => {
+          if (!blobRef.current) return;
+          const url = window.URL.createObjectURL(blobRef.current);
+          if (!testARef.current) return;
+          testARef.current.href = url;
           testARef.current?.click();
+          window.URL.revokeObjectURL(url);
         }}
       >
-        Down
-      </button>
-      <button
-        onClick={() => {
-          console.log(blobsRef.current);
-        }}
-      >
-        test
+        TempDown
       </button>
     </div>
   );

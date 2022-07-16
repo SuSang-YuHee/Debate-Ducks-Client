@@ -1,53 +1,67 @@
 import { useEffect } from "react";
 
-import { IDebateroom } from "../../types";
+import { upload } from "./upload";
+
+import { IDebateroom } from "../types";
 
 export const useSetRecorder = ({
-  debateId,
   socket,
-  isHost,
+  debateId,
+  isHostRef,
   canvasRef,
   stream,
   peerStream,
   isStart,
+  isDoneRef,
   mergedAudioRef,
   recorderRef,
+  blobsRef,
+  blobRef,
 }: Pick<
   IDebateroom,
-  | "debateId"
   | "socket"
-  | "isHost"
+  | "debateId"
+  | "isHostRef"
   | "canvasRef"
   | "stream"
   | "peerStream"
   | "isStart"
+  | "isDoneRef"
   | "mergedAudioRef"
   | "recorderRef"
+  | "blobsRef"
+  | "blobRef"
 >) => {
   useEffect(() => {
-    if (!isHost || !isStart) return;
+    if (!isStart) return;
     mergeAudio({ stream, peerStream, mergedAudioRef });
     setRecorder({
-      debateId,
       socket,
+      debateId,
+      isHostRef,
       canvasRef,
+      isDoneRef,
       mergedAudioRef,
       recorderRef,
+      blobsRef,
+      blobRef,
     });
-    if (recorderRef.current && recorderRef.current?.state !== "recording") {
+    if (recorderRef.current?.state !== "recording") {
       recorderRef.current?.start(1000 / 30);
-      console.log("녹화 시작"); //! console
     }
   }, [
-    stream,
-    peerStream,
-    mergedAudioRef,
+    blobRef,
+    blobsRef,
     canvasRef,
-    recorderRef,
-    isStart,
-    isHost,
-    socket,
     debateId,
+    isDoneRef,
+    isHostRef,
+    isStart,
+    mergedAudioRef,
+    peerStream,
+    recorderRef,
+    socket,
+    stream,
   ]);
 };
 
@@ -81,14 +95,26 @@ function mergeAudio({
 }
 
 function setRecorder({
-  debateId,
   socket,
+  debateId,
+  isHostRef,
   canvasRef,
+  isDoneRef,
   mergedAudioRef,
   recorderRef,
+  blobsRef,
+  blobRef,
 }: Pick<
   IDebateroom,
-  "debateId" | "socket" | "canvasRef" | "mergedAudioRef" | "recorderRef"
+  | "socket"
+  | "debateId"
+  | "isHostRef"
+  | "canvasRef"
+  | "isDoneRef"
+  | "mergedAudioRef"
+  | "recorderRef"
+  | "blobsRef"
+  | "blobRef"
 >) {
   const canvasStream = canvasRef.current?.captureStream(30);
 
@@ -108,6 +134,20 @@ function setRecorder({
   if (!recorder) return;
   recorderRef.current = recorder;
   recorderRef.current.ondataavailable = (ev) => {
-    socket.current?.emit("record", { debateId, blob: ev.data });
+    blobsRef.current.push(ev.data);
+  };
+  recorderRef.current.onstop = () => {
+    const blob = new Blob(blobsRef.current, {
+      type: "video/webm",
+    });
+    blobRef.current = blob;
+    console.log("녹화 중지", blobRef.current);
+
+    if (isDoneRef.current) {
+      upload(isHostRef.current, { socket, debateId, blobRef });
+    } else {
+      //Todo: 재시작 모달
+      console.log("재시작 모달");
+    }
   };
 }
