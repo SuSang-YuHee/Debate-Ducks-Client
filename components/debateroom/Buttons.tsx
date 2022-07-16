@@ -2,13 +2,14 @@ import { screenShare } from "./utils/screenShare";
 import { toggleMic, toggleReady, toggleVideo } from "./utils/toggle";
 import { wsTransmitSkip } from "./utils/webSocket";
 
-import { IDebateroomProps } from "./types";
+import { IDebateroom } from "./types";
 
 export default function Buttons({
   debateId,
   socket,
-  peer,
-  streamRef,
+  isPros,
+  peerRef,
+  stream,
   videoRef,
   screenStreamRef,
   isMicOn,
@@ -21,13 +22,14 @@ export default function Buttons({
   setIsReady,
   isStart,
   turn,
-  isPros,
+  timeRef,
 }: Pick<
-  IDebateroomProps,
+  IDebateroom,
   | "debateId"
   | "socket"
-  | "peer"
-  | "streamRef"
+  | "isPros"
+  | "peerRef"
+  | "stream"
   | "videoRef"
   | "screenStreamRef"
   | "isMicOn"
@@ -40,44 +42,38 @@ export default function Buttons({
   | "setIsReady"
   | "isStart"
   | "turn"
-  | "isPros"
+  | "timeRef"
 >) {
-  const checkAudioDisable = () => {
-    if (turn === "notice") return true;
-    if (isPros && turn === "cons") return true;
-    if (!isPros && turn === "pros") return true;
-    return false;
-  };
-
-  const checkScreenDisable = () => {
-    if (isScreenOn) return true;
-    if (isPros && turn === "cons") return true;
-    if (!isPros && turn === "pros") return true;
-    return false;
-  };
-
   return (
     <div>
       {checkAudioDisable() ? (
         "AudioOff"
       ) : (
-        <button onClick={() => toggleMic(streamRef, !isMicOn, setIsMicOn)}>
+        <button
+          onClick={() => toggleMic({ stream, isMicOn: !isMicOn, setIsMicOn })}
+        >
           {isMicOn ? "AudioOn" : "AudioOff"}
         </button>
       )}
-      <button onClick={() => toggleVideo(streamRef, !isVideoOn, setIsVideoOn)}>
+      <button
+        onClick={() =>
+          toggleVideo({ stream, isVideoOn: !isVideoOn, setIsVideoOn })
+        }
+      >
         {isVideoOn ? "VideoOn" : "VideoOff"}
       </button>
-      {checkScreenDisable() ? null : (
+      {checkScreenShareDisable() ? (
+        "ScreenShare X"
+      ) : (
         <button
           onClick={() =>
-            screenShare(
-              peer,
-              streamRef,
+            screenShare({
+              peerRef,
+              stream,
               videoRef,
               screenStreamRef,
               setIsScreenOn,
-            )
+            })
           }
         >
           ScreenShare
@@ -86,7 +82,7 @@ export default function Buttons({
       {isStart ? (
         <button
           onClick={() => {
-            wsTransmitSkip(debateId, socket, isPros);
+            wsTransmitSkip({ debateId, socket, isPros, timeRef });
           }}
         >
           Skip Turn
@@ -94,7 +90,7 @@ export default function Buttons({
       ) : (
         <button
           onClick={() => {
-            toggleReady(!isReady, setIsReady);
+            toggleReady({ isReady: !isReady, setIsReady });
           }}
         >
           {isReady ? "Cancel" : "Ready"}
@@ -102,4 +98,21 @@ export default function Buttons({
       )}
     </div>
   );
+
+  //*- utils
+  function checkAudioDisable() {
+    if (turn === "notice") return true;
+    if (isPros && turn === "cons") return true;
+    if (!isPros && turn === "pros") return true;
+    return false;
+  }
+
+  function checkScreenShareDisable() {
+    if (isScreenOn) return true;
+    if (!isStart && isReady) return true;
+    if (turn === "notice") return true;
+    if (isPros && turn === "cons") return true;
+    if (!isPros && turn === "pros") return true;
+    return false;
+  }
 }

@@ -1,152 +1,119 @@
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { MutableRefObject, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
-import { toggleMic, toggleVideo } from "./utils/toggle";
-import { offScreen } from "./utils/screenShare";
-import {
-  wsConnect,
-  wsDisconnect,
-  wsTransmitVideo,
-  wsTransmitScreen,
-  wsTransmitReady,
-} from "./utils/webSocket";
+import { useWebSocket } from "./utils/webSocket";
+import { useAutoOff } from "./utils/useAutoOff";
+import { useSetRecorder } from "./utils/useSetRecorder";
 
 import Canvas from "./Canvas";
 import Buttons from "./Buttons";
 
-import { IDummy } from "./types";
+import { IDummy, TTurn } from "./types";
 
 interface IRoomProps {
   debateId: string | string[] | undefined;
   socket: MutableRefObject<Socket | undefined>;
+  isPros: boolean;
 }
 
-export default function Room({ debateId, socket }: IRoomProps) {
-  //*- WebRTC 변수
-  const [reConnect, setReconnect] = useState<boolean>(false);
-  const [peer, setPeer] = useState<Peer.Instance | undefined>();
-  //*- 캔버스 변수
+export default function Room({ debateId, socket, isPros }: IRoomProps) {
+  //* WebRTC 변수
+  const peerRef = useRef<Peer.Instance | undefined>();
+  const isHostRef = useRef<boolean>(false);
+  //* 캔버스 변수
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  //*- 녹화 변수
-  const recorderRef = useRef<MediaRecorder | undefined>();
-  const downRef = useRef<HTMLAnchorElement | null>(null);
-  //*- 스트림 변수
-  const streamRef = useRef<MediaStream | undefined>();
-  const peerStreamRef = useRef<MediaStream | undefined>();
+  //* 스트림 변수
+  const [stream, setStream] = useState<MediaStream | undefined>();
+  const [peerStream, setPeerStream] = useState<MediaStream | undefined>();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const peerVideoRef = useRef<HTMLVideoElement | null>(null);
   const screenStreamRef = useRef<MediaStream | undefined>();
+  //* 토글 변수
   const [isMicOn, setIsMicOn] = useState<boolean>(true);
   const [isVideoOn, setIsVideoOn] = useState<boolean>(false);
   const [isPeerVideoOn, setIsPeerVideoOn] = useState<boolean>(false);
   const [isScreenOn, setIsScreenOn] = useState<boolean>(false);
   const [isPeerScreenOn, setIsPeerScreenOn] = useState<boolean>(false);
-  //*- 토론 변수
   const [isReady, setIsReady] = useState<boolean>(false);
+  //* 토론 변수
   const [isStart, setIsStart] = useState<boolean>(false);
-  const [turn, setTurn] = useState<
-    "none" | "notice" | "pros" | "cons" | "prosCross" | "consCross"
-  >("none");
+  const isDoneRef = useRef<boolean>(false);
+  const [turn, setTurn] = useState<TTurn>("none");
+  const timeRef = useRef<number>(0);
+  //* 녹화 변수
+  const mergedAudioRef = useRef<MediaStreamTrack[] | undefined>();
+  const recorderRef = useRef<MediaRecorder | undefined>();
+  const blobsRef = useRef<Blob[]>([]); //Todo: 재시작 시 비우기
+  const blobRef = useRef<Blob | undefined>();
 
-  //! 임시 변수
+  //! 임시
   const [dummy] = useState<IDummy>({
     topic: "Is Alien Exist?",
     prosName: "이찬성",
     consName: "반대중",
   });
-  const [isPros, setIsPros] = useState(true);
+  const testARef = useRef<HTMLAnchorElement | null>(null);
 
-  //! 임시 함수
-  function downloadRecord() {
-    downRef.current?.click();
-  }
+  useWebSocket({
+    debateId,
+    socket,
+    isPros,
+    peerRef,
+    isHostRef,
+    canvasRef,
+    stream,
+    setStream,
+    peerStream,
+    setPeerStream,
+    videoRef,
+    peerVideoRef,
+    screenStreamRef,
+    isVideoOn,
+    setIsPeerVideoOn,
+    isScreenOn,
+    setIsScreenOn,
+    setIsPeerScreenOn,
+    isReady,
+    setIsReady,
+    setIsStart,
+    isDoneRef,
+    setTurn,
+    timeRef,
+    mergedAudioRef,
+    recorderRef,
+    blobsRef,
+    dummy,
+  });
 
-  function startRecord() {
-    recorderRef.current?.start(1000 / 30);
-  }
+  useAutoOff({
+    isPros,
+    peerRef,
+    stream,
+    peerStream,
+    videoRef,
+    screenStreamRef,
+    setIsMicOn,
+    setIsScreenOn,
+    isPeerScreenOn,
+    isReady,
+    turn,
+  });
 
-  function stopRecord() {
-    recorderRef.current?.stop();
-  }
-
-  //*- Socket and WebRTC 연결
-  useEffect(() => {
-    wsConnect(
-      debateId,
-      socket,
-      setPeer,
-      canvasRef,
-      streamRef,
-      peerStreamRef,
-      videoRef,
-      peerVideoRef,
-      setIsPeerVideoOn,
-      setIsPeerScreenOn,
-      setIsStart,
-      setTurn,
-      dummy.topic,
-    );
-  }, [debateId, socket, reConnect, dummy.topic]);
-
-  //*- Socket and WebRTC 연결 해제
-  useEffect(() => {
-    wsDisconnect(
-      socket,
-      reConnect,
-      setReconnect,
-      peer,
-      setPeer,
-      peerStreamRef,
-      peerVideoRef,
-      screenStreamRef,
-      setIsPeerVideoOn,
-      setIsScreenOn,
-      setIsPeerScreenOn,
-    );
-  }, [debateId, socket, reConnect, peer]);
-
-  //*- 정보 송신
-  useEffect(() => {
-    wsTransmitVideo(debateId, socket, peer, isVideoOn);
-  }, [debateId, socket, peer, isVideoOn]);
-
-  useEffect(() => {
-    wsTransmitScreen(debateId, socket, peer, isScreenOn);
-  }, [debateId, socket, peer, isScreenOn]);
-
-  useEffect(() => {
-    wsTransmitReady(debateId, socket, isReady, isPros);
-  }, [debateId, socket, isReady, isPros]);
-
-  //*- 턴 전환 시 오디오 및 화면 공유 끄기
-  useEffect(() => {
-    if (isPros) {
-      if (turn === "pros" || turn === "prosCross") {
-        toggleMic(streamRef, true, setIsMicOn);
-      } else {
-        toggleMic(streamRef, false, setIsMicOn);
-      }
-    } else {
-      if (turn === "cons" || turn === "consCross") {
-        toggleMic(streamRef, true, setIsMicOn);
-      } else {
-        toggleMic(streamRef, false, setIsMicOn);
-      }
-    }
-    offScreen(peer, streamRef, videoRef, screenStreamRef, setIsScreenOn);
-  }, [peer, turn, isPros]);
-
-  //*- 상대 화면 공유 시 화면 공유 끄기
-  useEffect(() => {
-    if (isPeerScreenOn)
-      offScreen(peer, streamRef, videoRef, screenStreamRef, setIsScreenOn);
-  }, [peer, isPeerScreenOn]);
-
-  //*- 첫 입장 시 비디오 끄기
-  useEffect(() => {
-    toggleVideo(streamRef, false, setIsMicOn);
-  }, []);
+  useSetRecorder({
+    socket,
+    debateId,
+    isHostRef,
+    canvasRef,
+    stream,
+    peerStream,
+    isStart,
+    isDoneRef,
+    mergedAudioRef,
+    recorderRef,
+    blobsRef,
+    blobRef,
+  });
 
   return (
     <div>
@@ -162,7 +129,6 @@ export default function Room({ debateId, socket }: IRoomProps) {
       ></video>
       <video
         ref={peerVideoRef}
-        muted //! 테스트용
         autoPlay
         playsInline
         width={0}
@@ -170,10 +136,9 @@ export default function Room({ debateId, socket }: IRoomProps) {
         style={{ position: "sticky", top: 0 }}
       ></video>
       <Canvas
-        peer={peer}
+        isPros={isPros}
+        peerRef={peerRef}
         canvasRef={canvasRef}
-        recorderRef={recorderRef}
-        downRef={downRef}
         videoRef={videoRef}
         peerVideoRef={peerVideoRef}
         isVideoOn={isVideoOn}
@@ -181,13 +146,13 @@ export default function Room({ debateId, socket }: IRoomProps) {
         isScreenOn={isScreenOn}
         isPeerScreenOn={isPeerScreenOn}
         dummy={dummy}
-        isPros={isPros}
       />
       <Buttons
         debateId={debateId}
         socket={socket}
-        peer={peer}
-        streamRef={streamRef}
+        isPros={isPros}
+        peerRef={peerRef}
+        stream={stream}
         videoRef={videoRef}
         screenStreamRef={screenStreamRef}
         isMicOn={isMicOn}
@@ -200,16 +165,21 @@ export default function Room({ debateId, socket }: IRoomProps) {
         setIsReady={setIsReady}
         isStart={isStart}
         turn={turn}
-        isPros={isPros}
+        timeRef={timeRef}
       />
-      <a ref={downRef} download={`Test`} />
-      <button onClick={startRecord}>recordStart</button>
-      <button onClick={stopRecord}>recordStop</button>
-      <button onClick={downloadRecord}>recordDown</button>
-      <button onClick={() => setIsPros(!isPros)}>
-        {isPros ? "Now pros" : "Now cons"}
+      <a ref={testARef} download={dummy.topic} />
+      <button
+        onClick={() => {
+          if (!blobRef.current) return;
+          const url = window.URL.createObjectURL(blobRef.current);
+          if (!testARef.current) return;
+          testARef.current.href = url;
+          testARef.current?.click();
+          window.URL.revokeObjectURL(url);
+        }}
+      >
+        TempDown
       </button>
-      {isStart ? "start" : "waiting"}
     </div>
   );
 }

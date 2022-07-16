@@ -1,15 +1,23 @@
-import { MutableRefObject } from "react";
-import { Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
-export const connectHostPeer = (
-  debateId: string | string[],
-  socket: MutableRefObject<Socket | undefined>,
-  setPeer: (params: Peer.Instance | undefined) => void,
-  streamRef: MutableRefObject<MediaStream | undefined>,
-  peerStreamRef: MutableRefObject<MediaStream | undefined>,
-  peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
-) => {
+import { IDebateroom } from "../types";
+
+export const connectHostPeer = ({
+  debateId,
+  socket,
+  peerRef,
+  stream,
+  setPeerStream,
+  peerVideoRef,
+}: Pick<
+  IDebateroom,
+  | "debateId"
+  | "socket"
+  | "peerRef"
+  | "stream"
+  | "setPeerStream"
+  | "peerVideoRef"
+>) => {
   const simplePeer = new Peer({
     initiator: true,
     trickle: false,
@@ -23,17 +31,17 @@ export const connectHostPeer = (
         { urls: "stun:stun.nextcloud.com:443" },
       ],
     },
-    stream: streamRef.current,
+    stream,
   });
 
-  setPeer(simplePeer);
+  peerRef.current = simplePeer;
 
   simplePeer.on("signal", (signal) => {
     socket.current?.emit("offer", { debateId, signal });
   });
 
   simplePeer.on("stream", (stream) => {
-    peerStreamRef.current = stream;
+    setPeerStream(stream);
     if (peerVideoRef.current) {
       peerVideoRef.current.srcObject = stream;
     }
@@ -49,28 +57,38 @@ export const connectHostPeer = (
 };
 
 export const connectGuestPeer = (
-  debateId: string | string[],
-  socket: MutableRefObject<Socket | undefined>,
-  setPeer: (params: Peer.Instance | undefined) => void,
-  streamRef: MutableRefObject<MediaStream | undefined>,
-  peerStreamRef: MutableRefObject<MediaStream | undefined>,
-  peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
+  {
+    debateId,
+    socket,
+    peerRef,
+    stream,
+    setPeerStream,
+    peerVideoRef,
+  }: Pick<
+    IDebateroom,
+    | "debateId"
+    | "socket"
+    | "peerRef"
+    | "stream"
+    | "setPeerStream"
+    | "peerVideoRef"
+  >,
   signal: Peer.SignalData,
 ) => {
   const simplePeer = new Peer({
     initiator: false,
     trickle: false,
-    stream: streamRef.current,
+    stream,
   });
 
-  setPeer(simplePeer);
+  peerRef.current = simplePeer;
 
   simplePeer.on("signal", (signal) => {
     socket.current?.emit("answer", { debateId, signal });
   });
 
   simplePeer.on("stream", (stream) => {
-    peerStreamRef.current = stream;
+    setPeerStream(stream);
     if (peerVideoRef.current) {
       peerVideoRef.current.srcObject = stream;
     }

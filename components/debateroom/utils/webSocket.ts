@@ -1,190 +1,270 @@
-import { MutableRefObject } from "react";
-import { io, Socket } from "socket.io-client";
+import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 import Peer from "simple-peer";
 
-import { connectHostPeer, connectGuestPeer } from "./simple-peer";
-import { IDebateData, drawNotice } from "./draw";
+import { drawNotice } from "./draw";
 import { beep } from "./beep";
+import { offScreenShare } from "./screenShare";
+import { connectHostPeer, connectGuestPeer } from "./simple-peer";
 
-//*- Socket and WebRTC 연결
-export const wsConnect = (
-  debateId: string | string[] | undefined,
-  socket: MutableRefObject<Socket | undefined>,
-  setPeer: (params: Peer.Instance | undefined) => void,
-  canvasRef: MutableRefObject<HTMLCanvasElement | null>,
-  streamRef: MutableRefObject<MediaStream | undefined>,
-  peerStreamRef: MutableRefObject<MediaStream | undefined>,
-  videoRef: MutableRefObject<HTMLVideoElement | null>,
-  peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
-  setIsPeerVideoOn: (params: boolean) => void,
-  setIsPeerScreenOn: (params: boolean) => void,
-  setIsStart: (params: boolean) => void,
-  setTurn: (
-    params: "none" | "notice" | "pros" | "cons" | "prosCross" | "consCross",
-  ) => void,
-  topic: string,
-) => {
-  if (debateId && socket.current) {
-    // * 사용자 미디어 획득
+import { IDebateroom, IDebateData, TTurn } from "../types";
+
+export const useWebSocket = ({
+  debateId,
+  socket,
+  isPros,
+  peerRef,
+  isHostRef,
+  canvasRef,
+  stream,
+  setStream,
+  peerStream,
+  setPeerStream,
+  videoRef,
+  peerVideoRef,
+  screenStreamRef,
+  isVideoOn,
+  setIsPeerVideoOn,
+  isScreenOn,
+  setIsScreenOn,
+  setIsPeerScreenOn,
+  isReady,
+  setIsReady,
+  setIsStart,
+  isDoneRef,
+  setTurn,
+  timeRef,
+  mergedAudioRef,
+  recorderRef,
+  blobsRef,
+  dummy,
+}: Pick<
+  IDebateroom,
+  | "debateId"
+  | "socket"
+  | "isPros"
+  | "peerRef"
+  | "isHostRef"
+  | "canvasRef"
+  | "stream"
+  | "setStream"
+  | "peerStream"
+  | "setPeerStream"
+  | "videoRef"
+  | "peerVideoRef"
+  | "screenStreamRef"
+  | "isVideoOn"
+  | "setIsPeerVideoOn"
+  | "isScreenOn"
+  | "setIsScreenOn"
+  | "setIsPeerScreenOn"
+  | "isReady"
+  | "setIsReady"
+  | "setIsStart"
+  | "isDoneRef"
+  | "setTurn"
+  | "timeRef"
+  | "mergedAudioRef"
+  | "recorderRef"
+  | "blobsRef"
+  | "dummy"
+>) => {
+  const [reconnect, setReconnect] = useState<boolean>(false);
+
+  //*- 연결
+  useEffect(() => {
+    if (!debateId) return;
+
+    //* 미디어 획득 및 연결
     navigator.mediaDevices
       .getUserMedia({
         video: { facingMode: "user", width: 500, height: 500 },
         audio: { echoCancellation: true, noiseSuppression: true },
       })
       .then((stream) => {
-        streamRef.current = stream;
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
+        setStream(stream);
+        if (videoRef.current) videoRef.current.srcObject = stream;
+        socket.current?.emit("join", { debateId });
+
+        socket.current?.on("overcapacity", () => {
+          //Todo: 입장 초과 모달
+          console.log("overcapacity");
+        });
+
+        socket.current?.on("peerJoin", () => {
+          connectHostPeer({
+            debateId,
+            socket,
+            peerRef,
+            stream,
+            setPeerStream,
+            peerVideoRef,
+          });
+          isHostRef.current = true;
+        });
+
+        socket.current?.on("offer", (signal: Peer.SignalData) => {
+          connectGuestPeer(
+            {
+              debateId,
+              socket,
+              peerRef,
+              stream,
+              setPeerStream,
+              peerVideoRef,
+            },
+            signal,
+          );
+        });
       });
 
-    // * 방 입장
-    socket.current.emit("join", { debateId });
-
-    // * 방 입장 거절
-    socket.current.on("overcapacity", () => {
-      console.log("overcapacity"); //!
-    });
-
-    // * WebRTC 연결
-    socket.current.on("guestJoin", () => {
-      connectHostPeer(
-        debateId,
-        socket,
-        setPeer,
-        streamRef,
-        peerStreamRef,
-        peerVideoRef,
-      );
-    });
-
-    socket.current.on("offer", (signal: Peer.SignalData) => {
-      connectGuestPeer(
-        debateId,
-        socket,
-        setPeer,
-        streamRef,
-        peerStreamRef,
-        peerVideoRef,
-        signal,
-      );
-    });
-
-    // * 정보 수신
-    socket.current.on("peerVideo", (isPeerVideoOn: boolean) => {
+    //* 정보 수신
+    socket.current?.on("peerVideo", (isPeerVideoOn: boolean) => {
       setIsPeerVideoOn(isPeerVideoOn);
     });
 
-    socket.current.on("peerScreen", (isPeerScreenOn: boolean) => {
+    socket.current?.on("peerScreen", (isPeerScreenOn: boolean) => {
       setIsPeerScreenOn(isPeerScreenOn);
     });
 
-    socket.current.on("debateStart", () => {
+    socket.current?.on("debateStart", () => {
       setIsStart(true);
     });
 
-    socket.current.on("debateProgress", (debateData: IDebateData) => {
-      let turn:
-        | "none"
-        | "notice"
-        | "pros"
-        | "cons"
-        | "prosCross"
-        | "consCross" = "notice";
-      if (debateData.turn === 1 || debateData.turn === 5) turn = "pros";
-      if (debateData.turn === 3 || debateData.turn === 6) turn = "cons";
-      if (debateData.turn === 4) turn = "prosCross";
-      if (debateData.turn === 2) turn = "consCross";
-      setTurn(turn);
-      drawNotice(canvasRef, debateData, topic, turn);
-      if (debateData.timer === 10 || debateData.timer === 3) beep();
+    //* 최초 공지
+    drawNotice(
+      { canvasRef, turn: "none" },
+      {
+        notice: dummy.topic,
+        turn: 7,
+        time: 0,
+      },
+      dummy.topic,
+    );
+
+    //* 토론 및 공지
+    socket.current?.on("debate", (debateData: IDebateData) => {
+      let turn: TTurn = "notice";
+      if (debateData.turn === 7 && debateData.time < 0) {
+        isDoneRef.current = true;
+        if (recorderRef.current?.state === "recording") {
+          recorderRef.current?.stop();
+        }
+      } else {
+        if (debateData.turn === 1 || debateData.turn === 5) turn = "pros";
+        if (debateData.turn === 3 || debateData.turn === 6) turn = "cons";
+        if (debateData.turn === 4) turn = "prosCross";
+        if (debateData.turn === 2) turn = "consCross";
+        setTurn(turn);
+        timeRef.current = debateData.time;
+        drawNotice({ canvasRef, turn }, debateData, dummy.topic);
+        if (debateData.time === 10 || debateData.time === 1) beep();
+      }
     });
 
-    // * 기본 공지
-    drawNotice(
-      canvasRef,
-      {
-        notice: topic,
-        turn: -1,
-        timer: -1,
-      },
-      topic,
-      "none",
-    );
+    socket.current?.on("debateDone", () => {
+      //Todo: 토론 종료 모달
+      console.log("토론 종료 모달");
+    });
+  }, [
+    canvasRef,
+    debateId,
+    dummy.topic,
+    isDoneRef,
+    isHostRef,
+    peerRef,
+    peerVideoRef,
+    reconnect,
+    recorderRef,
+    setIsPeerScreenOn,
+    setIsPeerVideoOn,
+    setIsStart,
+    setPeerStream,
+    setStream,
+    setTurn,
+    socket,
+    timeRef,
+    videoRef,
+  ]); // dependency에 reconnect 필요
+
+  //*- 연결 해제
+  useEffect(() => {
+    socket.current?.on("peerDisconnect", () => {
+      if (recorderRef.current?.state === "recording") {
+        recorderRef.current?.stop();
+      }
+
+      offScreenShare({
+        peerRef,
+        stream,
+        videoRef,
+        screenStreamRef,
+        setIsScreenOn,
+      });
+
+      setPeerStream(undefined);
+      if (peerVideoRef.current) peerVideoRef.current.srcObject = null;
+      setIsPeerVideoOn(false);
+      setIsPeerScreenOn(false);
+      setIsReady(false);
+      setIsStart(false);
+      setTurn("none");
+      timeRef.current = 0;
+      mergedAudioRef.current = undefined;
+      recorderRef.current = undefined;
+
+      peerRef.current?.destroy();
+      peerRef.current = undefined;
+
+      socket.current?.disconnect();
+      socket.current = io(`${process.env.NEXT_PUBLIC_API_URL}`);
+
+      setReconnect((state) => !state);
+    });
+  }, [
+    blobsRef,
+    mergedAudioRef,
+    peerRef,
+    peerVideoRef,
+    recorderRef,
+    screenStreamRef,
+    setIsPeerScreenOn,
+    setIsPeerVideoOn,
+    setIsReady,
+    setIsScreenOn,
+    setIsStart,
+    setPeerStream,
+    setTurn,
+    socket,
+    stream,
+    timeRef,
+    videoRef,
+  ]);
+
+  //*- 정보 송신
+  useEffect(() => {
+    socket.current?.emit("peerVideo", { debateId, isVideoOn });
+  }, [debateId, isVideoOn, peerStream, socket]); // dependency에 peerStream 필요
+
+  useEffect(() => {
+    socket.current?.emit("peerScreen", { debateId, isScreenOn });
+  }, [debateId, isScreenOn, socket]);
+
+  useEffect(() => {
+    socket.current?.emit("ready", { debateId, isReady, isPros });
+  }, [debateId, isReady, socket, isPros]);
+};
+
+export const wsTransmitSkip = ({
+  debateId,
+  socket,
+  isPros,
+  timeRef,
+}: Pick<IDebateroom, "debateId" | "socket" | "isPros" | "timeRef">) => {
+  socket.current?.emit("skip", { debateId, isPros }); //!
+  if (timeRef.current < 60 && timeRef.current > 1) {
+    socket.current?.emit("skip", { debateId, isPros });
+  } else {
+    //Todo: 스킵 안내 모달
   }
-};
-
-//*- Socket and WebRTC 연결 해제
-export const wsDisconnect = (
-  socket: MutableRefObject<Socket | undefined>,
-  reConnect: boolean,
-  setReconnect: (params: boolean) => void,
-  peer: Peer.Instance | undefined,
-  setPeer: (params: Peer.Instance | undefined) => void,
-  peerStreamRef: MutableRefObject<MediaStream | undefined>,
-  peerVideoRef: MutableRefObject<HTMLVideoElement | null>,
-  screenStreamRef: MutableRefObject<MediaStream | undefined>,
-  setIsPeerVideoOn: (params: boolean) => void,
-  setIsScreenOn: (params: boolean) => void,
-  setIsPeerScreenOn: (params: boolean) => void,
-) => {
-  socket.current?.on("peerDisconnect", () => {
-    // * Peer 파괴
-    peer?.destroy();
-    setPeer(undefined);
-
-    // * Socket 연결 해제 및 재연결
-    socket.current?.disconnect();
-    socket.current = io(`${process.env.NEXT_PUBLIC_API_URL}`);
-
-    // * Peer 관련 정보 초기화
-    peerStreamRef.current = undefined;
-    if (peerVideoRef.current) peerVideoRef.current.srcObject = null;
-    setIsPeerVideoOn(false);
-    setIsScreenOn(false);
-    setIsPeerScreenOn(false);
-
-    // * 화면 공유 끄기
-    if (screenStreamRef.current) {
-      screenStreamRef.current.getTracks()[0].stop();
-    }
-
-    setReconnect(!reConnect);
-  });
-};
-
-//*- 정보 송신
-export const wsTransmitVideo = (
-  debateId: string | string[] | undefined,
-  socket: MutableRefObject<Socket | undefined>,
-  peer: Peer.Instance | undefined,
-  isVideoOn: boolean,
-) => {
-  if (peer) socket.current?.emit("peerVideo", { debateId, isVideoOn });
-};
-
-export const wsTransmitScreen = (
-  debateId: string | string[] | undefined,
-  socket: MutableRefObject<Socket | undefined>,
-  peer: Peer.Instance | undefined,
-  isScreenOn: boolean,
-) => {
-  if (peer) socket.current?.emit("peerScreen", { debateId, isScreenOn });
-};
-
-export const wsTransmitReady = (
-  debateId: string | string[] | undefined,
-  socket: MutableRefObject<Socket | undefined>,
-  isReady: boolean,
-  isPros: boolean,
-) => {
-  socket.current?.emit("ready", { debateId, isReady, isPros });
-};
-
-export const wsTransmitSkip = (
-  debateId: string | string[] | undefined,
-  socket: MutableRefObject<Socket | undefined>,
-  isPros: boolean,
-) => {
-  socket.current?.emit("skip", { debateId, isPros });
 };
