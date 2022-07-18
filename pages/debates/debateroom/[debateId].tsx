@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 
-import Room from "../../../components/debates/debateroom/Room";
+import DebateRoom from "../../../components/debates/debateroom";
 
 export default function Debateroom() {
   const router = useRouter();
@@ -14,7 +14,7 @@ export default function Debateroom() {
   }, []);
 
   return (
-    <Room
+    <DebateRoom
       debateId={debateId}
       socket={socketRef}
       isPros={isPros === "true" ? true : false}
