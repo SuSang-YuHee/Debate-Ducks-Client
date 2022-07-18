@@ -1,5 +1,5 @@
 import axios from "axios";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { BaseSyntheticEvent, useRef, useState } from "react";
 import styles from "../../styles/Signup.module.scss";
 
@@ -25,7 +25,7 @@ export default function Signup() {
   const emailRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
 
-  // const router = useRouter();
+  const router = useRouter();
 
   const emailRegExp =
     /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
@@ -65,93 +65,12 @@ export default function Signup() {
   }
   function handleSignup() {
     console.log(userInfo);
-    // axios.post("http://localhost:80/users", userInfo).then((res) => {
-    //   if (res.statusText === "Created") {
-    //     router.push("/");
-    //   }
-    // });
+    axios.post("http://localhost:80/users", userInfo).then((res) => {
+      if (res.statusText === "Created") {
+        router.push("/");
+      }
+    });
   }
-  // function verify(type: string, value: string): boolean | undefined {
-  //   if (type === "name") {
-  //     return value.length >= 3 && value.length <= 30;
-  //   } else if (type === "email") {
-  //     return value.match(emailRegExp) !== null;
-  //   } else if (type === "password") {
-  //     if (userInfo.name !== undefined) {
-  //       return (
-  //         value.match(passwordRegExp) !== null
-  //       );
-  //     }
-  //   }
-  // }
-  // const [isValidName, setIsValidName] = useState<boolean>(true);
-  // const [isValidEmail, setIsValidEmail] = useState<boolean>(true);
-  // const [isValidPassword, setIsValidPassword] = useState<boolean>(true);
-  // const [isValidUserInfo, setIsValidUserInfo] = useState<boolean>(false);
-  // const router = useRouter();
-  // function changeName() {
-  //   const nameValue: string | undefined = nameRef.current?.value;
-  //   if (!(nameValue === undefined)) {
-  //     if (nameValue.length < 3 || nameValue.length > 30) {
-  //       setIsValidUserInfo(isValidName && isValidEmail && isValidPassword);
-  //       setIsValidName(false);
-  //     } else {
-  //       setIsValidUserInfo(isValidName && isValidEmail && isValidPassword);
-  //       setIsValidName(true);
-  //       setName(nameRef.current?.value);
-  //     }
-  //   }
-  // }
-  // function changeEmail() {
-  //   const emailValue: string | undefined = emailRef.current?.value;
-  //   const regExp =
-  //     ;
-  //   if (!(emailValue === undefined)) {
-  //     if (emailValue.length > 0) {
-  //       if (emailValue.match(regExp) !== null) {
-  //         setIsValidUserInfo(isValidName && isValidEmail && isValidPassword);
-  //         setIsValidEmail(true);
-  //         setEmail(emailRef.current?.value);
-  //       } else {
-  //         setIsValidUserInfo(isValidName && isValidEmail && isValidPassword);
-  //         setIsValidEmail(false);
-  //       }
-  //     }
-  //   }
-  // }
-  // function changePassword() {
-  //   const passwordValue: string | undefined = passwordRef.current?.value;
-  //   const regExp =
-  //     ;
-  //   if (!(passwordValue === undefined)) {
-  //     if (passwordValue.length > 0) {
-  //       if (name !== undefined && passwordValue?.includes(name)) {
-  //         console.log("비밀번호는 이름과 같은 문자열을 포함할 수 없습니다.");
-  //       } else {
-  //         if (passwordValue.match(regExp) !== null) {
-  //           setIsValidUserInfo(isValidName && isValidEmail && isValidPassword);
-  //           setIsValidPassword(true);
-  //         } else {
-  //           setIsValidUserInfo(isValidName && isValidEmail && isValidPassword);
-  //           setIsValidPassword(false);
-  //         }
-  //       }
-  //     }
-  //   }
-  //   setPassword(passwordRef.current?.value);
-  // }
-  // function handleSignup() {
-  //   if (!isValidUserInfo) {
-  //     console.log("회원가입 비활성화");
-  //   } else {
-  //     console.log("회원가입 활성화");
-  //     axios.post("http://localhost:80/users", userInfo).then((res) => {
-  //       if (res.statusText === "Created") {
-  //         router.push("/");
-  //       }
-  //     });
-  //   }
-  // }
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Signup</h1>
