@@ -21,6 +21,7 @@ export default function Signup() {
   const [isValidEmail, setIsValidEmail] = useState<boolean>(true);
   const [isValidPassword, setIsValidPassword] = useState<boolean>(true);
   const [isPwIncludesName, setIsPwIncludesName] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState(false);
   const nameRef = useRef<HTMLInputElement | null>(null);
   const emailRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
@@ -41,6 +42,7 @@ export default function Signup() {
         setUserInfo({ ...userInfo, [valueType]: value });
       } else {
         setIsValidName(false);
+        setUserInfo({ ...userInfo, [valueType]: "" });
       }
     } else if (valueType === "email") {
       if (value.match(emailRegExp) !== null) {
@@ -48,18 +50,23 @@ export default function Signup() {
         setUserInfo({ ...userInfo, [valueType]: value });
       } else {
         setIsValidEmail(false);
+        setUserInfo({ ...userInfo, [valueType]: "" });
       }
     } else if (valueType === "password") {
-      if (!value.includes(userInfo.name)) {
-        if (value.match(passwordRegExp) !== null) {
+      if (value.match(passwordRegExp) !== null) {
+        if (!value.includes(userInfo.name)) {
           setIsValidPassword(true);
+          setIsPwIncludesName(false);
           setUserInfo({ ...userInfo, [valueType]: value });
         } else {
-          setIsValidPassword(false);
-          setIsPwIncludesName(false);
+          setIsValidPassword(true);
+          setIsPwIncludesName(true);
+          setUserInfo({ ...userInfo, [valueType]: "" });
         }
       } else {
-        setIsPwIncludesName(true);
+        setIsValidPassword(false);
+        setIsPwIncludesName(false);
+        setUserInfo({ ...userInfo, [valueType]: "" });
       }
     }
   }
@@ -70,6 +77,10 @@ export default function Signup() {
         router.push("/");
       }
     });
+  }
+
+  function togglePassword() {
+    setShowPassword(!showPassword);
   }
   return (
     <div className={styles.container}>
@@ -105,18 +116,32 @@ export default function Signup() {
         </div>
         <div className={styles.input}>
           <label htmlFor="password">비밀번호</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            placeholder="비밀번호를 입력하세요"
-            ref={passwordRef}
-            onChange={handleChange}
-          />
+          {showPassword ? (
+            <input
+              id="password"
+              name="password"
+              type="text"
+              placeholder="비밀번호를 입력하세요"
+              ref={passwordRef}
+              onChange={handleChange}
+            />
+          ) : (
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="비밀번호를 입력하세요"
+              ref={passwordRef}
+              onChange={handleChange}
+            />
+          )}
+          <span onClick={togglePassword}>
+            {showPassword ? "비밀번호 숨기기" : "비밀번호 보이기"}
+          </span>
           {isValidPassword ? null : (
             <div className={styles.vm}>
-              비밀번호는 최소 하나 이상의 영문 대소문자와 숫자, 특수문자를
-              포함해야 합니다.
+              비밀번호는 최소 하나 이상의 영문 대소문자와 숫자,
+              특수문자(@!%*#?&)를 포함해야 합니다.
             </div>
           )}
           {isPwIncludesName ? (
