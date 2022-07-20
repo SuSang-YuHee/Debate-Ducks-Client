@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
-import { drawContents } from "../debateroom/utils/draw";
-import { useSetInterval } from "../debateroom/utils/useSetInterval";
+import { drawContents } from "./utils/draw";
+import { useSetInterval } from "./utils/useSetInterval";
 
 import { IDebateroom } from "./types";
 

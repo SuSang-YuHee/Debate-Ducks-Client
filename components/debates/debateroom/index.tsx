@@ -17,7 +17,7 @@ interface IRoomProps {
   isPros: boolean;
 }
 
-export default function Room({ debateId, socket, isPros }: IRoomProps) {
+export default function DebateRoom({ debateId, socket, isPros }: IRoomProps) {
   //* WebRTC 변수
   const peerRef = useRef<Peer.Instance | undefined>();
   const isHostRef = useRef<boolean>(false);
