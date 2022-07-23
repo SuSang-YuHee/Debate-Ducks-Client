@@ -20,12 +20,11 @@ import { Debate, DebatePost, DebatePatch, User } from "../../types";
 
 export const useGetDebate = (
   debateId: number,
-  userId?: string,
   options?: UseQueryOptions<Debate, AxiosError>,
 ) => {
   const query = useQuery<Debate, AxiosError>(
     ["debates", `${debateId}`],
-    () => getDebate(debateId, userId),
+    () => getDebate(debateId),
     options,
   );
   return query;

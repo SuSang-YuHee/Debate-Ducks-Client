@@ -5,7 +5,7 @@ import { useGetDebate, usePatchDebate } from "../../../utils/queries/debates";
 import ConfirmModal from "../../common/modal/ConfirmModal";
 
 export default function DebaterInfo({ debateId }: { debateId: number }) {
-  const debate = useGetDebate(debateId, "01G85SA6V8NXD7XGB155SC4S17");
+  const debate = useGetDebate(debateId);
 
   const [isErrorModalOn, setIsErrorModalOn] = useState<boolean>(false);
 

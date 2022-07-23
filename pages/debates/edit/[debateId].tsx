@@ -19,7 +19,7 @@ export default function Edit() {
   const param = router.query;
   const debateId =
     typeof param?.debateId === "string" ? parseInt(param?.debateId) : 0;
-  const debate = useGetDebate(debateId, "01G85SA6V8NXD7XGB155SC4S17");
+  const debate = useGetDebate(debateId);
 
   const [isSameModal, setIsSameModal] = useState<boolean>(false);
   const [isErrorModalOn, setIsErrorModalOn] = useState<boolean>(false);
@@ -102,7 +102,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       : 0;
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(["debates", `${debateId}`], () =>
-    getDebate(debateId, undefined),
+    getDebate(debateId),
   );
   return {
     props: {

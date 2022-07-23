@@ -21,11 +21,10 @@ export interface Debate {
   author_pros: boolean;
   created_date: string;
   updated_date: string | null;
-  ended_date: string | null;
   author: User;
   participant: User | null;
   factchecks: Factcheck[];
-  heart: { isHeart: boolean; heartCnt: number };
+  heartCnt: number;
   vote: { prosCnt: number; consCnt: number };
 }
 

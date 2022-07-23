@@ -2,9 +2,9 @@ import axios from "axios";
 
 import { DebatePost, DebatePatch } from "../types";
 
-export const getDebate = async (debateId: number, userId?: string) => {
+export const getDebate = async (debateId: number) => {
   const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/debates/${debateId}?userId=${userId}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/debates/${debateId}`,
     { withCredentials: true },
   );
   return data;

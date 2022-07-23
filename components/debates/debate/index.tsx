@@ -5,7 +5,7 @@ import DebaterInfo from "./DebaterInfo";
 import EditAndDelete from "./EditAndDelete";
 
 export default function Debate({ debateId }: { debateId: number }) {
-  const debate = useGetDebate(debateId, "01G85SA6V8NXD7XGB155SC4S17");
+  const debate = useGetDebate(debateId);
 
   return (
     <div>
@@ -13,8 +13,8 @@ export default function Debate({ debateId }: { debateId: number }) {
       <p>{debate.data?.created_date}</p>
       <p>{debate.data?.created_date}</p>
       <p>{debate.data?.category}</p>
-      <p>{`${debate.data?.heart?.isHeart}`}</p>
-      <p>{debate.data?.heart?.heartCnt}</p>
+      <p>하트</p>
+      <p>{debate.data?.heartCnt}</p>
       <EditAndDelete debateId={debateId} />
       <DebaterInfo debateId={debateId} />
       <pre>{debate.data?.contents}</pre>
