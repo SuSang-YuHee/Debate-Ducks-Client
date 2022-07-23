@@ -52,6 +52,12 @@ export interface Factcheck {
   reference_url: string;
 }
 
+//*- heart
+export interface HeartPatchOrDelete {
+  debateId: number;
+  userId: string;
+}
+
 //*- useInPutSelect
 export interface ResultUseInput {
   attribute: {

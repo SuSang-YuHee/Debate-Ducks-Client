@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { AxiosError } from "axios";
 import {
   useMutation,
+  UseMutationOptions,
   UseMutationResult,
   useQuery,
   useQueryClient,
@@ -32,10 +33,12 @@ export const useGetDebate = (
 
 export const usePostDebate = (
   setIsErrorModalOn: Dispatch<SetStateAction<boolean>>,
+  options?: UseMutationOptions<DebatePost, AxiosError, DebatePost>,
 ): UseMutationResult<DebatePost, AxiosError, DebatePost> => {
   const router = useRouter();
   const queryClient = useQueryClient();
   return useMutation((debate) => postDebate(debate), {
+    ...options,
     onSuccess: () => {
       queryClient.invalidateQueries(["debates"], { exact: true });
       router.push(`/debates`);
@@ -50,26 +53,28 @@ export const usePatchDebate = (
   debateId: number,
   setIsErrorModalOn: Dispatch<SetStateAction<boolean>>,
   participant?: User,
+  options?: UseMutationOptions<DebatePatch, AxiosError, DebatePatch>,
 ): UseMutationResult<DebatePatch, AxiosError, DebatePatch> => {
   const router = useRouter();
   const queryClient = useQueryClient();
   return useMutation((debate) => patchDebate(debate), {
+    ...options,
     onMutate: () => {
       if (!participant) return;
-      const oldDebate: DebatePatch | undefined = queryClient.getQueryData([
+      const prevDebate: Debate | undefined = queryClient.getQueryData([
         "debates",
         `${debateId}`,
       ]);
-      if (oldDebate) {
+      if (prevDebate) {
         queryClient.cancelQueries(["debates", `${debateId}`]);
         queryClient.setQueryData(["debates", `${debateId}`], () => {
           return {
-            ...oldDebate,
+            ...prevDebate,
             participant,
           };
         });
         return () =>
-          queryClient.setQueryData(["debates", `${debateId}`], oldDebate);
+          queryClient.setQueryData(["debates", `${debateId}`], prevDebate);
       }
     },
     onSuccess: () => {
@@ -87,10 +92,12 @@ export const usePatchDebate = (
 
 export const useDeleteDebate = (
   setIsErrorModalOn: Dispatch<SetStateAction<boolean>>,
+  options?: UseMutationOptions<number, AxiosError, number>,
 ): UseMutationResult<number, AxiosError, number> => {
   const router = useRouter();
   const queryClient = useQueryClient();
   return useMutation((debateId) => deleteDebate(debateId), {
+    ...options,
     onSuccess: () => {
       queryClient.invalidateQueries(["debates"], { exact: true });
       router.push(`/debates`);
