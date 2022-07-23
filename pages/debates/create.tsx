@@ -25,7 +25,7 @@ export default function Create() {
 
   const postDebate = usePostDebate(setIsErrorModalOn);
 
-  const debate: DebatePost = {
+  const debatePost: DebatePost = {
     title: titleInput.value,
     author_pros: prosConsRadio.value,
     category: categorySelect.value,
@@ -35,7 +35,7 @@ export default function Create() {
 
   const create = () => {
     createOrEdit(titleRef, setValidateNotice, titleInput, () => {
-      postDebate.mutate(debate);
+      postDebate.mutate(debatePost);
     });
   };
 
@@ -54,6 +54,7 @@ export default function Create() {
         prosConsRadio={prosConsRadio}
         contentsInput={contentsInput}
         createOrEdit={create}
+        createOrEditStr="작성"
         routerPush={() => {
           router.push("/debates");
         }}

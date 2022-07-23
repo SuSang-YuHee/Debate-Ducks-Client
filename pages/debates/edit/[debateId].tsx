@@ -19,7 +19,7 @@ export default function Edit() {
   const param = router.query;
   const debateId =
     typeof param?.debateId === "string" ? parseInt(param?.debateId) : 0;
-  const { data } = useGetDebate(debateId);
+  const debate = useGetDebate(debateId);
 
   const [isSameModal, setIsSameModal] = useState<boolean>(false);
   const [isErrorModalOn, setIsErrorModalOn] = useState<boolean>(false);
@@ -27,47 +27,46 @@ export default function Edit() {
   const titleRef = useRef<HTMLInputElement>(null);
   const [validateNotice, setValidateNotice] = useState<string>("");
 
-  const titleInput = useInput(data?.title || "", "");
-  const categorySelect = useSelect(data?.category || CATEGORIES[0]);
+  const titleInput = useInput(debate.data?.title || "", "");
+  const categorySelect = useSelect(debate.data?.category || CATEGORIES[0]);
   const prosConsRadio = useRadio(
-    data?.author_pros ? `${data?.author_pros}` : "false",
+    debate.data?.author_pros ? `${debate.data?.author_pros}` : "false",
     "prosCons",
   );
-  const contentsInput = useInput(data?.contents || "", "");
+  const contentsInput = useInput(debate.data?.contents || "", "");
 
-  const postDebate = usePatchDebate(setIsErrorModalOn, true);
+  const postDebate = usePatchDebate(debateId, setIsErrorModalOn);
 
-  const debate: DebatePatch = {
+  const debatePatch: DebatePatch = {
     title: titleInput.value,
     author_pros: prosConsRadio.value,
     category: categorySelect.value,
     contents: contentsInput.value,
-    id: data?.id || 0,
+    id: debate.data?.id || 0,
   };
 
   const edit = () => {
-    if (!data) return;
     if (
-      data.title === debate.title &&
-      data.author_pros === debate.author_pros &&
-      data.category === debate.category &&
-      data.contents === debate.contents
+      debate.data?.title === debatePatch.title &&
+      debate.data?.author_pros === debatePatch.author_pros &&
+      debate.data?.category === debatePatch.category &&
+      debate.data?.contents === debatePatch.contents
     ) {
       setIsSameModal(true);
     } else {
       createOrEdit(titleRef, setValidateNotice, titleInput, () => {
-        postDebate.mutate(debate);
+        postDebate.mutate(debatePatch);
       });
     }
   };
 
-  if (!data) return <>404</>;
+  if (!debate.data) return <>404</>;
   return (
     <div>
       {isSameModal ? (
         <ConfirmModal
-          title="작성 실패"
-          content="변경 내용이 없습니다."
+          title="수정 실패"
+          content="변경된 내용이 없습니다."
           firstBtn="확인"
           firstFunc={() => {
             setIsSameModal(false);
@@ -87,6 +86,7 @@ export default function Edit() {
         prosConsRadio={prosConsRadio}
         contentsInput={contentsInput}
         createOrEdit={edit}
+        createOrEditStr="수정"
         routerPush={() => {
           router.push(`/debates/${debateId}`);
         }}
@@ -101,7 +101,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       ? parseInt(context.params?.debateId)
       : 0;
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(["debate", `${debateId}`], () =>
+  await queryClient.prefetchQuery(["debates", `${debateId}`], () =>
     getDebate(debateId),
   );
   return {

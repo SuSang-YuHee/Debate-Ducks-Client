@@ -5,18 +5,20 @@ import DebaterInfo from "./DebaterInfo";
 import EditAndDelete from "./EditAndDelete";
 
 export default function Debate({ debateId }: { debateId: number }) {
-  const { data } = useGetDebate(debateId);
+  const debate = useGetDebate(debateId);
 
   return (
     <div>
-      <h1>{data?.title}</h1>
-      <p>{data?.created_date.toString()}</p>
-      <p>{data?.created_date.toString()}</p>
-      <p>{data?.category}</p>
+      <h1>{debate.data?.title}</h1>
+      <p>{debate.data?.created_date}</p>
+      <p>{debate.data?.created_date}</p>
+      <p>{debate.data?.category}</p>
+      <p>하트</p>
+      <p>{debate.data?.heartCnt}</p>
       <EditAndDelete debateId={debateId} />
       <DebaterInfo debateId={debateId} />
-      <pre>{data?.contents}</pre>
-      {data?.video_url ? <AfterDebate debateId={debateId} /> : null}
+      <pre>{debate.data?.contents}</pre>
+      <AfterDebate debateId={debateId} />
     </div>
   );
 }
