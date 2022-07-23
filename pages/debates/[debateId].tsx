@@ -3,19 +3,21 @@ import { useRouter } from "next/router";
 import { dehydrate, QueryClient } from "react-query";
 
 import { getDebate } from "../../api/debates";
+import { useGetDebate } from "../../utils/queries/debates";
 
 import Debate from "../../components/debates/debate";
 import Comments from "../../components/debates/debate/Comments";
-import { useGetDebate } from "../../utils/queries/debates";
 
 export default function Debates() {
   const router = useRouter();
   const param = router.query;
   const debateId =
     typeof param?.debateId === "string" ? parseInt(param?.debateId) : 0;
-  const { data } = useGetDebate(debateId);
+  const debate = useGetDebate(debateId, "01G85SA6V8NXD7XGB155SC4S17");
 
-  if (!data) return <>404</>;
+  console.log(debateId);
+
+  if (!debate.data) return <>404</>;
   return (
     <div>
       <Debate debateId={debateId} />
@@ -31,7 +33,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       ? parseInt(context.params?.debateId)
       : 0;
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(["debate", `${debateId}`], () =>
+  await queryClient.prefetchQuery(["debates", `${debateId}`], () =>
     getDebate(debateId),
   );
   return {

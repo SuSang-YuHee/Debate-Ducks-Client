@@ -16,25 +16,19 @@ import {
   postDebate,
 } from "../../api/debates";
 
-import { Debate, DebatePost, DebatePatch } from "../../types";
+import { Debate, DebatePost, DebatePatch, User } from "../../types";
 
 export const useGetDebate = (
   debateId: number,
+  userId?: string,
   options?: UseQueryOptions<Debate, AxiosError>,
 ) => {
-  const router = useRouter();
-  const { isLoading, data } = useQuery<Debate, AxiosError>(
-    ["debate", `${debateId}`],
-    () => getDebate(debateId),
-    {
-      ...options,
-      onError: () => {
-        router.push("/"); //Todo: 에러 페이지로 이동
-      },
-    },
+  const query = useQuery<Debate, AxiosError>(
+    ["debates", `${debateId}`],
+    () => getDebate(debateId, userId),
+    options,
   );
-
-  return { isLoading, data };
+  return query;
 };
 
 export const usePostDebate = (
@@ -43,9 +37,9 @@ export const usePostDebate = (
   const router = useRouter();
   const queryClient = useQueryClient();
   return useMutation((debate) => postDebate(debate), {
-    onSuccess: (debateId) => {
-      queryClient.invalidateQueries(["debates"]);
-      router.push(`/debates/${debateId}`);
+    onSuccess: () => {
+      queryClient.invalidateQueries(["debates"], { exact: true });
+      router.push(`/debates`);
     },
     onError: () => {
       setIsErrorModalOn(true);
@@ -54,17 +48,39 @@ export const usePostDebate = (
 };
 
 export const usePatchDebate = (
+  debateId: number,
   setIsErrorModalOn: Dispatch<SetStateAction<boolean>>,
-  isEdit?: boolean,
+  participant?: User,
 ): UseMutationResult<DebatePatch, AxiosError, DebatePatch> => {
   const router = useRouter();
   const queryClient = useQueryClient();
   return useMutation((debate) => patchDebate(debate), {
-    onSuccess: (debateId) => {
-      queryClient.invalidateQueries(["debate", `${debateId}`]);
-      if (isEdit) router.push(`/debates/${debateId}`);
+    onMutate: () => {
+      if (!participant) return;
+      const oldDebate: DebatePatch | undefined = queryClient.getQueryData([
+        "debates",
+        `${debateId}`,
+      ]);
+      if (oldDebate) {
+        queryClient.cancelQueries(["debates", `${debateId}`]);
+        queryClient.setQueryData(["debates", `${debateId}`], () => {
+          return {
+            ...oldDebate,
+            participant,
+          };
+        });
+        return () =>
+          queryClient.setQueryData(["debates", `${debateId}`], oldDebate);
+      }
     },
-    onError: () => {
+    onSuccess: () => {
+      if (!participant) {
+        queryClient.invalidateQueries(["debates", `${debateId}`]);
+        router.push(`/debates/${debateId}`);
+      }
+    },
+    onError: (error, variables, rollback) => {
+      if (rollback) rollback();
       setIsErrorModalOn(true);
     },
   });
@@ -77,7 +93,7 @@ export const useDeleteDebate = (
   const queryClient = useQueryClient();
   return useMutation((debateId) => deleteDebate(debateId), {
     onSuccess: () => {
-      queryClient.invalidateQueries(["debates"]);
+      queryClient.invalidateQueries(["debates"], { exact: true });
       router.push(`/debates`);
     },
     onError: () => {

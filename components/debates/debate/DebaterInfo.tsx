@@ -5,41 +5,49 @@ import { useGetDebate, usePatchDebate } from "../../../utils/queries/debates";
 import ConfirmModal from "../../common/modal/ConfirmModal";
 
 export default function DebaterInfo({ debateId }: { debateId: number }) {
-  const { data } = useGetDebate(debateId);
+  const debate = useGetDebate(debateId, "01G85SA6V8NXD7XGB155SC4S17");
 
   const [isErrorModalOn, setIsErrorModalOn] = useState<boolean>(false);
 
-  const participateDebate = usePatchDebate(setIsErrorModalOn);
-
-  const debate = {
-    id: data?.id || 0,
-    participant_id: "01G85SA6V8NXD7XGB155SC4S18", //!
+  //!
+  const user = {
+    id: "01G85SA6V8NXD7XGB155SC4S18",
+    nickname: "참여자",
+    email: "test2@gmail.com",
+    profile_image: null,
   };
+
+  const participateDebate = usePatchDebate(debateId, setIsErrorModalOn, user);
 
   return (
     <div>
-      <p>{data?.author?.name}</p>
-      {data?.participant ? (
-        <p>{data?.participant?.name}</p>
+      <p>{debate.data?.author?.nickname}</p>
+      {debate.data?.participant ? (
+        <p>{debate.data?.participant?.nickname}</p>
       ) : (
         <div>
           {isErrorModalOn ? (
             <ConfirmModal
-              title="작성 실패"
-              content="에러가 발생해 작성에 실패했습니다."
+              title="참여 실패"
+              content="참여에 실패했습니다. 다시 한번 확인해 주세요."
               firstBtn="확인"
               firstFunc={() => {
                 setIsErrorModalOn(false);
               }}
             />
           ) : null}
-          <button
-            onClick={() => {
-              participateDebate.mutate(debate);
-            }}
-          >
-            참여
-          </button>
+          {debate.data?.author.id !== user.id ? (
+            <button
+              onClick={() => {
+                participateDebate.mutate({
+                  id: debate.data?.id || 0,
+                  participant_id: user.id,
+                });
+              }}
+            >
+              참여
+            </button>
+          ) : null}
         </div>
       )}
     </div>

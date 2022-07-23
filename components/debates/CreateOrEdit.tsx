@@ -19,6 +19,7 @@ export default function CreateOrEdit({
   prosConsRadio,
   contentsInput,
   createOrEdit,
+  createOrEditStr,
   routerPush,
 }: {
   isErrorModalOn: boolean;
@@ -33,6 +34,7 @@ export default function CreateOrEdit({
   prosConsRadio: ResultUseRadio;
   contentsInput: ResultUseInput;
   createOrEdit: () => void;
+  createOrEditStr: string;
   routerPush: () => void;
 }) {
   useEffect(() => {
@@ -47,12 +49,12 @@ export default function CreateOrEdit({
         isCheckModalOn={isCancelModalOn}
         setIsCheckModalOn={setIsCancelModalOn}
         errorMessage={{
-          title: "작성 실패",
-          content: "에러가 발생해 작성에 실패했습니다.",
+          title: `${createOrEditStr} 실패`,
+          content: `에러가 발생해 ${createOrEditStr}에 실패했습니다.`,
         }}
         checkMessage={{
-          title: "작성 취소",
-          content: "작성을 취소하고 나가겠습니까?",
+          title: `${createOrEditStr} 취소`,
+          content: `${createOrEditStr}을 취소하고 나가겠습니까?`,
           firstBtn: "머무르기",
           secondBtn: "나가기",
         }}
@@ -89,7 +91,7 @@ export default function CreateOrEdit({
       >
         취소
       </button>
-      <button onClick={createOrEdit}>만들기</button>
+      <button onClick={createOrEdit}>{createOrEditStr}</button>
     </div>
   );
 }
