@@ -56,20 +56,20 @@ export const usePatchDebate = (
   return useMutation((debate) => patchDebate(debate), {
     onMutate: () => {
       if (!participant) return;
-      const oldDebate: DebatePatch | undefined = queryClient.getQueryData([
+      const prevDebate: Debate | undefined = queryClient.getQueryData([
         "debates",
         `${debateId}`,
       ]);
-      if (oldDebate) {
+      if (prevDebate) {
         queryClient.cancelQueries(["debates", `${debateId}`]);
         queryClient.setQueryData(["debates", `${debateId}`], () => {
           return {
-            ...oldDebate,
+            ...prevDebate,
             participant,
           };
         });
         return () =>
-          queryClient.setQueryData(["debates", `${debateId}`], oldDebate);
+          queryClient.setQueryData(["debates", `${debateId}`], prevDebate);
       }
     },
     onSuccess: () => {
