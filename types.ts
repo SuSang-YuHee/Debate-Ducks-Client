@@ -52,10 +52,10 @@ export interface Factcheck {
   reference_url: string;
 }
 
-//*- hearts
-export interface HeartPatchOrDelete {
-  debateId: number;
-  userId: string;
+//*- debate and user id
+export interface DebateAndUserID {
+  target_debate_id: number;
+  target_user_id: string;
 }
 
 //*- useInPutSelect

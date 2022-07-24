@@ -13,11 +13,16 @@ import EditAndDelete from "./EditAndDelete";
 import ConfirmModal from "../../common/modal/ConfirmModal";
 
 export default function Debate({ debateId }: { debateId: number }) {
+  const userId = "01G85SA6V8NXD7XGB155SC4S17"; //!
+
   const [isHeartErrorModalOn, setIsHeartErrorModalOn] =
     useState<boolean>(false);
 
   const debate = useGetDebate(debateId);
-  const heart = useGetHeart(debateId, "01G85SA6V8NXD7XGB155SC4S17");
+  const heart = useGetHeart({
+    target_debate_id: debateId,
+    target_user_id: userId,
+  });
   const postHeart = usePostHeart(setIsHeartErrorModalOn);
   const deleteHeart = useDeleteHeart(setIsHeartErrorModalOn);
 
@@ -41,13 +46,13 @@ export default function Debate({ debateId }: { debateId: number }) {
         onClick={() => {
           if (heart.data) {
             deleteHeart.mutate({
-              debateId,
-              userId: "01G85SA6V8NXD7XGB155SC4S17",
+              target_debate_id: debateId,
+              target_user_id: userId,
             });
           } else {
             postHeart.mutate({
-              debateId,
-              userId: "01G85SA6V8NXD7XGB155SC4S17",
+              target_debate_id: debateId,
+              target_user_id: userId,
             });
           }
         }}
