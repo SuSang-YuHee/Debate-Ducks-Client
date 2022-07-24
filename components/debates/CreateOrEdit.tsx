@@ -2,13 +2,13 @@ import { Dispatch, RefObject, SetStateAction, useEffect } from "react";
 
 import { CATEGORIES } from "../../utils";
 
-import ErrorAndCheckModal from "../common/modal/ErrorAndCheckModal";
+import ErrAndCheckModal from "../common/modal/ErrAndCheckModal";
 
 import { UseInputResult, UseRadioResult, UseSelectResult } from "../../types";
 
 export default function CreateOrEdit({
-  isErrorModalOn,
-  setIsErrorModalOn,
+  isErrModalOn,
+  setIsErrModalOn,
   isCancelModalOn,
   setIsCancelModalOn,
   titleRef,
@@ -22,8 +22,8 @@ export default function CreateOrEdit({
   createOrEditStr,
   routerPush,
 }: {
-  isErrorModalOn: boolean;
-  setIsErrorModalOn: Dispatch<SetStateAction<boolean>>;
+  isErrModalOn: boolean;
+  setIsErrModalOn: Dispatch<SetStateAction<boolean>>;
   isCancelModalOn: boolean;
   setIsCancelModalOn: Dispatch<SetStateAction<boolean>>;
   titleRef: RefObject<HTMLInputElement>;
@@ -43,12 +43,12 @@ export default function CreateOrEdit({
 
   return (
     <div>
-      <ErrorAndCheckModal
-        isErrorModalOn={isErrorModalOn}
-        setIsErrorModalOn={setIsErrorModalOn}
+      <ErrAndCheckModal
+        isErrModalOn={isErrModalOn}
+        setIsErrModalOn={setIsErrModalOn}
         isCheckModalOn={isCancelModalOn}
         setIsCheckModalOn={setIsCancelModalOn}
-        errorMessage={{
+        errMessage={{
           title: `${createOrEditStr} 실패`,
           content: `에러가 발생해 ${createOrEditStr}에 실패했습니다.`,
         }}

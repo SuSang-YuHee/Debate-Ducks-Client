@@ -26,7 +26,7 @@ export const useGetHeart = (
 };
 
 export const usePostHeart = (
-  setIsErrorModalOn: Dispatch<SetStateAction<boolean>>,
+  setIsErrModalOn: Dispatch<SetStateAction<boolean>>,
   options?: UseMutationOptions<DebateAndUserID, AxiosError, DebateAndUserID>,
 ): UseMutationResult<DebateAndUserID, AxiosError, DebateAndUserID> => {
   const queryClient = useQueryClient();
@@ -79,13 +79,13 @@ export const usePostHeart = (
     },
     onError: (error, variables, rollback) => {
       if (rollback) rollback();
-      setIsErrorModalOn(true);
+      setIsErrModalOn(true);
     },
   });
 };
 
 export const useDeleteHeart = (
-  setIsErrorModalOn: Dispatch<SetStateAction<boolean>>,
+  setIsErrModalOn: Dispatch<SetStateAction<boolean>>,
   options?: UseMutationOptions<DebateAndUserID, AxiosError, DebateAndUserID>,
 ): UseMutationResult<DebateAndUserID, AxiosError, DebateAndUserID> => {
   const queryClient = useQueryClient();
@@ -138,7 +138,7 @@ export const useDeleteHeart = (
     },
     onError: (error, variables, rollback) => {
       if (rollback) rollback();
-      setIsErrorModalOn(true);
+      setIsErrModalOn(true);
     },
   });
 };

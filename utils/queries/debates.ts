@@ -32,7 +32,7 @@ export const useGetDebate = (
 };
 
 export const usePostDebate = (
-  setIsErrorModalOn: Dispatch<SetStateAction<boolean>>,
+  setIsErrModalOn: Dispatch<SetStateAction<boolean>>,
   options?: UseMutationOptions<DebatePost, AxiosError, DebatePost>,
 ): UseMutationResult<DebatePost, AxiosError, DebatePost> => {
   const router = useRouter();
@@ -44,14 +44,14 @@ export const usePostDebate = (
       router.push(`/debates`);
     },
     onError: () => {
-      setIsErrorModalOn(true);
+      setIsErrModalOn(true);
     },
   });
 };
 
 export const usePatchDebate = (
   debateId: number,
-  setIsErrorModalOn: Dispatch<SetStateAction<boolean>>,
+  setIsErrModalOn: Dispatch<SetStateAction<boolean>>,
   participant?: User,
   options?: UseMutationOptions<DebatePatch, AxiosError, DebatePatch>,
 ): UseMutationResult<DebatePatch, AxiosError, DebatePatch> => {
@@ -85,13 +85,13 @@ export const usePatchDebate = (
     },
     onError: (error, variables, rollback) => {
       if (rollback) rollback();
-      setIsErrorModalOn(true);
+      setIsErrModalOn(true);
     },
   });
 };
 
 export const useDeleteDebate = (
-  setIsErrorModalOn: Dispatch<SetStateAction<boolean>>,
+  setIsErrModalOn: Dispatch<SetStateAction<boolean>>,
   options?: UseMutationOptions<number, AxiosError, number>,
 ): UseMutationResult<number, AxiosError, number> => {
   const router = useRouter();
@@ -103,7 +103,7 @@ export const useDeleteDebate = (
       router.push(`/debates`);
     },
     onError: () => {
-      setIsErrorModalOn(true);
+      setIsErrModalOn(true);
     },
   });
 };

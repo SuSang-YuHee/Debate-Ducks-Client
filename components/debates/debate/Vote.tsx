@@ -12,15 +12,15 @@ import ConfirmModal from "../../common/modal/ConfirmModal";
 export default function Vote({ debateId }: { debateId: number }) {
   const userId = "01G85SA6V8NXD7XGB155SC4S17";
 
-  const [isErrorModalOn, setIsErrorModalOn] = useState<boolean>(false);
+  const [isErrModalOn, setIsErrModalOn] = useState<boolean>(false);
 
   const debate = useGetDebate(debateId);
   const vote = useGetVote({
     target_debate_id: debateId,
     target_user_id: userId,
   });
-  const postVote = usePostVote(setIsErrorModalOn);
-  const patchVote = usePatchVote(setIsErrorModalOn);
+  const postVote = usePostVote(setIsErrModalOn);
+  const patchVote = usePatchVote(setIsErrModalOn);
 
   const doVote = (isPros: boolean) => {
     if (vote.data?.isVote) {
@@ -40,13 +40,13 @@ export default function Vote({ debateId }: { debateId: number }) {
 
   return (
     <div>
-      {isErrorModalOn ? (
+      {isErrModalOn ? (
         <ConfirmModal
           title="투표 실패"
           content="투표를 실패했습니다. 다시 한번 확인해 주세요."
           firstBtn="확인"
           firstFunc={() => {
-            setIsErrorModalOn(false);
+            setIsErrModalOn(false);
           }}
         />
       ) : null}

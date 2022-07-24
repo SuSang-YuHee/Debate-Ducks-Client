@@ -26,7 +26,7 @@ export const useGetVote = (
 };
 
 export const usePostVote = (
-  setIsErrorModalOn: Dispatch<SetStateAction<boolean>>,
+  setIsErrModalOn: Dispatch<SetStateAction<boolean>>,
   options?: UseMutationOptions<VotePostOrPatch, AxiosError, VotePostOrPatch>,
 ): UseMutationResult<VotePostOrPatch, AxiosError, VotePostOrPatch> => {
   const queryClient = useQueryClient();
@@ -95,13 +95,13 @@ export const usePostVote = (
     },
     onError: (error, variables, rollback) => {
       if (rollback) rollback();
-      setIsErrorModalOn(true);
+      setIsErrModalOn(true);
     },
   });
 };
 
 export const usePatchVote = (
-  setIsErrorModalOn: Dispatch<SetStateAction<boolean>>,
+  setIsErrModalOn: Dispatch<SetStateAction<boolean>>,
   options?: UseMutationOptions<VotePostOrPatch, AxiosError, VotePostOrPatch>,
 ): UseMutationResult<VotePostOrPatch, AxiosError, VotePostOrPatch> => {
   const queryClient = useQueryClient();
@@ -166,7 +166,7 @@ export const usePatchVote = (
     },
     onError: (error, variables, rollback) => {
       if (rollback) rollback();
-      setIsErrorModalOn(true);
+      setIsErrModalOn(true);
     },
   });
 };

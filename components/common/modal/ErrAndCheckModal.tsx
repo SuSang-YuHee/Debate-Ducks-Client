@@ -1,20 +1,20 @@
 import { Dispatch, SetStateAction } from "react";
 import ConfirmModal from "./ConfirmModal";
 
-export default function ErrorAndCheckModal({
-  isErrorModalOn,
-  setIsErrorModalOn,
+export default function ErrAndCheckModal({
+  isErrModalOn,
+  setIsErrModalOn,
   isCheckModalOn,
   setIsCheckModalOn,
-  errorMessage,
+  errMessage,
   checkMessage,
   checkCallback,
 }: {
-  isErrorModalOn: boolean;
-  setIsErrorModalOn: Dispatch<SetStateAction<boolean>>;
+  isErrModalOn: boolean;
+  setIsErrModalOn: Dispatch<SetStateAction<boolean>>;
   isCheckModalOn: boolean;
   setIsCheckModalOn: Dispatch<SetStateAction<boolean>>;
-  errorMessage: {
+  errMessage: {
     title: string;
     content: string;
   };
@@ -28,13 +28,13 @@ export default function ErrorAndCheckModal({
 }) {
   return (
     <div>
-      {isErrorModalOn ? (
+      {isErrModalOn ? (
         <ConfirmModal
-          title={errorMessage.title}
-          content={errorMessage.content}
+          title={errMessage.title}
+          content={errMessage.content}
           firstBtn="확인"
           firstFunc={() => {
-            setIsErrorModalOn(false);
+            setIsErrModalOn(false);
           }}
         />
       ) : null}
