@@ -67,12 +67,20 @@ export const usePostVote = (
                 ...prevDebate,
                 vote: {
                   prosCnt: prevDebate.vote.prosCnt + 1,
+<<<<<<< HEAD
+=======
+                  consCnt: prevDebate.vote.consCnt,
+>>>>>>> f17cb58f7ac21be7da2012406f9be2f35c1c3ca4
                 },
               };
             } else {
               return {
                 ...prevDebate,
                 vote: {
+<<<<<<< HEAD
+=======
+                  prosCnt: prevDebate.vote.prosCnt,
+>>>>>>> f17cb58f7ac21be7da2012406f9be2f35c1c3ca4
                   consCnt: prevDebate.vote.consCnt + 1,
                 },
               };
