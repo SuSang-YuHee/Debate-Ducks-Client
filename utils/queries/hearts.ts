@@ -10,6 +10,7 @@ import {
 import { Dispatch, SetStateAction } from "react";
 
 import { getHeart, postHeart, deleteHeart } from "../../api/hearts";
+import { queryStr } from ".";
 
 import { Debate, DebateAndUserID } from "../../types";
 
@@ -18,7 +19,7 @@ export const useGetHeart = (
   options?: UseQueryOptions<boolean, AxiosError>,
 ) => {
   const query = useQuery<boolean, AxiosError>(
-    ["hearts", `${debateAndUserId.target_debate_id}`],
+    [queryStr.hearts, `${debateAndUserId.target_debate_id}`],
     () => getHeart(debateAndUserId),
     options,
   );
@@ -34,30 +35,30 @@ export const usePostHeart = (
     ...options,
     onMutate: (debateAndUserId) => {
       const prevHeart: boolean | undefined = queryClient.getQueryData([
-        "hearts",
+        queryStr.hearts,
         `${debateAndUserId.target_debate_id}`,
       ]);
       const prevDebate: Debate | undefined = queryClient.getQueryData([
-        "debates",
+        queryStr.debates,
         `${debateAndUserId.target_debate_id}`,
       ]);
       if (prevHeart !== undefined && prevDebate !== undefined) {
         queryClient.cancelQueries([
-          "hearts",
+          queryStr.hearts,
           `${debateAndUserId.target_debate_id}`,
         ]);
         queryClient.cancelQueries([
-          "debates",
+          queryStr.debates,
           `${debateAndUserId.target_debate_id}`,
         ]);
         queryClient.setQueryData(
-          ["hearts", `${debateAndUserId.target_debate_id}`],
+          [queryStr.hearts, `${debateAndUserId.target_debate_id}`],
           () => {
             return !prevHeart;
           },
         );
         queryClient.setQueryData(
-          ["debates", `${debateAndUserId.target_debate_id}`],
+          [queryStr.debates, `${debateAndUserId.target_debate_id}`],
           () => {
             return {
               ...prevDebate,
@@ -67,11 +68,11 @@ export const usePostHeart = (
         );
         return () => {
           queryClient.setQueryData(
-            ["hearts", `${debateAndUserId.target_debate_id}`],
+            [queryStr.hearts, `${debateAndUserId.target_debate_id}`],
             prevHeart,
           );
           queryClient.setQueryData(
-            ["debates", `${debateAndUserId.target_debate_id}`],
+            [queryStr.debates, `${debateAndUserId.target_debate_id}`],
             prevDebate,
           );
         };
@@ -93,30 +94,30 @@ export const useDeleteHeart = (
     ...options,
     onMutate: (debateAndUserId) => {
       const prevHeart: boolean | undefined = queryClient.getQueryData([
-        "hearts",
+        queryStr.hearts,
         `${debateAndUserId.target_debate_id}`,
       ]);
       const prevDebate: Debate | undefined = queryClient.getQueryData([
-        "debates",
+        queryStr.debates,
         `${debateAndUserId.target_debate_id}`,
       ]);
       if (prevHeart !== undefined && prevDebate !== undefined) {
         queryClient.cancelQueries([
-          "hearts",
+          queryStr.hearts,
           `${debateAndUserId.target_debate_id}`,
         ]);
         queryClient.cancelQueries([
-          "debates",
+          queryStr.debates,
           `${debateAndUserId.target_debate_id}`,
         ]);
         queryClient.setQueryData(
-          ["hearts", `${debateAndUserId.target_debate_id}`],
+          [queryStr.hearts, `${debateAndUserId.target_debate_id}`],
           () => {
             return !prevHeart;
           },
         );
         queryClient.setQueryData(
-          ["debates", `${debateAndUserId.target_debate_id}`],
+          [queryStr.debates, `${debateAndUserId.target_debate_id}`],
           () => {
             return {
               ...prevDebate,
@@ -126,11 +127,11 @@ export const useDeleteHeart = (
         );
         return () => {
           queryClient.setQueryData(
-            ["hearts", `${debateAndUserId.target_debate_id}`],
+            [queryStr.hearts, `${debateAndUserId.target_debate_id}`],
             prevHeart,
           );
           queryClient.setQueryData(
-            ["debates", `${debateAndUserId.target_debate_id}`],
+            [queryStr.debates, `${debateAndUserId.target_debate_id}`],
             prevDebate,
           );
         };

@@ -10,6 +10,7 @@ import {
 import { Dispatch, SetStateAction } from "react";
 
 import { postVote, patchVote, getVote } from "../../api/votes";
+import { queryStr } from ".";
 
 import { Debate, DebateAndUserID, Vote, VotePostOrPatch } from "../../types";
 
@@ -18,7 +19,7 @@ export const useGetVote = (
   options?: UseQueryOptions<Vote, AxiosError>,
 ) => {
   const query = useQuery<Vote, AxiosError>(
-    ["votes", `${debateAndUserId.target_debate_id}`],
+    [queryStr.votes, `${debateAndUserId.target_debate_id}`],
     () => getVote(debateAndUserId),
     options,
   );
@@ -34,24 +35,24 @@ export const usePostVote = (
     ...options,
     onMutate: (votePostOrPatch) => {
       const prevVote: Vote | undefined = queryClient.getQueryData([
-        "votes",
+        queryStr.votes,
         `${votePostOrPatch.target_debate_id}`,
       ]);
       const prevDebate: Debate | undefined = queryClient.getQueryData([
-        "debates",
+        queryStr.debates,
         `${votePostOrPatch.target_debate_id}`,
       ]);
       if (prevVote !== undefined && prevDebate !== undefined) {
         queryClient.cancelQueries([
-          "votes",
+          queryStr.votes,
           `${votePostOrPatch.target_debate_id}`,
         ]);
         queryClient.cancelQueries([
-          "debates",
+          queryStr.debates,
           `${votePostOrPatch.target_debate_id}`,
         ]);
         queryClient.setQueryData(
-          ["votes", `${votePostOrPatch.target_debate_id}`],
+          [queryStr.votes, `${votePostOrPatch.target_debate_id}`],
           () => {
             return {
               isVote: true,
@@ -60,7 +61,7 @@ export const usePostVote = (
           },
         );
         queryClient.setQueryData(
-          ["debates", `${votePostOrPatch.target_debate_id}`],
+          [queryStr.debates, `${votePostOrPatch.target_debate_id}`],
           () => {
             if (votePostOrPatch.pros) {
               return {
@@ -83,11 +84,11 @@ export const usePostVote = (
         );
         return () => {
           queryClient.setQueryData(
-            ["votes", `${votePostOrPatch.target_debate_id}`],
+            [queryStr.votes, `${votePostOrPatch.target_debate_id}`],
             prevVote,
           );
           queryClient.setQueryData(
-            ["debates", `${votePostOrPatch.target_debate_id}`],
+            [queryStr.debates, `${votePostOrPatch.target_debate_id}`],
             prevDebate,
           );
         };
@@ -109,24 +110,24 @@ export const usePatchVote = (
     ...options,
     onMutate: (votePostOrPatch) => {
       const prevVote: Vote | undefined = queryClient.getQueryData([
-        "votes",
+        queryStr.votes,
         `${votePostOrPatch.target_debate_id}`,
       ]);
       const prevDebate: Debate | undefined = queryClient.getQueryData([
-        "debates",
+        queryStr.debates,
         `${votePostOrPatch.target_debate_id}`,
       ]);
       if (prevVote !== undefined && prevDebate !== undefined) {
         queryClient.cancelQueries([
-          "votes",
+          queryStr.votes,
           `${votePostOrPatch.target_debate_id}`,
         ]);
         queryClient.cancelQueries([
-          "debates",
+          queryStr.debates,
           `${votePostOrPatch.target_debate_id}`,
         ]);
         queryClient.setQueryData(
-          ["votes", `${votePostOrPatch.target_debate_id}`],
+          [queryStr.votes, `${votePostOrPatch.target_debate_id}`],
           () => {
             return {
               isVote: true,
@@ -135,7 +136,7 @@ export const usePatchVote = (
           },
         );
         queryClient.setQueryData(
-          ["debates", `${votePostOrPatch.target_debate_id}`],
+          [queryStr.debates, `${votePostOrPatch.target_debate_id}`],
           () => {
             if (votePostOrPatch.pros) {
               return {
@@ -158,7 +159,7 @@ export const usePatchVote = (
         );
         return () => {
           queryClient.setQueryData(
-            ["debates", `${votePostOrPatch.target_debate_id}`],
+            [queryStr.debates, `${votePostOrPatch.target_debate_id}`],
             prevDebate,
           );
         };

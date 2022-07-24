@@ -16,6 +16,7 @@ import {
   patchDebate,
   postDebate,
 } from "../../api/debates";
+import { queryStr } from ".";
 
 import { Debate, DebatePost, DebatePatch, User } from "../../types";
 
@@ -24,7 +25,7 @@ export const useGetDebate = (
   options?: UseQueryOptions<Debate, AxiosError>,
 ) => {
   const query = useQuery<Debate, AxiosError>(
-    ["debates", `${debateId}`],
+    [queryStr.debates, `${debateId}`],
     () => getDebate(debateId),
     options,
   );
@@ -40,7 +41,7 @@ export const usePostDebate = (
   return useMutation((debate) => postDebate(debate), {
     ...options,
     onSuccess: () => {
-      queryClient.invalidateQueries(["debates"], { exact: true });
+      queryClient.invalidateQueries([queryStr.debates], { exact: true });
       router.push(`/debates`);
     },
     onError: () => {
@@ -62,24 +63,27 @@ export const usePatchDebate = (
     onMutate: () => {
       if (!participant) return;
       const prevDebate: Debate | undefined = queryClient.getQueryData([
-        "debates",
+        queryStr.debates,
         `${debateId}`,
       ]);
       if (prevDebate) {
-        queryClient.cancelQueries(["debates", `${debateId}`]);
-        queryClient.setQueryData(["debates", `${debateId}`], () => {
+        queryClient.cancelQueries([queryStr.debates, `${debateId}`]);
+        queryClient.setQueryData([queryStr.debates, `${debateId}`], () => {
           return {
             ...prevDebate,
             participant,
           };
         });
         return () =>
-          queryClient.setQueryData(["debates", `${debateId}`], prevDebate);
+          queryClient.setQueryData(
+            [queryStr.debates, `${debateId}`],
+            prevDebate,
+          );
       }
     },
     onSuccess: () => {
       if (!participant) {
-        queryClient.invalidateQueries(["debates", `${debateId}`]);
+        queryClient.invalidateQueries([queryStr.debates, `${debateId}`]);
         router.push(`/debates/${debateId}`);
       }
     },
@@ -99,7 +103,7 @@ export const useDeleteDebate = (
   return useMutation((debateId) => deleteDebate(debateId), {
     ...options,
     onSuccess: () => {
-      queryClient.invalidateQueries(["debates"], { exact: true });
+      queryClient.invalidateQueries([queryStr.debates], { exact: true });
       router.push(`/debates`);
     },
     onError: () => {
