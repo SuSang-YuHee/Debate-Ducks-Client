@@ -5,7 +5,7 @@ import {
   useDeleteHeart,
   useGetHeart,
   usePostHeart,
-} from "../../../utils/queries/heart";
+} from "../../../utils/queries/hearts";
 
 import AfterDebate from "./AfterDebate";
 import DebaterInfo from "./DebaterInfo";
@@ -13,13 +13,18 @@ import EditAndDelete from "./EditAndDelete";
 import ConfirmModal from "../../common/modal/ConfirmModal";
 
 export default function Debate({ debateId }: { debateId: number }) {
-  const [isHeartErrorModalOn, setHeartIsErrorModalOn] =
+  const userId = "01G85SA6V8NXD7XGB155SC4S17"; //!
+
+  const [isHeartErrorModalOn, setIsHeartErrorModalOn] =
     useState<boolean>(false);
 
   const debate = useGetDebate(debateId);
-  const heart = useGetHeart(debateId, "01G85SA6V8NXD7XGB155SC4S17");
-  const postHeart = usePostHeart(setHeartIsErrorModalOn);
-  const deleteHeart = useDeleteHeart(setHeartIsErrorModalOn);
+  const heart = useGetHeart({
+    target_debate_id: debateId,
+    target_user_id: userId,
+  });
+  const postHeart = usePostHeart(setIsHeartErrorModalOn);
+  const deleteHeart = useDeleteHeart(setIsHeartErrorModalOn);
 
   return (
     <div>
@@ -29,7 +34,7 @@ export default function Debate({ debateId }: { debateId: number }) {
           content="좋아요 반영에 실패했습니다. 다시 한번 확인해 주세요."
           firstBtn="확인"
           firstFunc={() => {
-            setHeartIsErrorModalOn(false);
+            setIsHeartErrorModalOn(false);
           }}
         />
       ) : null}
@@ -41,13 +46,13 @@ export default function Debate({ debateId }: { debateId: number }) {
         onClick={() => {
           if (heart.data) {
             deleteHeart.mutate({
-              debateId,
-              userId: "01G85SA6V8NXD7XGB155SC4S17",
+              target_debate_id: debateId,
+              target_user_id: userId,
             });
           } else {
             postHeart.mutate({
-              debateId,
-              userId: "01G85SA6V8NXD7XGB155SC4S17",
+              target_debate_id: debateId,
+              target_user_id: userId,
             });
           }
         }}

@@ -18,12 +18,12 @@ export default function Create() {
   const titleRef = useRef<HTMLInputElement>(null);
   const [validateNotice, setValidateNotice] = useState<string>("");
 
+  const postDebate = usePostDebate(setIsErrorModalOn);
+
   const titleInput = useInput("", "");
   const categorySelect = useSelect(CATEGORIES[0]);
   const prosConsRadio = useRadio("true", "prosCons");
   const contentsInput = useInput("", "");
-
-  const postDebate = usePostDebate(setIsErrorModalOn);
 
   const debatePost: DebatePost = {
     title: titleInput.value,
