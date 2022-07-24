@@ -58,6 +58,16 @@ export interface DebateAndUserID {
   target_user_id: string;
 }
 
+//*- votes
+export interface Vote {
+  isVote: boolean;
+  pros: boolean;
+}
+
+export interface VotePostOrPatch extends DebateAndUserID {
+  pros: boolean;
+}
+
 //*- useInPutSelect
 export interface UseInputResult {
   attribute: {
