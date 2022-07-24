@@ -21,13 +21,13 @@ export default function Edit() {
     typeof param?.debateId === "string" ? parseInt(param?.debateId) : 0;
 
   const [isSameModal, setIsSameModal] = useState<boolean>(false);
-  const [isErrorModalOn, setIsErrorModalOn] = useState<boolean>(false);
+  const [isErrModalOn, setIsErrModalOn] = useState<boolean>(false);
   const [isCancelModalOn, setIsCancelModalOn] = useState<boolean>(false);
   const titleRef = useRef<HTMLInputElement>(null);
   const [validateNotice, setValidateNotice] = useState<string>("");
 
   const debate = useGetDebate(debateId);
-  const postDebate = usePatchDebate(debateId, setIsErrorModalOn);
+  const postDebate = usePatchDebate(debateId, setIsErrModalOn);
 
   const titleInput = useInput(debate.data?.title || "", "");
   const categorySelect = useSelect(debate.data?.category || CATEGORIES[0]);
@@ -74,8 +74,8 @@ export default function Edit() {
         />
       ) : null}
       <CreateOrEdit
-        isErrorModalOn={isErrorModalOn}
-        setIsErrorModalOn={setIsErrorModalOn}
+        isErrModalOn={isErrModalOn}
+        setIsErrModalOn={setIsErrModalOn}
         isCancelModalOn={isCancelModalOn}
         setIsCancelModalOn={setIsCancelModalOn}
         titleRef={titleRef}

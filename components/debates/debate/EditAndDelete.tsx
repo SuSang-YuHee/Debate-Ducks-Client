@@ -2,24 +2,24 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 
 import { useDeleteDebate } from "../../../utils/queries/debates";
-import ErrorAndCheckModal from "../../common/modal/ErrorAndCheckModal";
+import ErrAndCheckModal from "../../common/modal/ErrAndCheckModal";
 
 export default function EditAndDelete({ debateId }: { debateId: number }) {
   const router = useRouter();
 
-  const [isErrorModalOn, setIsErrorModalOn] = useState<boolean>(false);
+  const [isErrModalOn, setIsErrModalOn] = useState<boolean>(false);
   const [isConfirmModal, setIsConfirmModal] = useState<boolean>(false);
 
-  const deleteDebate = useDeleteDebate(setIsErrorModalOn);
+  const deleteDebate = useDeleteDebate(setIsErrModalOn);
 
   return (
     <div>
-      <ErrorAndCheckModal
-        isErrorModalOn={isErrorModalOn}
-        setIsErrorModalOn={setIsErrorModalOn}
+      <ErrAndCheckModal
+        isErrModalOn={isErrModalOn}
+        setIsErrModalOn={setIsErrModalOn}
         isCheckModalOn={isConfirmModal}
         setIsCheckModalOn={setIsConfirmModal}
-        errorMessage={{
+        errMessage={{
           title: "삭제 실패",
           content: "에러가 발생해 삭제에 실패했습니다.",
         }}

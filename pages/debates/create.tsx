@@ -13,12 +13,12 @@ import { DebatePost } from "../../types";
 export default function Create() {
   const router = useRouter();
 
-  const [isErrorModalOn, setIsErrorModalOn] = useState<boolean>(false);
+  const [isErrModalOn, setIsErrModalOn] = useState<boolean>(false);
   const [isCancelModalOn, setIsCancelModalOn] = useState<boolean>(false);
   const titleRef = useRef<HTMLInputElement>(null);
   const [validateNotice, setValidateNotice] = useState<string>("");
 
-  const postDebate = usePostDebate(setIsErrorModalOn);
+  const postDebate = usePostDebate(setIsErrModalOn);
 
   const titleInput = useInput("", "");
   const categorySelect = useSelect(CATEGORIES[0]);
@@ -42,8 +42,8 @@ export default function Create() {
   return (
     <div>
       <CreateOrEdit
-        isErrorModalOn={isErrorModalOn}
-        setIsErrorModalOn={setIsErrorModalOn}
+        isErrModalOn={isErrModalOn}
+        setIsErrModalOn={setIsErrModalOn}
         isCancelModalOn={isCancelModalOn}
         setIsCancelModalOn={setIsCancelModalOn}
         titleRef={titleRef}

@@ -52,6 +52,17 @@ export interface Factcheck {
   reference_url: string;
 }
 
+export type FactcheckPost = Pick<
+  Factcheck,
+  "pros" | "description" | "reference_url"
+> &
+  DebateAndUserID;
+
+export type FactcheckPatch = Pick<
+  Factcheck,
+  "id" | "description" | "reference_url"
+>;
+
 //*- debate and user id
 export interface DebateAndUserID {
   target_debate_id: number;
