@@ -1,11 +1,11 @@
 import { useState, ChangeEvent } from "react";
 
-import { ResultUseInput, ResultUseRadio, ResultUseSelect } from "../types";
+import { UseInputResult, UseRadioResult, UseSelectResult } from "../types";
 
 export const useInput = (
   initialValue: string,
   placeholder: string,
-): ResultUseInput => {
+): UseInputResult => {
   const [value, setValue] = useState(initialValue);
 
   const onChange = (
@@ -24,7 +24,7 @@ export const useInput = (
 export const useRadio = (
   initialValue: "true" | "false",
   name: string,
-): ResultUseRadio => {
+): UseRadioResult => {
   const [value, setValue] = useState<string>(initialValue);
 
   const onChange = (ev: ChangeEvent<HTMLInputElement>) => {
@@ -51,7 +51,7 @@ export const useRadio = (
   };
 };
 
-export const useSelect = (initialValue: string): ResultUseSelect => {
+export const useSelect = (initialValue: string): UseSelectResult => {
   const [value, setValue] = useState(initialValue);
 
   const onChange = (ev: ChangeEvent<HTMLSelectElement>) => {

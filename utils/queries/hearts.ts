@@ -9,7 +9,7 @@ import {
 } from "react-query";
 import { Dispatch, SetStateAction } from "react";
 
-import { getHeart, postHeart, deleteHeart } from "../../api/heart";
+import { getHeart, postHeart, deleteHeart } from "../../api/hearts";
 
 import { Debate, HeartPatchOrDelete } from "../../types";
 

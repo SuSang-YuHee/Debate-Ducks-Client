@@ -19,13 +19,15 @@ export default function Edit() {
   const param = router.query;
   const debateId =
     typeof param?.debateId === "string" ? parseInt(param?.debateId) : 0;
-  const debate = useGetDebate(debateId);
 
   const [isSameModal, setIsSameModal] = useState<boolean>(false);
   const [isErrorModalOn, setIsErrorModalOn] = useState<boolean>(false);
   const [isCancelModalOn, setIsCancelModalOn] = useState<boolean>(false);
   const titleRef = useRef<HTMLInputElement>(null);
   const [validateNotice, setValidateNotice] = useState<string>("");
+
+  const debate = useGetDebate(debateId);
+  const postDebate = usePatchDebate(debateId, setIsErrorModalOn);
 
   const titleInput = useInput(debate.data?.title || "", "");
   const categorySelect = useSelect(debate.data?.category || CATEGORIES[0]);
@@ -34,8 +36,6 @@ export default function Edit() {
     "prosCons",
   );
   const contentsInput = useInput(debate.data?.contents || "", "");
-
-  const postDebate = usePatchDebate(debateId, setIsErrorModalOn);
 
   const debatePatch: DebatePatch = {
     title: titleInput.value,

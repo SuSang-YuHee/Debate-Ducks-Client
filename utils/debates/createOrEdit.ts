@@ -1,11 +1,11 @@
 import { Dispatch, RefObject, SetStateAction } from "react";
 
-import { ResultUseInput } from "../../types";
+import { UseInputResult } from "../../types";
 
 export const createOrEdit = (
   titleRef: RefObject<HTMLInputElement>,
   setValidateNotice: Dispatch<SetStateAction<string>>,
-  titleInput: ResultUseInput,
+  titleInput: UseInputResult,
   callback: () => void,
 ) => {
   const title = titleInput.value;
@@ -15,7 +15,6 @@ export const createOrEdit = (
     titleRef.current?.focus();
     return;
   }
-
   if (/[^\s\w가-힣.,!?%&()]/.test(title)) {
     setValidateNotice(
       "제목은 한글, 영어, 숫자 및 특수문자【.,!?%&()_】만 포함 가능합니다.",

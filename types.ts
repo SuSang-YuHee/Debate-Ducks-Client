@@ -52,14 +52,14 @@ export interface Factcheck {
   reference_url: string;
 }
 
-//*- heart
+//*- hearts
 export interface HeartPatchOrDelete {
   debateId: number;
   userId: string;
 }
 
 //*- useInPutSelect
-export interface ResultUseInput {
+export interface UseInputResult {
   attribute: {
     value: string;
     placeholder: string;
@@ -69,7 +69,7 @@ export interface ResultUseInput {
   setValue: Dispatch<SetStateAction<string>>;
 }
 
-export interface ResultUseRadio {
+export interface UseRadioResult {
   attributeTrue: {
     type: string;
     name: string;
@@ -88,7 +88,7 @@ export interface ResultUseRadio {
   setValue: Dispatch<SetStateAction<string>>;
 }
 
-export interface ResultUseSelect {
+export interface UseSelectResult {
   attribute: {
     value: string;
     onChange: (ev: ChangeEvent<HTMLSelectElement>) => void;

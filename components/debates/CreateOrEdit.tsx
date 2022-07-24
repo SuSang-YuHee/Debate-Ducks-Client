@@ -4,7 +4,7 @@ import { CATEGORIES } from "../../utils";
 
 import ErrorAndCheckModal from "../common/modal/ErrorAndCheckModal";
 
-import { ResultUseInput, ResultUseRadio, ResultUseSelect } from "../../types";
+import { UseInputResult, UseRadioResult, UseSelectResult } from "../../types";
 
 export default function CreateOrEdit({
   isErrorModalOn,
@@ -29,10 +29,10 @@ export default function CreateOrEdit({
   titleRef: RefObject<HTMLInputElement>;
   validateNotice: string;
   setValidateNotice: Dispatch<SetStateAction<string>>;
-  titleInput: ResultUseInput;
-  categorySelect: ResultUseSelect;
-  prosConsRadio: ResultUseRadio;
-  contentsInput: ResultUseInput;
+  titleInput: UseInputResult;
+  categorySelect: UseSelectResult;
+  prosConsRadio: UseRadioResult;
+  contentsInput: UseInputResult;
   createOrEdit: () => void;
   createOrEditStr: string;
   routerPush: () => void;

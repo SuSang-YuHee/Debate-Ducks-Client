@@ -5,10 +5,6 @@ import { useGetDebate, usePatchDebate } from "../../../utils/queries/debates";
 import ConfirmModal from "../../common/modal/ConfirmModal";
 
 export default function DebaterInfo({ debateId }: { debateId: number }) {
-  const debate = useGetDebate(debateId);
-
-  const [isErrorModalOn, setIsErrorModalOn] = useState<boolean>(false);
-
   //!
   const user = {
     id: "01G85SA6V8NXD7XGB155SC4S18",
@@ -17,6 +13,9 @@ export default function DebaterInfo({ debateId }: { debateId: number }) {
     profile_image: null,
   };
 
+  const [isErrorModalOn, setIsErrorModalOn] = useState<boolean>(false);
+
+  const debate = useGetDebate(debateId);
   const participateDebate = usePatchDebate(debateId, setIsErrorModalOn, user);
 
   return (
