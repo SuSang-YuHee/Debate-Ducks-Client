@@ -19,7 +19,7 @@ export const useGetHeart = (
   options?: UseQueryOptions<boolean, AxiosError>,
 ) => {
   const query = useQuery<boolean, AxiosError>(
-    ["heart", `${debateId}`],
+    ["hearts", `${debateId}`],
     () => getHeart(debateId, userId),
     options,
   );
@@ -39,7 +39,7 @@ export const usePostHeart = (
     ...options,
     onMutate: (heart) => {
       const prevHeart: boolean | undefined = queryClient.getQueryData([
-        "heart",
+        "hearts",
         `${heart.debateId}`,
       ]);
       const prevDebate: Debate | undefined = queryClient.getQueryData([
@@ -47,9 +47,9 @@ export const usePostHeart = (
         `${heart.debateId}`,
       ]);
       if (prevHeart !== undefined && prevDebate !== undefined) {
-        queryClient.cancelQueries(["heart", `${heart.debateId}`]);
+        queryClient.cancelQueries(["hearts", `${heart.debateId}`]);
         queryClient.cancelQueries(["debates", `${heart.debateId}`]);
-        queryClient.setQueryData(["heart", `${heart.debateId}`], () => {
+        queryClient.setQueryData(["hearts", `${heart.debateId}`], () => {
           return !prevHeart;
         });
         queryClient.setQueryData(["debates", `${heart.debateId}`], () => {
@@ -59,7 +59,7 @@ export const usePostHeart = (
           };
         });
         return () => {
-          queryClient.setQueryData(["heart", `${heart.debateId}`], prevHeart);
+          queryClient.setQueryData(["hearts", `${heart.debateId}`], prevHeart);
           queryClient.setQueryData(
             ["debates", `${heart.debateId}`],
             prevDebate,
@@ -87,7 +87,7 @@ export const useDeleteHeart = (
     ...options,
     onMutate: (heart) => {
       const prevHeart: boolean | undefined = queryClient.getQueryData([
-        "heart",
+        "hearts",
         `${heart.debateId}`,
       ]);
       const prevDebate: Debate | undefined = queryClient.getQueryData([
@@ -95,9 +95,9 @@ export const useDeleteHeart = (
         `${heart.debateId}`,
       ]);
       if (prevHeart !== undefined && prevDebate !== undefined) {
-        queryClient.cancelQueries(["heart", `${heart.debateId}`]);
+        queryClient.cancelQueries(["hearts", `${heart.debateId}`]);
         queryClient.cancelQueries(["debates", `${heart.debateId}`]);
-        queryClient.setQueryData(["heart", `${heart.debateId}`], () => {
+        queryClient.setQueryData(["hearts", `${heart.debateId}`], () => {
           return !prevHeart;
         });
         queryClient.setQueryData(["debates", `${heart.debateId}`], () => {
@@ -107,7 +107,7 @@ export const useDeleteHeart = (
           };
         });
         return () => {
-          queryClient.setQueryData(["heart", `${heart.debateId}`], prevHeart);
+          queryClient.setQueryData(["hearts", `${heart.debateId}`], prevHeart);
           queryClient.setQueryData(
             ["debates", `${heart.debateId}`],
             prevDebate,
