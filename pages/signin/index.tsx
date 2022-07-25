@@ -27,6 +27,7 @@ export default function Signin() {
           );
         } else {
           console.log(res);
+          localStorage.setItem("id", res.data);
           router.push("/");
         }
       });
