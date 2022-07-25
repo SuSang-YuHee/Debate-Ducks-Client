@@ -27,7 +27,7 @@ export default function Signin() {
           );
         } else {
           console.log(res);
-          localStorage.setItem("id", res.data);
+          localStorage.setItem("debate-ducks-token", res.data);
           router.push("/");
         }
       });

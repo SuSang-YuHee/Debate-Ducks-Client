@@ -12,6 +12,7 @@ import {
   patchFactcheck,
   deleteFactcheck,
 } from "../../api/factchecks";
+import { queryStr } from ".";
 
 import { FactcheckPost, FactcheckPatch, Debate } from "../../types";
 
@@ -24,7 +25,7 @@ export const usePostFactcheck = (
   return useMutation((factcheckPost) => postFactcheck(factcheckPost), {
     ...options,
     onSuccess: () => {
-      queryClient.invalidateQueries(["debates", `${debateId}`]);
+      queryClient.invalidateQueries([queryStr.debates, `${debateId}`]);
     },
     onError: () => {
       setIsErrorModalOn(true);
@@ -42,12 +43,12 @@ export const usePatchFactcheck = (
     ...options,
     onMutate: (factcheckPatch) => {
       const prevDebate: Debate | undefined = queryClient.getQueryData([
-        "debates",
+        queryStr.debates,
         `${debateId}`,
       ]);
       if (prevDebate !== undefined) {
-        queryClient.cancelQueries(["debates", `${debateId}`]);
-        queryClient.setQueryData(["debates", `${debateId}`], () => {
+        queryClient.cancelQueries([queryStr.debates, `${debateId}`]);
+        queryClient.setQueryData([queryStr.debates, `${debateId}`], () => {
           return {
             ...prevDebate,
             factchecks: prevDebate.factchecks.map((factcheck) => {
@@ -63,7 +64,10 @@ export const usePatchFactcheck = (
           };
         });
         return () => {
-          queryClient.setQueryData(["debates", `${debateId}`], prevDebate);
+          queryClient.setQueryData(
+            [queryStr.debates, `${debateId}`],
+            prevDebate,
+          );
         };
       }
     },
@@ -84,12 +88,12 @@ export const useDeleteFactcheck = (
     ...options,
     onMutate: (factcheckId) => {
       const prevDebate: Debate | undefined = queryClient.getQueryData([
-        "debates",
+        queryStr.debates,
         `${debateId}`,
       ]);
       if (prevDebate !== undefined) {
-        queryClient.cancelQueries(["debates", `${debateId}`]);
-        queryClient.setQueryData(["debates", `${debateId}`], () => {
+        queryClient.cancelQueries([queryStr.debates, `${debateId}`]);
+        queryClient.setQueryData([queryStr.debates, `${debateId}`], () => {
           return {
             ...prevDebate,
             factchecks: prevDebate.factchecks.filter(
@@ -98,7 +102,10 @@ export const useDeleteFactcheck = (
           };
         });
         return () => {
-          queryClient.setQueryData(["debates", `${debateId}`], prevDebate);
+          queryClient.setQueryData(
+            [queryStr.debates, `${debateId}`],
+            prevDebate,
+          );
         };
       }
     },

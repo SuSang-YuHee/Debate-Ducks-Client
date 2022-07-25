@@ -8,7 +8,7 @@ export interface User {
   id: string;
   nickname: string;
   email: string;
-  profile_image: string | null;
+  profile_image?: string | null;
 }
 
 //*- debates
