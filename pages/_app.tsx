@@ -29,7 +29,12 @@ function MyApp({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}>
         {isToaster ? (
-          <Toaster toastOptions={{ position: "top-center" }} />
+          <Toaster
+            toastOptions={{
+              position: "top-center",
+              duration: 2000,
+            }}
+          />
         ) : null}
         <Header />
         <Component {...pageProps} />

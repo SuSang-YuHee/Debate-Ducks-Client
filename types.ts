@@ -79,6 +79,27 @@ export interface VotePostOrPatch extends DebateAndUserID {
   pros: boolean;
 }
 
+//*- comments
+export interface CommentOfDebate {
+  id: number;
+  pros: boolean;
+  contents: string;
+  created_date: string;
+  updated_date: string | null;
+  target_user: User;
+}
+
+export interface CommentPost extends DebateAndUserID {
+  pros: boolean;
+  contents: string;
+}
+
+export interface CommentPatch {
+  id: number;
+  pros: boolean;
+  contents: string;
+}
+
 //*- useInPutSelect
 export interface UseInputResult {
   attribute: {
