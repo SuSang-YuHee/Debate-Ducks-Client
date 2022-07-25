@@ -1,6 +1,6 @@
 import { Dispatch, RefObject, SetStateAction } from "react";
 
-import { CATEGORIES } from "../../utils";
+import { CATEGORIES } from "../../utils/constant";
 
 import ConfirmModal from "../common/modal/ConfirmModal";
 

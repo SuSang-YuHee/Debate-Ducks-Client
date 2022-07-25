@@ -4,7 +4,7 @@ import { dehydrate, QueryClient } from "react-query";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 
-import { CATEGORIES } from "../../../utils";
+import { CATEGORIES } from "../../../utils/constant";
 import { getDebate } from "../../../api/debates";
 import { useInput, useRadio, useSelect } from "../../../utils/useInputSelect";
 import { useGetDebate, usePatchDebate } from "../../../utils/queries/debates";
