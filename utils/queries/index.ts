@@ -3,4 +3,5 @@ export const queryStr = {
   hearts: "hearts",
   votes: "votes",
   users: "users",
+  comments: "comments",
 };
