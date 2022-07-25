@@ -11,11 +11,11 @@ import {
 } from "../../../utils/queries/comments";
 import { useGetUser } from "../../../utils/queries/users";
 import { useInput, useRadio } from "../../../utils/useInputSelect";
+import { removeSpace } from "../../../utils/removeSpace";
 
 import ConfirmModal from "../../common/modal/ConfirmModal";
 
 import { CommentOfDebate } from "../../../types";
-import { removeSpace } from "../../../utils/removeSpace";
 
 export default function Comments({ debateId }: { debateId: number }) {
   const token =

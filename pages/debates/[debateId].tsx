@@ -13,6 +13,7 @@ export default function Debates() {
   const param = router.query;
   const debateId =
     typeof param?.debateId === "string" ? parseInt(param?.debateId) : 0;
+
   const debate = useGetDebate(debateId);
 
   if (!debate.data) return <>404</>;

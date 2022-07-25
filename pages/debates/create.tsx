@@ -8,11 +8,8 @@ import { createOrEdit } from "../../utils/debates/createOrEdit";
 
 import CreateOrEdit from "../../components/debates/CreateOrEdit";
 
-import { DebatePost } from "../../types";
-
 export default function Create() {
   const router = useRouter();
-
   const [isCancelModalOn, setIsCancelModalOn] = useState<boolean>(false);
   const titleRef = useRef<HTMLInputElement>(null);
 
@@ -23,17 +20,15 @@ export default function Create() {
   const prosConsRadio = useRadio("true", "prosCons");
   const contentsInput = useInput("", "");
 
-  const debatePost: DebatePost = {
-    title: titleInput.value,
-    author_pros: prosConsRadio.value,
-    category: categorySelect.value,
-    contents: contentsInput.value,
-    author_id: "01G85SA6V8NXD7XGB155SC4S17",
-  };
-
   const create = () => {
     createOrEdit(titleRef, titleInput, () => {
-      postDebate.mutate(debatePost);
+      postDebate.mutate({
+        title: titleInput.value,
+        author_pros: prosConsRadio.value,
+        category: categorySelect.value,
+        contents: contentsInput.value,
+        author_id: "01G85SA6V8NXD7XGB155SC4S17",
+      });
     });
   };
 
