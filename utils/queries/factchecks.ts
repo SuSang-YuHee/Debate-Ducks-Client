@@ -1,3 +1,4 @@
+import { toast } from "react-hot-toast";
 import { AxiosError } from "axios";
 import {
   useMutation,
@@ -5,7 +6,6 @@ import {
   UseMutationResult,
   useQueryClient,
 } from "react-query";
-import { Dispatch, SetStateAction } from "react";
 
 import {
   postFactcheck,
@@ -18,7 +18,6 @@ import { FactcheckPost, FactcheckPatch, Debate } from "../../types";
 
 export const usePostFactcheck = (
   debateId: number,
-  setIsErrorModalOn: Dispatch<SetStateAction<boolean>>,
   options?: UseMutationOptions<FactcheckPost, AxiosError, FactcheckPost>,
 ): UseMutationResult<FactcheckPost, AxiosError, FactcheckPost> => {
   const queryClient = useQueryClient();
@@ -27,15 +26,14 @@ export const usePostFactcheck = (
     onSuccess: () => {
       queryClient.invalidateQueries([queryStr.debates, `${debateId}`]);
     },
-    onError: () => {
-      setIsErrorModalOn(true);
+    onError: (err) => {
+      toast.error(`${err.message}`);
     },
   });
 };
 
 export const usePatchFactcheck = (
   debateId: number,
-  setIsErrorModalOn: Dispatch<SetStateAction<boolean>>,
   options?: UseMutationOptions<FactcheckPatch, AxiosError, FactcheckPatch>,
 ): UseMutationResult<FactcheckPatch, AxiosError, FactcheckPatch> => {
   const queryClient = useQueryClient();
@@ -71,16 +69,15 @@ export const usePatchFactcheck = (
         };
       }
     },
-    onError: (error, variables, rollback) => {
+    onError: (err, variables, rollback) => {
       if (rollback) rollback();
-      setIsErrorModalOn(true);
+      toast.error(`${err.message}`);
     },
   });
 };
 
 export const useDeleteFactcheck = (
   debateId: number,
-  setIsErrorModalOn: Dispatch<SetStateAction<boolean>>,
   options?: UseMutationOptions<number, AxiosError, number>,
 ): UseMutationResult<number, AxiosError, number> => {
   const queryClient = useQueryClient();
@@ -109,9 +106,9 @@ export const useDeleteFactcheck = (
         };
       }
     },
-    onError: (error, variables, rollback) => {
+    onError: (err, variables, rollback) => {
       if (rollback) rollback();
-      setIsErrorModalOn(true);
+      toast.error(`${err.response?.data}`);
     },
   });
 };

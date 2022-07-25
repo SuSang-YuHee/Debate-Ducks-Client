@@ -1,3 +1,4 @@
+import { toast } from "react-hot-toast";
 import { AxiosError } from "axios";
 import {
   useMutation,
@@ -7,7 +8,6 @@ import {
   useQueryClient,
   UseQueryOptions,
 } from "react-query";
-import { Dispatch, SetStateAction } from "react";
 
 import { getHeart, postHeart, deleteHeart } from "../../api/hearts";
 import { queryStr } from ".";
@@ -27,7 +27,6 @@ export const useGetHeart = (
 };
 
 export const usePostHeart = (
-  setIsErrModalOn: Dispatch<SetStateAction<boolean>>,
   options?: UseMutationOptions<DebateAndUserID, AxiosError, DebateAndUserID>,
 ): UseMutationResult<DebateAndUserID, AxiosError, DebateAndUserID> => {
   const queryClient = useQueryClient();
@@ -78,15 +77,14 @@ export const usePostHeart = (
         };
       }
     },
-    onError: (error, variables, rollback) => {
+    onError: (err, variables, rollback) => {
       if (rollback) rollback();
-      setIsErrModalOn(true);
+      toast.error(`${err.message}`);
     },
   });
 };
 
 export const useDeleteHeart = (
-  setIsErrModalOn: Dispatch<SetStateAction<boolean>>,
   options?: UseMutationOptions<DebateAndUserID, AxiosError, DebateAndUserID>,
 ): UseMutationResult<DebateAndUserID, AxiosError, DebateAndUserID> => {
   const queryClient = useQueryClient();
@@ -137,9 +135,9 @@ export const useDeleteHeart = (
         };
       }
     },
-    onError: (error, variables, rollback) => {
+    onError: (err, variables, rollback) => {
       if (rollback) rollback();
-      setIsErrModalOn(true);
+      toast.error(`${err.response?.data}`);
     },
   });
 };

@@ -1,8 +1,4 @@
-import { useState } from "react";
-
 import { useGetDebate, usePatchDebate } from "../../../utils/queries/debates";
-
-import ConfirmModal from "../../common/modal/ConfirmModal";
 
 export default function DebaterInfo({ debateId }: { debateId: number }) {
   //!
@@ -13,10 +9,8 @@ export default function DebaterInfo({ debateId }: { debateId: number }) {
     profile_image: null,
   };
 
-  const [isErrModalOn, setIsErrModalOn] = useState<boolean>(false);
-
   const debate = useGetDebate(debateId);
-  const participateDebate = usePatchDebate(debateId, setIsErrModalOn, user);
+  const participateDebate = usePatchDebate(debateId, user);
 
   return (
     <div>
@@ -25,16 +19,6 @@ export default function DebaterInfo({ debateId }: { debateId: number }) {
         <p>{debate.data?.participant?.nickname}</p>
       ) : (
         <div>
-          {isErrModalOn ? (
-            <ConfirmModal
-              title="참여 실패"
-              content="참여에 실패했습니다. 다시 한번 확인해 주세요."
-              firstBtn="확인"
-              firstFunc={() => {
-                setIsErrModalOn(false);
-              }}
-            />
-          ) : null}
           {debate.data?.author.id !== user.id ? (
             <button
               onClick={() => {
