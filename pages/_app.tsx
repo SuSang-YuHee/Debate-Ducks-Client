@@ -10,6 +10,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         defaultOptions: {
           queries: {
             staleTime: Infinity,
+            retry: false,
           },
         },
       }),
