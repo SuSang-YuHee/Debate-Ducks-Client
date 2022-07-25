@@ -1,3 +1,4 @@
+import { toast } from "react-hot-toast";
 import { AxiosError } from "axios";
 import {
   useMutation,
@@ -7,7 +8,6 @@ import {
   useQueryClient,
   UseQueryOptions,
 } from "react-query";
-import { Dispatch, SetStateAction } from "react";
 
 import { postVote, patchVote, getVote } from "../../api/votes";
 import { queryStr } from ".";
@@ -27,7 +27,6 @@ export const useGetVote = (
 };
 
 export const usePostVote = (
-  setIsErrModalOn: Dispatch<SetStateAction<boolean>>,
   options?: UseMutationOptions<VotePostOrPatch, AxiosError, VotePostOrPatch>,
 ): UseMutationResult<VotePostOrPatch, AxiosError, VotePostOrPatch> => {
   const queryClient = useQueryClient();
@@ -94,15 +93,14 @@ export const usePostVote = (
         };
       }
     },
-    onError: (error, variables, rollback) => {
+    onError: (err, variables, rollback) => {
       if (rollback) rollback();
-      setIsErrModalOn(true);
+      toast.error(`${err.message}`);
     },
   });
 };
 
 export const usePatchVote = (
-  setIsErrModalOn: Dispatch<SetStateAction<boolean>>,
   options?: UseMutationOptions<VotePostOrPatch, AxiosError, VotePostOrPatch>,
 ): UseMutationResult<VotePostOrPatch, AxiosError, VotePostOrPatch> => {
   const queryClient = useQueryClient();
@@ -165,9 +163,9 @@ export const usePatchVote = (
         };
       }
     },
-    onError: (error, variables, rollback) => {
+    onError: (err, variables, rollback) => {
       if (rollback) rollback();
-      setIsErrModalOn(true);
+      toast.error(`${err.response?.data}`);
     },
   });
 };

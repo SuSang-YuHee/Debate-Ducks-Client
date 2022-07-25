@@ -1,3 +1,4 @@
+import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
 import { AxiosError } from "axios";
 import {
@@ -8,7 +9,6 @@ import {
   useQueryClient,
   UseQueryOptions,
 } from "react-query";
-import { Dispatch, SetStateAction } from "react";
 
 import {
   deleteDebate,
@@ -33,7 +33,6 @@ export const useGetDebate = (
 };
 
 export const usePostDebate = (
-  setIsErrModalOn: Dispatch<SetStateAction<boolean>>,
   options?: UseMutationOptions<DebatePost, AxiosError, DebatePost>,
 ): UseMutationResult<DebatePost, AxiosError, DebatePost> => {
   const router = useRouter();
@@ -44,15 +43,14 @@ export const usePostDebate = (
       queryClient.invalidateQueries([queryStr.debates], { exact: true });
       router.push(`/debates`);
     },
-    onError: () => {
-      setIsErrModalOn(true);
+    onError: (err) => {
+      toast.error(`${err.response?.data}`);
     },
   });
 };
 
 export const usePatchDebate = (
   debateId: number,
-  setIsErrModalOn: Dispatch<SetStateAction<boolean>>,
   participant?: User,
   options?: UseMutationOptions<DebatePatch, AxiosError, DebatePatch>,
 ): UseMutationResult<DebatePatch, AxiosError, DebatePatch> => {
@@ -87,15 +85,14 @@ export const usePatchDebate = (
         router.push(`/debates/${debateId}`);
       }
     },
-    onError: (error, variables, rollback) => {
+    onError: (err, variables, rollback) => {
       if (rollback) rollback();
-      setIsErrModalOn(true);
+      toast.error(`${err.message}`);
     },
   });
 };
 
 export const useDeleteDebate = (
-  setIsErrModalOn: Dispatch<SetStateAction<boolean>>,
   options?: UseMutationOptions<number, AxiosError, number>,
 ): UseMutationResult<number, AxiosError, number> => {
   const router = useRouter();
@@ -106,8 +103,8 @@ export const useDeleteDebate = (
       queryClient.invalidateQueries([queryStr.debates], { exact: true });
       router.push(`/debates`);
     },
-    onError: () => {
-      setIsErrModalOn(true);
+    onError: (err) => {
+      toast.error(`${err.message}`);
     },
   });
 };

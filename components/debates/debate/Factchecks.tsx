@@ -8,23 +8,18 @@ import {
 } from "../../../utils/queries/factchecks";
 
 import ConfirmModal from "../../common/modal/ConfirmModal";
-import ErrAndCheckModal from "../../common/modal/ErrAndCheckModal";
 
 import { FactcheckPatch, FactcheckPost } from "../../../types";
 import { useInput } from "../../../utils/useInputSelect";
 
 export default function Factchecks({ debateId }: { debateId: number }) {
-  const [isCreateErrModalOn, setIsCreateErrModalOn] = useState<boolean>(false);
-  const [isEditErrModalOn, setIsEditErrModalOn] = useState<boolean>(false);
   const [isEditOn, setIsEditOn] = useState<boolean>(false);
-  const [isDeleteErrModalOn, setIsDeleteErrModalOn] = useState<boolean>(false);
-  const [isDeleteConfirmModalOn, setIsDeleteConfirmModalOn] =
-    useState<boolean>(false);
+  const [isDeleteModalOn, setIsDeleteModalOn] = useState<boolean>(false);
 
   const debate = useGetDebate(debateId);
-  const postFactcheck = usePostFactcheck(debateId, setIsCreateErrModalOn);
-  const patchFactcheck = usePatchFactcheck(debateId, setIsEditErrModalOn);
-  const deleteFactcheck = useDeleteFactcheck(debateId, setIsDeleteErrModalOn);
+  const postFactcheck = usePostFactcheck(debateId);
+  const patchFactcheck = usePatchFactcheck(debateId);
+  const deleteFactcheck = useDeleteFactcheck(debateId);
   const factcheckIdRef = useRef<number>(0);
 
   const referencePostInput = useInput("", "");
@@ -47,46 +42,21 @@ export default function Factchecks({ debateId }: { debateId: number }) {
 
   return (
     <>
-      {isCreateErrModalOn ? (
+      {isDeleteModalOn ? (
         <ConfirmModal
-          title="작성 실패"
-          content="작성에 실패했습니다. 다시 한번 확인해 주세요."
-          firstBtn="확인"
+          title={"삭제 확인"}
+          content={"게시물을 삭제하시겠습니까?"}
+          firstBtn={"취소하기"}
           firstFunc={() => {
-            setIsCreateErrModalOn(false);
+            setIsDeleteModalOn(false);
+          }}
+          secondBtn={"삭제하기"}
+          secondFunc={() => {
+            deleteFactcheck.mutate(factcheckIdRef.current);
+            setIsDeleteModalOn(false);
           }}
         />
       ) : null}
-      {isEditErrModalOn ? (
-        <ConfirmModal
-          title="수정 실패"
-          content="수정에 실패했습니다. 다시 한번 확인해 주세요."
-          firstBtn="확인"
-          firstFunc={() => {
-            setIsEditErrModalOn(false);
-          }}
-        />
-      ) : null}
-      <ErrAndCheckModal
-        isErrModalOn={isDeleteErrModalOn}
-        setIsErrModalOn={setIsDeleteErrModalOn}
-        isCheckModalOn={isDeleteConfirmModalOn}
-        setIsCheckModalOn={setIsDeleteConfirmModalOn}
-        errMessage={{
-          title: "삭제 실패",
-          content: "에러가 발생해 삭제에 실패했습니다.",
-        }}
-        checkMessage={{
-          title: "삭제 확인",
-          content: "삭제하시겠습니까?",
-          firstBtn: "취소하기",
-          secondBtn: "삭제하기",
-        }}
-        checkCallback={() => {
-          deleteFactcheck.mutate(factcheckIdRef.current);
-          setIsDeleteConfirmModalOn(false);
-        }}
-      />
       {debate.data?.factchecks
         .filter((factcheck) => factcheck.pros)
         .map((factcheck) => (
@@ -129,7 +99,7 @@ export default function Factchecks({ debateId }: { debateId: number }) {
             <button
               onClick={() => {
                 factcheckIdRef.current = factcheck.id;
-                setIsDeleteConfirmModalOn(true);
+                setIsDeleteModalOn(true);
               }}
             >
               삭제
