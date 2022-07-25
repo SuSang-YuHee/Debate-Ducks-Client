@@ -51,11 +51,17 @@ export const useRadio = (
   };
 };
 
-export const useSelect = (initialValue: string): UseSelectResult => {
+export const useSelect = (
+  initialValue: string,
+  callback?: () => void,
+): UseSelectResult => {
   const [value, setValue] = useState(initialValue);
 
   const onChange = (ev: ChangeEvent<HTMLSelectElement>) => {
-    if (ev.target.value !== value) setValue(ev.target.value);
+    if (ev.target.value !== value) {
+      setValue(ev.target.value);
+      if (callback) callback();
+    }
   };
 
   return {

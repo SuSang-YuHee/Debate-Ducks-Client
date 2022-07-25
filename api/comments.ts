@@ -5,12 +5,10 @@ import { CommentPatch, CommentPost, Order } from "../types";
 export const getComments = async (
   debateId: number,
   page: number,
-  order?: Order,
+  order: Order,
 ) => {
   const { data } = await axios.get(
-    `${
-      process.env.NEXT_PUBLIC_API_URL
-    }/comments/debate/${debateId}?page=${page}&${order || "ASC"}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/comments/debate/${debateId}?page=${page}&order=${order}`,
     { withCredentials: true },
   );
   return { list: data.list, isLast: data.isLast, nextPage: page + 1 };
