@@ -22,6 +22,18 @@ export const getDebatesHeart = async (
   return { list: data.list, isLast: data.isLast, nextPage: page + 1 };
 };
 
+export const getDebatesSearch = async (
+  searchValue: string,
+  page: string,
+  order: string,
+) => {
+  const { data } = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/debates/search?page=${page}&order=${order}&title=${searchValue}`,
+    { withCredentials: true },
+  );
+  return { list: data.list, isLast: data.isLast, nextPage: page + 1 };
+};
+
 export const getDebate = async (debateId: number) => {
   const { data } = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/debates/${debateId}`,

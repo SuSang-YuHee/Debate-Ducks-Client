@@ -16,6 +16,7 @@ import {
   getDebate,
   getDebates,
   getDebatesHeart,
+  getDebatesSearch,
   patchDebate,
   postDebate,
 } from "../../api/debates";
@@ -39,6 +40,18 @@ export const useGetDebatesHeart = (userId: string, order: string) => {
   const query = useInfiniteQuery(
     [queryStr.debates, "heart"],
     ({ pageParam = 0 }) => getDebatesHeart(userId, pageParam, order),
+    {
+      getNextPageParam: (lastPage) =>
+        !lastPage.isLast ? lastPage.nextPage : undefined,
+    },
+  );
+  return query;
+};
+
+export const useGetDebatesSearch = (searchValue: string, order: string) => {
+  const query = useInfiniteQuery(
+    [queryStr.debates, "search"],
+    ({ pageParam = 0 }) => getDebatesSearch(searchValue, pageParam, order),
     {
       getNextPageParam: (lastPage) =>
         !lastPage.isLast ? lastPage.nextPage : undefined,
