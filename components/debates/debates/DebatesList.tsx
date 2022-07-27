@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
 import { checkCategory } from "../../../utils/debates/checkCategory";
@@ -8,9 +8,17 @@ import { COMMENT_ORDER } from "../../../utils/common/constant";
 
 import { DebateOfDebates } from "../../../types";
 
-export default function DebatesList({ list }: { list: string[] }) {
+export default function DebatesList({
+  list,
+  order,
+  setOrder,
+}: {
+  list: string[];
+  order: string;
+  setOrder: Dispatch<SetStateAction<string>>;
+}) {
   const { ref, inView } = useInView();
-  const orderSelect = useSelect(COMMENT_ORDER[0][1], refetch);
+  const orderSelect = useSelect(order, refetch, setOrder);
   const [isSearchListOn, setIsSearchListOn] = useState<boolean>(false);
   const search = useInput("", "");
 

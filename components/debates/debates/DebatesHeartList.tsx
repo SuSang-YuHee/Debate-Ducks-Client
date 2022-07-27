@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
 import { checkCategory } from "../../../utils/debates/checkCategory";
@@ -9,9 +9,17 @@ import { useGetUser } from "../../../utils/queries/users";
 
 import { DebateOfDebates } from "../../../types";
 
-export default function DebatesHeartList({ list }: { list: string[] }) {
+export default function DebatesHeartList({
+  list,
+  order,
+  setOrder,
+}: {
+  list: string[];
+  order: string;
+  setOrder: Dispatch<SetStateAction<string>>;
+}) {
   const { ref, inView } = useInView();
-  const orderSelect = useSelect(COMMENT_ORDER[0][1], refetch);
+  const orderSelect = useSelect(order, refetch, setOrder);
 
   const user = useGetUser();
   const debates = useGetDebatesHeart(user.data?.id || "", orderSelect.value);

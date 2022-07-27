@@ -11,8 +11,12 @@ import DebatesHeartList from "../../components/debates/debates/DebatesHeartList"
 export default function Debates() {
   const router = useRouter();
   const [list, setList] = useState<string[]>([]);
+  const [order, setOrder] = useState<string>("DESC");
+  const [heartOrder, setHeartOrder] = useState<string>("DESC");
   const [isHeartListOn, setIsHeartListOn] = useState<boolean>(false);
   const user = useGetUser();
+
+  console.log(order);
 
   return (
     <div>
@@ -33,8 +37,16 @@ export default function Debates() {
           </button>
         )
       ) : null}
-      {!isHeartListOn ? <DebatesList list={list} /> : null}
-      {isHeartListOn ? <DebatesHeartList list={list} /> : null}
+      {!isHeartListOn ? (
+        <DebatesList list={list} order={order} setOrder={setOrder} />
+      ) : null}
+      {isHeartListOn ? (
+        <DebatesHeartList
+          list={list}
+          order={heartOrder}
+          setOrder={setHeartOrder}
+        />
+      ) : null}
     </div>
   );
 }

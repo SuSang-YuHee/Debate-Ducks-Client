@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, Dispatch, SetStateAction } from "react";
 
 import { UseInputResult, UseRadioResult, UseSelectResult } from "../../types";
 
@@ -54,6 +54,7 @@ export const useRadio = (
 export const useSelect = (
   initialValue: string,
   callback?: () => void,
+  setSelect?: Dispatch<SetStateAction<string>>,
 ): UseSelectResult => {
   const [value, setValue] = useState(initialValue);
 
@@ -61,6 +62,7 @@ export const useSelect = (
     if (ev.target.value !== value) {
       setValue(ev.target.value);
       if (callback) callback();
+      if (setSelect) setSelect(ev.target.value);
     }
   };
 
