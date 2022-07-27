@@ -1,7 +1,7 @@
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
 
 //*- common
-export type Order = "ASC" | "DESC";
+export type Order = "DESC" | "ASC";
 
 //*- users
 export interface User {
@@ -21,12 +21,14 @@ export interface Debate {
   author_pros: boolean;
   created_date: string;
   updated_date: string | null;
-  author: User;
+  author: User | null;
   participant: User | null;
   factchecks: Factcheck[];
   heartCnt: number;
   vote: { prosCnt: number; consCnt: number };
 }
+
+export type DebateOfDebates = Omit<Debate, "factchecks" | "heartCnt" | "vote">;
 
 export interface DebatePost
   extends Pick<Debate, "title" | "contents" | "category" | "author_pros"> {
