@@ -10,6 +10,18 @@ export const getDebates = async (page: string, order: string) => {
   return { list: data.list, isLast: data.isLast, nextPage: page + 1 };
 };
 
+export const getDebatesHeart = async (
+  userId: string,
+  page: string,
+  order: string,
+) => {
+  const { data } = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/hearts?page=${page}&order=${order}`,
+    { withCredentials: true },
+  );
+  return { list: data.list, isLast: data.isLast, nextPage: page + 1 };
+};
+
 export const getDebate = async (debateId: number) => {
   const { data } = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/debates/${debateId}`,
