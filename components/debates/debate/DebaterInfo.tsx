@@ -18,7 +18,7 @@ export default function DebaterInfo({ debateId }: { debateId: number }) {
         <p>{debate.data?.participant?.nickname}</p>
       ) : (
         <div>
-          {debate.data?.author.id !== user.id ? (
+          {debate.data?.author?.id !== user.id ? (
             <button
               onClick={() => {
                 participateDebate.mutate({
