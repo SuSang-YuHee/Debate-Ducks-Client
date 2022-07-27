@@ -10,7 +10,7 @@ import DebaterInfo from "./DebaterInfo";
 import EditAndDelete from "./EditAndDelete";
 
 export default function Debate({ debateId }: { debateId: number }) {
-  const userId = "01G85SA6V8NXD7XGB155SC4S17"; //!
+  const userId = "01G85SA6V8NXD7XGB155SC4S17";
 
   const debate = useGetDebate(debateId);
   const heart = useGetHeart({

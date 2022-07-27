@@ -10,3 +10,5 @@ export const CATEGORIES = [
   "철학",
   "기타",
 ];
+
+export const COMMENT_ORDER = ["최신순", "오래된 순"];

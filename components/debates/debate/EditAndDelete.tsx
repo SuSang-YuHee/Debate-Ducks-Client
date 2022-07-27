@@ -6,7 +6,6 @@ import ConfirmModal from "../../common/modal/ConfirmModal";
 
 export default function EditAndDelete({ debateId }: { debateId: number }) {
   const router = useRouter();
-
   const [isDeleteModalOn, setIsDeleteModalOn] = useState<boolean>(false);
 
   const deleteDebate = useDeleteDebate();

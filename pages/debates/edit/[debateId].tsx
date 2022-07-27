@@ -4,7 +4,7 @@ import { dehydrate, QueryClient } from "react-query";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 
-import { CATEGORIES } from "../../../utils";
+import { CATEGORIES } from "../../../utils/constant";
 import { getDebate } from "../../../api/debates";
 import { useInput, useRadio, useSelect } from "../../../utils/useInputSelect";
 import { useGetDebate, usePatchDebate } from "../../../utils/queries/debates";
@@ -12,14 +12,11 @@ import { createOrEdit } from "../../../utils/debates/createOrEdit";
 
 import CreateOrEdit from "../../../components/debates/CreateOrEdit";
 
-import { DebatePatch } from "../../../types";
-
 export default function Edit() {
   const router = useRouter();
   const param = router.query;
   const debateId =
     typeof param?.debateId === "string" ? parseInt(param?.debateId) : 0;
-
   const [isCancelModalOn, setIsCancelModalOn] = useState<boolean>(false);
   const titleRef = useRef<HTMLInputElement>(null);
 
@@ -34,25 +31,23 @@ export default function Edit() {
   );
   const contentsInput = useInput(debate.data?.contents || "", "");
 
-  const debatePatch: DebatePatch = {
-    title: titleInput.value,
-    author_pros: prosConsRadio.value,
-    category: categorySelect.value,
-    contents: contentsInput.value,
-    id: debate.data?.id || 0,
-  };
-
   const edit = () => {
     if (
-      debate.data?.title === debatePatch.title &&
-      debate.data?.author_pros === debatePatch.author_pros &&
-      debate.data?.category === debatePatch.category &&
-      debate.data?.contents === debatePatch.contents
+      debate.data?.title === titleInput.value &&
+      debate.data?.author_pros === prosConsRadio.value &&
+      debate.data?.category === categorySelect.value &&
+      debate.data?.contents === contentsInput.value
     ) {
       toast.error("변경 내용이 없습니다.");
     } else {
       createOrEdit(titleRef, titleInput, () => {
-        postDebate.mutate(debatePatch);
+        postDebate.mutate({
+          title: titleInput.value,
+          author_pros: prosConsRadio.value,
+          category: categorySelect.value,
+          contents: contentsInput.value,
+          id: debate.data?.id || 0,
+        });
       });
     }
   };

@@ -10,12 +10,13 @@ import {
   usePostComment,
 } from "../../../utils/queries/comments";
 import { useGetUser } from "../../../utils/queries/users";
-import { useInput, useRadio } from "../../../utils/useInputSelect";
+import { useInput, useRadio, useSelect } from "../../../utils/useInputSelect";
+import { removeSpace } from "../../../utils/removeSpace";
+import { COMMENT_ORDER } from "../../../utils/constant";
 
 import ConfirmModal from "../../common/modal/ConfirmModal";
 
 import { CommentOfDebate } from "../../../types";
-import { removeSpace } from "../../../utils/removeSpace";
 
 export default function Comments({ debateId }: { debateId: number }) {
   const token =
@@ -27,8 +28,13 @@ export default function Comments({ debateId }: { debateId: number }) {
   const [isDeleteModalOn, setIsDeleteModalOn] = useState<boolean>(false);
   const [commentId, setCommentId] = useState<number>(0);
 
+  const orderSelect = useSelect(COMMENT_ORDER[0], refetch);
+
   const user = useGetUser(token || "");
-  const comments = useGetComments(debateId);
+  const comments = useGetComments(
+    debateId,
+    orderSelect.value === "최신순" ? "DESC" : "ASC",
+  );
   const postComment = usePostComment(debateId);
   const patchComment = usePatchComment(debateId);
   const deleteComment = useDeleteComment(debateId);
@@ -41,6 +47,10 @@ export default function Comments({ debateId }: { debateId: number }) {
   useEffect(() => {
     if (inView && comments.hasNextPage) comments.fetchNextPage();
   }, [comments, inView]);
+
+  function refetch() {
+    setTimeout(() => comments.refetch(), 1);
+  }
 
   return (
     <div>
@@ -91,6 +101,11 @@ export default function Comments({ debateId }: { debateId: number }) {
       >
         생성
       </button>
+      <select {...orderSelect.attribute}>
+        {COMMENT_ORDER.map((order) => (
+          <option key={order}>{order}</option>
+        ))}
+      </select>
       {comments.data?.pages.map((page, idx) => (
         <div key={idx}>
           {page.list.map((comment: CommentOfDebate) => (

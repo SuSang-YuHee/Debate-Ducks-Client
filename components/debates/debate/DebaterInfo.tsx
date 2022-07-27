@@ -1,7 +1,6 @@
 import { useGetDebate, usePatchDebate } from "../../../utils/queries/debates";
 
 export default function DebaterInfo({ debateId }: { debateId: number }) {
-  //!
   const user = {
     id: "01G85SA6V8NXD7XGB155SC4S18",
     nickname: "참여자",
