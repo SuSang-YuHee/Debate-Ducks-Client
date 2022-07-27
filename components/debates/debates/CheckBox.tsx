@@ -1,8 +1,14 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 
-export default function CheckBox({ candidates }: { candidates: string[] }) {
-  const [list, setList] = useState<string[]>([]);
-
+export default function CheckBox({
+  candidates,
+  list,
+  setList,
+}: {
+  candidates: string[];
+  list: string[];
+  setList: Dispatch<SetStateAction<string[]>>;
+}) {
   return (
     <div>
       <div>{`${list}`}</div>
