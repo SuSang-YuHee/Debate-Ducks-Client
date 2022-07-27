@@ -1,11 +1,11 @@
 import axios from "axios";
 
-import { CommentPatch, CommentPost, Order } from "../types";
+import { CommentPatch, CommentPost } from "../types";
 
 export const getComments = async (
   debateId: number,
   page: number,
-  order: Order,
+  order: string,
 ) => {
   const { data } = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/comments/debate/${debateId}?page=${page}&order=${order}`,

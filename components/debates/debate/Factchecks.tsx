@@ -6,7 +6,7 @@ import {
   usePatchFactcheck,
   usePostFactcheck,
 } from "../../../utils/queries/factchecks";
-import { useInput } from "../../../utils/useInputSelect";
+import { useInput } from "../../../utils/common/useInputSelect";
 
 import ConfirmModal from "../../common/modal/ConfirmModal";
 

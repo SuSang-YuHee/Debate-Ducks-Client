@@ -6,14 +6,12 @@ import { queryStr } from ".";
 
 import { User } from "../../types";
 
-export const useGetUser = (
-  token: string,
-  options?: UseQueryOptions<User, AxiosError>,
-) => {
-  const query = useQuery<User, AxiosError>(
-    [queryStr.users],
-    () => getUser(token),
-    options,
-  );
+export const useGetUser = (options?: UseQueryOptions<User, AxiosError>) => {
+  const query = useQuery<User, AxiosError>([queryStr.users], () => getUser(), {
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    ...options,
+  });
   return query;
 };

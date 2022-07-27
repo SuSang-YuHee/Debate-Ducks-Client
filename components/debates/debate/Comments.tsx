@@ -2,7 +2,7 @@ import { toast } from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
-import { DMYorHM } from "../../../utils/formatStrDate";
+import { DMYorHM } from "../../../utils/common/formatStrDate";
 import {
   useDeleteComment,
   useGetComments,
@@ -10,31 +10,28 @@ import {
   usePostComment,
 } from "../../../utils/queries/comments";
 import { useGetUser } from "../../../utils/queries/users";
-import { useInput, useRadio, useSelect } from "../../../utils/useInputSelect";
-import { removeSpace } from "../../../utils/removeSpace";
-import { COMMENT_ORDER } from "../../../utils/constant";
+import {
+  useInput,
+  useRadio,
+  useSelect,
+} from "../../../utils/common/useInputSelect";
+import { removeSpace } from "../../../utils/common/removeSpace";
+import { COMMENT_ORDER } from "../../../utils/common/constant";
 
 import ConfirmModal from "../../common/modal/ConfirmModal";
 
 import { CommentOfDebate } from "../../../types";
 
 export default function Comments({ debateId }: { debateId: number }) {
-  const token =
-    typeof window !== "undefined"
-      ? localStorage.getItem("debate-ducks-token")
-      : null;
   const { ref, inView } = useInView();
   const [isEditOn, setIsEditOn] = useState<boolean>(false);
   const [isDeleteModalOn, setIsDeleteModalOn] = useState<boolean>(false);
   const [commentId, setCommentId] = useState<number>(0);
 
-  const orderSelect = useSelect(COMMENT_ORDER[0], refetch);
+  const orderSelect = useSelect(COMMENT_ORDER[0][1], refetch);
 
-  const user = useGetUser(token || "");
-  const comments = useGetComments(
-    debateId,
-    orderSelect.value === "최신순" ? "DESC" : "ASC",
-  );
+  const user = useGetUser();
+  const comments = useGetComments(debateId, orderSelect.value);
   const postComment = usePostComment(debateId);
   const patchComment = usePatchComment(debateId);
   const deleteComment = useDeleteComment(debateId);
@@ -103,7 +100,9 @@ export default function Comments({ debateId }: { debateId: number }) {
       </button>
       <select {...orderSelect.attribute}>
         {COMMENT_ORDER.map((order) => (
-          <option key={order}>{order}</option>
+          <option key={order[0]} value={order[1]}>
+            {order[0]}
+          </option>
         ))}
       </select>
       {comments.data?.pages.map((page, idx) => (
