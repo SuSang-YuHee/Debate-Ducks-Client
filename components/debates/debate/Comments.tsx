@@ -2,7 +2,7 @@ import { toast } from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
-import { DMYorHM } from "../../../utils/formatStrDate";
+import { DMYorHM } from "../../../utils/common/formatStrDate";
 import {
   useDeleteComment,
   useGetComments,
@@ -10,9 +10,13 @@ import {
   usePostComment,
 } from "../../../utils/queries/comments";
 import { useGetUser } from "../../../utils/queries/users";
-import { useInput, useRadio, useSelect } from "../../../utils/useInputSelect";
-import { removeSpace } from "../../../utils/removeSpace";
-import { COMMENT_ORDER } from "../../../utils/constant";
+import {
+  useInput,
+  useRadio,
+  useSelect,
+} from "../../../utils/common/useInputSelect";
+import { removeSpace } from "../../../utils/common/removeSpace";
+import { COMMENT_ORDER } from "../../../utils/common/constant";
 
 import ConfirmModal from "../../common/modal/ConfirmModal";
 

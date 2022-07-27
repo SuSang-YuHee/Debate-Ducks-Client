@@ -1,8 +1,12 @@
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 
-import { CATEGORIES } from "../../utils/constant";
-import { useInput, useRadio, useSelect } from "../../utils/useInputSelect";
+import { CATEGORIES } from "../../utils/common/constant";
+import {
+  useInput,
+  useRadio,
+  useSelect,
+} from "../../utils/common/useInputSelect";
 import { usePostDebate } from "../../utils/queries/debates";
 import { createOrEdit } from "../../utils/debates/createOrEdit";
 

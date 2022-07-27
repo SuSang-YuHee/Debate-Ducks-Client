@@ -1,6 +1,6 @@
 import CheckBox from "../../components/debates/CheckBox";
 
-import { CATEGORIES } from "../../utils/constant";
+import { CATEGORIES } from "../../utils/common/constant";
 
 export default function Debates() {
   return (
