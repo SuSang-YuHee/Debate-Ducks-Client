@@ -23,10 +23,6 @@ import ConfirmModal from "../../common/modal/ConfirmModal";
 import { CommentOfDebate } from "../../../types";
 
 export default function Comments({ debateId }: { debateId: number }) {
-  const token =
-    typeof window !== "undefined"
-      ? localStorage.getItem("debate-ducks-token")
-      : null;
   const { ref, inView } = useInView();
   const [isEditOn, setIsEditOn] = useState<boolean>(false);
   const [isDeleteModalOn, setIsDeleteModalOn] = useState<boolean>(false);
@@ -34,7 +30,7 @@ export default function Comments({ debateId }: { debateId: number }) {
 
   const orderSelect = useSelect(COMMENT_ORDER[0], refetch);
 
-  const user = useGetUser(token || "");
+  const user = useGetUser();
   const comments = useGetComments(
     debateId,
     orderSelect.value === "최신순" ? "DESC" : "ASC",
