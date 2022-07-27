@@ -14,7 +14,7 @@ import {
 import { useGetDebate, usePatchDebate } from "../../../utils/queries/debates";
 import { createOrEdit } from "../../../utils/debates/createOrEdit";
 
-import CreateOrEdit from "../../../components/debates/debates/CreateOrEdit";
+import CreateOrEdit from "../../../components/debates/CreateOrEdit";
 
 export default function Edit() {
   const router = useRouter();

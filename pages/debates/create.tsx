@@ -10,7 +10,7 @@ import {
 import { usePostDebate } from "../../utils/queries/debates";
 import { createOrEdit } from "../../utils/debates/createOrEdit";
 
-import CreateOrEdit from "../../components/debates/debates/CreateOrEdit";
+import CreateOrEdit from "../../components/debates/CreateOrEdit";
 
 export default function Create() {
   const router = useRouter();

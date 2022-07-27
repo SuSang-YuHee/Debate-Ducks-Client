@@ -1,14 +1,10 @@
 import { Dispatch, RefObject, SetStateAction } from "react";
 
-import { CATEGORIES } from "../../../utils/common/constant";
+import { CATEGORIES } from "../../utils/common/constant";
 
-import ConfirmModal from "../../common/modal/ConfirmModal";
+import ConfirmModal from "../common/modal/ConfirmModal";
 
-import {
-  UseInputResult,
-  UseRadioResult,
-  UseSelectResult,
-} from "../../../types";
+import { UseInputResult, UseRadioResult, UseSelectResult } from "../../types";
 
 export default function CreateOrEdit({
   isCancelModalOn,
