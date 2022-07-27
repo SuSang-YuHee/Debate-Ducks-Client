@@ -1,6 +1,6 @@
 import { useState, ChangeEvent } from "react";
 
-import { UseInputResult, UseRadioResult, UseSelectResult } from "../types";
+import { UseInputResult, UseRadioResult, UseSelectResult } from "../../types";
 
 export const useInput = (
   initialValue: string,
