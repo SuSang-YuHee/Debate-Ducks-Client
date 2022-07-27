@@ -3,20 +3,16 @@ import { useRouter } from "next/router";
 
 import { CATEGORIES } from "../../utils/common/constant";
 import { useGetUser } from "../../utils/queries/users";
-import { useInput } from "../../utils/common/useInputSelect";
 
 import CheckBox from "../../components/debates/debates/CheckBox";
 import DebatesList from "../../components/debates/debates/DebatesList";
 import DebatesHeartList from "../../components/debates/debates/DebatesHeartList";
-import DebatesSearchList from "../../components/debates/debates/DebatesSearchList";
 
 export default function Debates() {
   const router = useRouter();
   const [list, setList] = useState<string[]>([]);
   const [isHeartListOn, setIsHeartListOn] = useState<boolean>(false);
-  const [isSearchListOn, setIsSearchListOn] = useState<boolean>(false);
   const user = useGetUser();
-  const search = useInput("", "");
 
   return (
     <div>
@@ -37,34 +33,8 @@ export default function Debates() {
           </button>
         )
       ) : null}
-      {isSearchListOn ? (
-        <div>
-          <input {...search.attribute} disabled />
-          <button
-            onClick={() => {
-              setIsSearchListOn(false);
-            }}
-          >
-            X
-          </button>
-        </div>
-      ) : (
-        <div>
-          <input {...search.attribute} />
-          <button
-            onClick={() => {
-              setIsSearchListOn(true);
-            }}
-          >
-            검색
-          </button>
-        </div>
-      )}
-      {!isHeartListOn && !isSearchListOn ? <DebatesList list={list} /> : null}
+      {!isHeartListOn ? <DebatesList list={list} /> : null}
       {isHeartListOn ? <DebatesHeartList list={list} /> : null}
-      {isSearchListOn ? (
-        <DebatesSearchList list={list} searchValue={search.value} />
-      ) : null}
     </div>
   );
 }

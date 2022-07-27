@@ -2,9 +2,13 @@ import axios from "axios";
 
 import { DebatePost, DebatePatch } from "../types";
 
-export const getDebates = async (page: string, order: string) => {
+export const getDebates = async (
+  searchValue: string,
+  page: string,
+  order: string,
+) => {
   const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/debates?page=${page}&order=${order}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/debates/search?title=${searchValue}&page=${page}&order=${order}`,
     { withCredentials: true },
   );
   return { list: data.list, isLast: data.isLast, nextPage: page + 1 };
@@ -17,18 +21,6 @@ export const getDebatesHeart = async (
 ) => {
   const { data } = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/hearts?page=${page}&order=${order}`,
-    { withCredentials: true },
-  );
-  return { list: data.list, isLast: data.isLast, nextPage: page + 1 };
-};
-
-export const getDebatesSearch = async (
-  searchValue: string,
-  page: string,
-  order: string,
-) => {
-  const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/debates/search?page=${page}&order=${order}&title=${searchValue}`,
     { withCredentials: true },
   );
   return { list: data.list, isLast: data.isLast, nextPage: page + 1 };
