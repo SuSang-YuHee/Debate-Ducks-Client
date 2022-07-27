@@ -1,8 +1,5 @@
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
 
-//*- common
-export type Order = "DESC" | "ASC";
-
 //*- users
 export interface User {
   id: string;
