@@ -2,6 +2,7 @@ import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
 import { AxiosError } from "axios";
 import {
+  useInfiniteQuery,
   useMutation,
   UseMutationOptions,
   UseMutationResult,
@@ -13,12 +14,25 @@ import {
 import {
   deleteDebate,
   getDebate,
+  getDebates,
   patchDebate,
   postDebate,
 } from "../../api/debates";
 import { queryStr } from ".";
 
-import { Debate, DebatePost, DebatePatch, User } from "../../types";
+import { Debate, DebatePost, DebatePatch, User, Order } from "../../types";
+
+export const useGetDebates = (order: Order) => {
+  const query = useInfiniteQuery(
+    [queryStr.debates],
+    ({ pageParam = 0 }) => getDebates(pageParam, order),
+    {
+      getNextPageParam: (lastPage) =>
+        !lastPage.isLast ? lastPage.nextPage : undefined,
+    },
+  );
+  return query;
+};
 
 export const useGetDebate = (
   debateId: number,
