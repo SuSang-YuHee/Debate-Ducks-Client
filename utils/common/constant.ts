@@ -11,4 +11,7 @@ export const CATEGORIES = [
   "기타",
 ];
 
-export const COMMENT_ORDER = ["최신순", "오래된 순"];
+export const COMMENT_ORDER = [
+  ["최신순", "DESC"],
+  ["오래된 순", "ASC"],
+];

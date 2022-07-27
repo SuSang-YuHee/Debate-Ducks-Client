@@ -20,9 +20,9 @@ import {
 } from "../../api/debates";
 import { queryStr } from ".";
 
-import { Debate, DebatePost, DebatePatch, User, Order } from "../../types";
+import { Debate, DebatePost, DebatePatch, User } from "../../types";
 
-export const useGetDebates = (order: Order) => {
+export const useGetDebates = (order: string) => {
   const query = useInfiniteQuery(
     [queryStr.debates],
     ({ pageParam = 0 }) => getDebates(pageParam, order),

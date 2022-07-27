@@ -10,11 +10,9 @@ import { DebateOfDebates } from "../../../types";
 
 export default function DebatesList({ list }: { list: string[] }) {
   const { ref, inView } = useInView();
-  const orderSelect = useSelect(COMMENT_ORDER[0], refetch);
+  const orderSelect = useSelect(COMMENT_ORDER[0][1], refetch);
 
-  const debates = useGetDebates(
-    orderSelect.value === "최신순" ? "DESC" : "ASC",
-  );
+  const debates = useGetDebates(orderSelect.value);
 
   useEffect(() => {
     if (inView && debates.hasNextPage) debates.fetchNextPage();
@@ -40,7 +38,9 @@ export default function DebatesList({ list }: { list: string[] }) {
     <div>
       <select {...orderSelect.attribute}>
         {COMMENT_ORDER.map((order) => (
-          <option key={order}>{order}</option>
+          <option key={order[0]} value={order[1]}>
+            {order[0]}
+          </option>
         ))}
       </select>
       {debates.data?.pages.map((page, idx) => (

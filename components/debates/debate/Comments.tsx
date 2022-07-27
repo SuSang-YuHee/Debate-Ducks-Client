@@ -28,13 +28,10 @@ export default function Comments({ debateId }: { debateId: number }) {
   const [isDeleteModalOn, setIsDeleteModalOn] = useState<boolean>(false);
   const [commentId, setCommentId] = useState<number>(0);
 
-  const orderSelect = useSelect(COMMENT_ORDER[0], refetch);
+  const orderSelect = useSelect(COMMENT_ORDER[0][1], refetch);
 
   const user = useGetUser();
-  const comments = useGetComments(
-    debateId,
-    orderSelect.value === "최신순" ? "DESC" : "ASC",
-  );
+  const comments = useGetComments(debateId, orderSelect.value);
   const postComment = usePostComment(debateId);
   const patchComment = usePatchComment(debateId);
   const deleteComment = useDeleteComment(debateId);
@@ -103,7 +100,9 @@ export default function Comments({ debateId }: { debateId: number }) {
       </button>
       <select {...orderSelect.attribute}>
         {COMMENT_ORDER.map((order) => (
-          <option key={order}>{order}</option>
+          <option key={order[0]} value={order[1]}>
+            {order[0]}
+          </option>
         ))}
       </select>
       {comments.data?.pages.map((page, idx) => (

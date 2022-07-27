@@ -1,8 +1,8 @@
 import axios from "axios";
 
-import { DebatePost, DebatePatch, Order } from "../types";
+import { DebatePost, DebatePatch } from "../types";
 
-export const getDebates = async (page: string, order: Order) => {
+export const getDebates = async (page: string, order: string) => {
   const { data } = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/debates?page=${page}&order=${order}`,
     { withCredentials: true },

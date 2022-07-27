@@ -16,9 +16,9 @@ import {
 } from "../../api/comments";
 import { queryStr } from ".";
 
-import { CommentPatch, CommentPost, Order } from "../../types";
+import { CommentPatch, CommentPost } from "../../types";
 
-export const useGetComments = (debateId: number, order: Order) => {
+export const useGetComments = (debateId: number, order: string) => {
   const query = useInfiniteQuery(
     [queryStr.comments, `${debateId}`],
     ({ pageParam = 0 }) => getComments(debateId, pageParam, order),
