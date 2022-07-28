@@ -1,3 +1,10 @@
+export const COLORS = {
+  white: "#F8FBFD",
+  black: "#292929",
+  pros: "#ff9425",
+  cons: "#6667ab",
+};
+
 export const CATEGORIES = [
   "정치",
   "경제",
@@ -9,6 +16,12 @@ export const CATEGORIES = [
   "역사",
   "철학",
   "기타",
+];
+
+export const STATUSES = [
+  "참가 가능한 토론",
+  "대기 중인 토론",
+  "투표 가능한 토론",
 ];
 
 export const COMMENT_ORDER = [
