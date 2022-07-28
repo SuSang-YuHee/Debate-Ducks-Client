@@ -1,0 +1,20 @@
+html,
+body {
+  font-family: sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.inner {
+  width: 1200px; /* 최대 넓이 */
+  max-width: 100%; /* 모바일용 */
+  margin: 0 auto; /* 가로 가운데 정렬 */
+  position: relative;
+}
