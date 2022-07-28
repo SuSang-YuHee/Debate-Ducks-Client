@@ -21,7 +21,7 @@ export const CATEGORIES = [
 ];
 
 export const STATUSES = [
-  "참가 가능한 토론",
+  "참여 가능한 토론",
   "대기 중인 토론",
   "투표 가능한 토론",
 ];
