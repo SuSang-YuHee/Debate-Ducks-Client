@@ -2,6 +2,7 @@ $c-white: #f8fbfd;
 $c-black: #292929;
 $c-gray_light: #eeeeee;
 $c-gray_dark: #cccccc;
+
 $c-pros: #ff9425;
 $c-cons: #6667ab;
 
@@ -21,6 +22,7 @@ $c-cons: #6667ab;
   display: flex;
   justify-content: center;
   align-items: center;
+  @content;
 }
 
 @mixin disabledText {
@@ -28,4 +30,19 @@ $c-cons: #6667ab;
   -webkit-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+@mixin btn-w($w) {
+  @include disabledText;
+  @include center;
+  padding: 0.5rem;
+  border-radius: 18px;
+  width: $w;
+  transition: 0.3s ease 0s;
+}
+
+@mixin btn-c($c, $b, $bc) {
+  color: $c;
+  border: 1px solid $b;
+  background-color: $bc;
 }
