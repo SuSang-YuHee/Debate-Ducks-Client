@@ -16,8 +16,6 @@ export default function Debates() {
   const [isHeartListOn, setIsHeartListOn] = useState<boolean>(false);
   const user = useGetUser();
 
-  console.log(order);
-
   return (
     <div>
       {user.data ? (
