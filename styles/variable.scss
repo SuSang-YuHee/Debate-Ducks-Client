@@ -1,6 +1,24 @@
-$c-white: "#F8FBFD";
-$c-black: "#292929";
-$c-gray_light: "EEEEEE";
-$c-gray_dark: "CCCCC";
-$c-pros: "#ff9425";
-$c-cons: "#6667ab";
+$c-white: #f8fbfd;
+$c-black: #292929;
+$c-gray_light: #eeeeee;
+$c-gray_dark: #cccccc;
+$c-pros: #ff9425;
+$c-cons: #6667ab;
+
+@mixin tablet {
+  @media screen and (max-width: 899px) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media screen and (max-width: 599px) {
+    @content;
+  }
+}
+
+@mixin center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
