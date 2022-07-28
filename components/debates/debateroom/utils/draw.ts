@@ -1,11 +1,6 @@
-import { IDebateroom, IDebateData } from "../types";
+import { COLORS } from "../../../../utils/common/constant";
 
-const color = {
-  white: "#F8FBFD",
-  black: "#292929",
-  pros: "#ff9425",
-  cons: "#6667ab",
-};
+import { IDebateroom, IDebateData } from "../types";
 
 export const drawContents = ({
   isPros,
@@ -31,30 +26,37 @@ export const drawContents = ({
   | "isPeerScreenOn"
   | "dummy"
 >) => {
-  drawSquare({ canvasRef }, color.white, 0, 80, 1280, 640);
+  drawSquare({ canvasRef }, COLORS.white, 0, 80, 1280, 640);
 
   if (isScreenOn) {
     if (!videoRef.current) return;
-    drawSquare({ canvasRef }, color.black, 0, 80, 1280, 640);
+    drawSquare({ canvasRef }, COLORS.black, 0, 80, 1280, 640);
     const [w, h] = resize(videoRef.current);
     canvasRef.current
       ?.getContext("2d")
       ?.drawImage(videoRef.current, 640 - w / 2, 440 - h / 2, w, h);
   } else if (isPeerScreenOn) {
     if (!peerVideoRef.current) return;
-    drawSquare({ canvasRef }, color.black, 0, 80, 1280, 640);
+    drawSquare({ canvasRef }, COLORS.black, 0, 80, 1280, 640);
     const [w, h] = resize(peerVideoRef.current);
     canvasRef.current
       ?.getContext("2d")
       ?.drawImage(peerVideoRef.current, 640 - w / 2, 440 - h / 2, w, h);
   } else {
-    drawText({ canvasRef }, color.black, "bold 48px san-serif", "VS", 640, 420);
-
-    drawSquare({ canvasRef }, color.pros, 40, 110, 520, 520);
-    drawSquare({ canvasRef }, color.black, 50, 120, 500, 500);
     drawText(
       { canvasRef },
-      color.pros,
+      COLORS.black,
+      "bold 48px san-serif",
+      "VS",
+      640,
+      420,
+    );
+
+    drawSquare({ canvasRef }, COLORS.pros, 40, 110, 520, 520);
+    drawSquare({ canvasRef }, COLORS.black, 50, 120, 500, 500);
+    drawText(
+      { canvasRef },
+      COLORS.pros,
       "bold 32px san-serif",
       `${dummy.prosName}`,
       300,
@@ -62,18 +64,18 @@ export const drawContents = ({
     );
     drawText(
       { canvasRef },
-      color.white,
+      COLORS.white,
       "bold 32px san-serif",
       peerRef.current ? "Camera Off" : isPros ? "Camera Off" : "Not connected",
       300,
       380,
     );
 
-    drawSquare({ canvasRef }, color.cons, 720, 110, 520, 520);
-    drawSquare({ canvasRef }, color.black, 730, 120, 500, 500);
+    drawSquare({ canvasRef }, COLORS.cons, 720, 110, 520, 520);
+    drawSquare({ canvasRef }, COLORS.black, 730, 120, 500, 500);
     drawText(
       { canvasRef },
-      color.cons,
+      COLORS.cons,
       "bold 32px san-serif",
       `${dummy.consName}`,
       980,
@@ -81,7 +83,7 @@ export const drawContents = ({
     );
     drawText(
       { canvasRef },
-      color.white,
+      COLORS.white,
       "bold 32px san-serif",
       peerRef.current ? "Camera Off" : !isPros ? "Camera Off" : "Not connected",
       980,
@@ -119,13 +121,13 @@ export const drawNotice = (
       : debateData.time >= 1 && debateData.turn !== 7
       ? `${debateData.notice} ( ${debateData.time}초 )`
       : debateData.notice;
-  let bgColor = color.black;
-  if (turn === "pros" || turn === "prosCross") bgColor = color.pros;
-  if (turn === "cons" || turn === "consCross") bgColor = color.cons;
+  let bgColor = COLORS.black;
+  if (turn === "pros" || turn === "prosCross") bgColor = COLORS.pros;
+  if (turn === "cons" || turn === "consCross") bgColor = COLORS.cons;
   drawSquare({ canvasRef }, bgColor, 0, 0, 1280, 80);
   drawText(
     { canvasRef },
-    color.white,
+    COLORS.white,
     "normal 28px san-serif",
     notice,
     640,
