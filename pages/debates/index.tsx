@@ -1,29 +1,27 @@
 import { useState } from "react";
-import { useRouter } from "next/router";
 
-import { CATEGORIES } from "../../utils/common/constant";
 import { useGetUser } from "../../utils/queries/users";
 
-import CheckBox from "../../components/debates/debates/CheckBox";
+import Filters from "../../components/debates/debates/Filters";
 import DebatesList from "../../components/debates/debates/DebatesList";
 import DebatesHeartList from "../../components/debates/debates/DebatesHeartList";
 
 export default function Debates() {
-  const router = useRouter();
-  const [list, setList] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [statuses, setStatuses] = useState<string[]>([]);
   const [order, setOrder] = useState<string>("DESC");
   const [heartOrder, setHeartOrder] = useState<string>("DESC");
   const [isHeartListOn, setIsHeartListOn] = useState<boolean>(false);
   const user = useGetUser();
 
   return (
-    <div>
-      {user.data ? (
-        <button onClick={() => router.push("/debates/create")}>
-          토론 만들기
-        </button>
-      ) : null}
-      <CheckBox candidates={CATEGORIES} list={list} setList={setList} />
+    <div className="inner">
+      <Filters
+        statuses={statuses}
+        setStatuses={setStatuses}
+        categories={categories}
+        setCategories={setCategories}
+      />
       {user.data ? (
         isHeartListOn ? (
           <button onClick={() => setIsHeartListOn(false)}>
@@ -36,11 +34,11 @@ export default function Debates() {
         )
       ) : null}
       {!isHeartListOn ? (
-        <DebatesList list={list} order={order} setOrder={setOrder} />
+        <DebatesList list={categories} order={order} setOrder={setOrder} />
       ) : null}
       {isHeartListOn ? (
         <DebatesHeartList
-          list={list}
+          list={categories}
           order={heartOrder}
           setOrder={setHeartOrder}
         />
