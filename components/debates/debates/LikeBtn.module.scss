@@ -1,0 +1,22 @@
+@import "../../../styles/variable.scss";
+
+.outer {
+  @include center;
+  font-size: 0.8rem;
+  margin: 1rem 0;
+  font-weight: 700;
+}
+
+.btn {
+  @include disabledText;
+  color: darken($c-gray_dark, 20%);
+  &:hover {
+    color: darken($c-gray_dark, 30%);
+  }
+  &_clicked {
+    color: $c-cons;
+    &:hover {
+      color: darken($c-cons, 10%);
+    }
+  }
+}
