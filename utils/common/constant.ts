@@ -1,6 +1,8 @@
 export const COLORS = {
   white: "#F8FBFD",
   black: "#292929",
+  gray_light: "EEEEEE",
+  gray_dark: "CCCCC",
   pros: "#ff9425",
   cons: "#6667ab",
 };
