@@ -40,8 +40,8 @@ export const usePostComment = (
     onSuccess: () => {
       queryClient.invalidateQueries([queryStr.comments, `${debateId}`]);
     },
-    onError: (err) => {
-      toast.error(`${err.response?.data}`);
+    onError: (err: AxiosError<{ message: string }>) => {
+      toast.error(`${err.response?.data.message}`);
     },
   });
 };
@@ -56,8 +56,8 @@ export const usePatchComment = (
     onSuccess: () => {
       queryClient.invalidateQueries([queryStr.comments, `${debateId}`]);
     },
-    onError: (err) => {
-      toast.error(`${err.message}`);
+    onError: (err: AxiosError<{ message: string }>) => {
+      toast.error(`${err.response?.data.message}`);
     },
   });
 };
@@ -72,8 +72,8 @@ export const useDeleteComment = (
     onSuccess: () => {
       queryClient.invalidateQueries([queryStr.comments, `${debateId}`]);
     },
-    onError: (err) => {
-      toast.error(`${err.response?.data}`);
+    onError: (err: AxiosError<{ message: string }>) => {
+      toast.error(`${err.response?.data.message}`);
     },
   });
 };

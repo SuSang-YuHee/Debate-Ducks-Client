@@ -26,8 +26,8 @@ export const usePostFactcheck = (
     onSuccess: () => {
       queryClient.invalidateQueries([queryStr.debates, `${debateId}`]);
     },
-    onError: (err) => {
-      toast.error(`${err.message}`);
+    onError: (err: AxiosError<{ message: string }>) => {
+      toast.error(`${err.response?.data.message}`);
     },
   });
 };
@@ -69,9 +69,9 @@ export const usePatchFactcheck = (
         };
       }
     },
-    onError: (err, variables, rollback) => {
+    onError: (err: AxiosError<{ message: string }>, variables, rollback) => {
       if (rollback) rollback();
-      toast.error(`${err.message}`);
+      toast.error(`${err.response?.data.message}`);
     },
   });
 };
@@ -106,9 +106,9 @@ export const useDeleteFactcheck = (
         };
       }
     },
-    onError: (err, variables, rollback) => {
+    onError: (err: AxiosError<{ message: string }>, variables, rollback) => {
       if (rollback) rollback();
-      toast.error(`${err.response?.data}`);
+      toast.error(`${err.response?.data.message}`);
     },
   });
 };
