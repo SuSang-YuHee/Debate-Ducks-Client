@@ -35,14 +35,20 @@ export default function Debates() {
         isHeartListOn={isHeartListOn}
         setIsHeartListOn={setIsHeartListOn}
       />
-      {isHeartListOn && user.data ? (
+      {isHeartListOn ? (
         <DebatesHeartList
-          list={categories}
+          statuses={statuses}
+          categories={categories}
           order={heartOrder}
           setOrder={setHeartOrder}
         />
       ) : (
-        <DebatesList list={categories} order={order} setOrder={setOrder} />
+        <DebatesList
+          statuses={statuses}
+          categories={categories}
+          order={order}
+          setOrder={setOrder}
+        />
       )}
     </div>
   );
