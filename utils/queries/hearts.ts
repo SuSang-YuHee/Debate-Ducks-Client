@@ -61,7 +61,7 @@ export const usePostHeart = (
           () => {
             return {
               ...prevDebate,
-              heartCnt: prevDebate.heartCnt + 1,
+              hearts_cnt: prevDebate.hearts_cnt + 1,
             };
           },
         );
@@ -119,7 +119,7 @@ export const useDeleteHeart = (
           () => {
             return {
               ...prevDebate,
-              heartCnt: prevDebate.heartCnt - 1,
+              hearts_cnt: prevDebate.hearts_cnt - 1,
             };
           },
         );
