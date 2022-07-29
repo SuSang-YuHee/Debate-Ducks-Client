@@ -6,6 +6,7 @@
   @include center {
     flex-direction: column;
   }
+  min-width: 20rem;
 }
 
 .btn_edit {
@@ -57,10 +58,9 @@
 
 .cards {
   @include center {
-    flex-direction: column;
+    flex-wrap: wrap;
   }
   margin-top: 1rem;
-  background-color: red; //!
+  background-color: $c-gray-light; //!
   width: 100%;
-  padding: 1rem;
 }

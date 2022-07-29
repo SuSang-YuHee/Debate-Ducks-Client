@@ -6,10 +6,10 @@
   @include center {
     flex-direction: column;
   }
+  min-width: 20rem;
 }
 
 .container {
-  min-width: 20rem;
   @include center;
   flex-wrap: wrap;
   margin-top: 1rem;
