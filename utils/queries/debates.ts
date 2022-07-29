@@ -70,8 +70,8 @@ export const usePostDebate = (
       queryClient.invalidateQueries([queryStr.debates], { exact: true });
       router.push(`/debates`);
     },
-    onError: (err) => {
-      toast.error(`${err.response?.data}`);
+    onError: (err: AxiosError<{ message: string }>) => {
+      toast.error(`${err.response?.data.message}`);
     },
   });
 };
@@ -112,9 +112,9 @@ export const usePatchDebate = (
         router.push(`/debates/${debateId}`);
       }
     },
-    onError: (err, variables, rollback) => {
+    onError: (err: AxiosError<{ message: string }>, variables, rollback) => {
       if (rollback) rollback();
-      toast.error(`${err.message}`);
+      toast.error(`${err.response?.data.message}`);
     },
   });
 };
@@ -130,8 +130,8 @@ export const useDeleteDebate = (
       queryClient.invalidateQueries([queryStr.debates], { exact: true });
       router.push(`/debates`);
     },
-    onError: (err) => {
-      toast.error(`${err.message}`);
+    onError: (err: AxiosError<{ message: string }>) => {
+      toast.error(`${err.response?.data.message}`);
     },
   });
 };

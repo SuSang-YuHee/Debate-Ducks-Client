@@ -77,9 +77,9 @@ export const usePostHeart = (
         };
       }
     },
-    onError: (err, variables, rollback) => {
+    onError: (err: AxiosError<{ message: string }>, variables, rollback) => {
       if (rollback) rollback();
-      toast.error(`${err.message}`);
+      toast.error(`${err.response?.data.message}`);
     },
   });
 };
@@ -135,9 +135,9 @@ export const useDeleteHeart = (
         };
       }
     },
-    onError: (err, variables, rollback) => {
+    onError: (err: AxiosError<{ message: string }>, variables, rollback) => {
       if (rollback) rollback();
-      toast.error(`${err.response?.data}`);
+      toast.error(`${err.response?.data.message}`);
     },
   });
 };

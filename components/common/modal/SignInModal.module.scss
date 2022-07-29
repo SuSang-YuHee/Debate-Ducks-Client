@@ -18,7 +18,7 @@
   transform: translateY(-50%);
   background-color: $c-white;
   padding: 3rem 1rem;
-  width: 22rem;
+  width: 20rem;
   border-radius: 9px;
   font-size: 1rem;
   text-align: center;
@@ -31,14 +31,23 @@
   margin-bottom: 2rem;
 }
 
-.content {
-  color: $c-black;
-  margin-bottom: 2.5rem;
-}
-
 .container {
   @include center;
-  gap: 2rem;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  &:nth-child(3) {
+    margin-bottom: 2.5rem;
+  }
+}
+
+.content {
+  width: 4rem;
+}
+
+.input {
+  border-radius: 9px;
+  padding: 0.2rem 0.4rem;
+  border: 1px $c-black solid;
 }
 
 .btn {

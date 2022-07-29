@@ -32,9 +32,10 @@ $c-cons: #6667ab;
   user-select: none;
 }
 
-@mixin btn-w($w) {
+@mixin btn-w($w, $b: 0.8rem) {
   @include disabledText;
   @include center;
+  font-size: $b;
   padding: 0.5rem;
   border-radius: 18px;
   width: $w;

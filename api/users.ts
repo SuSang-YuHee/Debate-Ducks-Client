@@ -1,4 +1,5 @@
-import axios from "axios";
+import { toast } from "react-hot-toast";
+import axios, { AxiosError } from "axios";
 
 export const getUser = async () => {
   const token =
@@ -19,6 +20,25 @@ export const getUser = async () => {
   }
   return null;
 };
+
+export const login = (
+  email: string,
+  password: string,
+  callback?: () => void,
+) => {
+  axios
+    .post(
+      `${process.env.NEXT_PUBLIC_API_URL}/users/login`,
+      { email, password },
+      { withCredentials: true },
+    )
+    .then((res) => {
+      localStorage.setItem("debate-ducks-token", res.data);
+      if (callback) callback();
+    })
+    .catch((err: AxiosError<{ message: string }>) => {
+      toast.error(`${err.response?.data.message}`);
+    });
 
 export const getUserImage = async (id: string) => {
   const { data } = await axios.get(
