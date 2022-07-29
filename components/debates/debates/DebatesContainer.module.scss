@@ -1,0 +1,61 @@
+@import "../../../styles/variable.scss";
+
+.outer {
+  font-size: 0.8rem;
+  margin: 1rem;
+  @include center {
+    flex-direction: column;
+  }
+}
+
+.btn_edit {
+  @include btn-w(7rem);
+  @include btn-c($c-pros, $c-pros, $c-white);
+  margin-right: auto;
+}
+
+.container {
+  @include center;
+  margin-top: 1rem;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.select {
+  @include input(7rem, $c-cons);
+}
+
+.item {
+  @include center;
+  gap: 0.5rem;
+}
+
+.input {
+  @include input(9rem, $c-cons);
+}
+
+.btn_search {
+  @include disabledText;
+  @include center;
+  color: $c-pros;
+  border: 1px solid $c-pros;
+  width: 1rem;
+  height: 1rem;
+  font-size: 1rem;
+  border-radius: 100%;
+  text-align: center;
+  &_disabled {
+    color: $c-cons;
+    border: 1px solid $c-cons;
+  }
+}
+
+.cards {
+  @include center {
+    flex-direction: column;
+  }
+  margin-top: 1rem;
+  background-color: red; //!
+  width: 100%;
+  padding: 1rem;
+}
