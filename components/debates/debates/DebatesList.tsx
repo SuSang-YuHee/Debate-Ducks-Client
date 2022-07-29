@@ -6,11 +6,13 @@ import { useInput, useSelect } from "../../../utils/common/useInputSelect";
 import DebatesContainer from "./DebatesContainer";
 
 export default function DebatesList({
-  list,
+  statuses,
+  categories,
   order,
   setOrder,
 }: {
-  list: string[];
+  statuses: string[];
+  categories: string[];
   order: string;
   setOrder: Dispatch<SetStateAction<string>>;
 }) {
@@ -25,7 +27,8 @@ export default function DebatesList({
 
   return (
     <DebatesContainer
-      list={list}
+      statuses={statuses}
+      categories={categories}
       isDisabledSearch={false}
       debates={debates}
       refetch={refetch}
