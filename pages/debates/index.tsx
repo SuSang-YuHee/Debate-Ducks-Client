@@ -21,7 +21,7 @@ export default function Debates() {
       setHeartOrder("DESC");
       setIsHeartListOn(false);
     }
-  }, [user]);
+  }, [user.data]);
 
   return (
     <div className="inner">
