@@ -39,6 +39,7 @@ export const login = (
     .catch((err: AxiosError<{ message: string }>) => {
       toast.error(`${err.response?.data.message}`);
     });
+};
 
 export const getUserImage = async (id: string) => {
   const { data } = await axios.get(
