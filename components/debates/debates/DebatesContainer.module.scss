@@ -32,6 +32,11 @@
 
 .input {
   @include input(9rem, $c-cons);
+  &_disabled {
+    color: darken($c-gray-dark, 20%);
+    text-decoration: line-through;
+    background-color: $c-gray-light;
+  }
 }
 
 .btn_search {
