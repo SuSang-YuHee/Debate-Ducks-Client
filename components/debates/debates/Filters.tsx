@@ -1,8 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 
-import styles from "./Filters.module.scss";
-
 import { CATEGORIES, STATUSES } from "../../../utils/common/constant";
+import styles from "./Filters.module.scss";
 
 export default function Filters({
   statuses,

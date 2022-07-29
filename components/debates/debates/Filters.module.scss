@@ -1,17 +1,15 @@
 @import "../../../styles/variable.scss";
 
-@mixin btn($c, $b, $bc) {
-  color: $c;
-  border: 1px solid $b;
-  background-color: $bc;
-}
-
 .outer {
   font-size: 0.8rem;
-  margin: 4rem 0;
+  margin: 4rem 0 1rem;
+  @include center {
+    flex-direction: column;
+  }
 }
 
 .container {
+  min-width: 20rem;
   @include center;
   flex-wrap: wrap;
   margin-top: 1rem;
@@ -19,13 +17,12 @@
     margin-top: 0;
   }
   &:nth-child(2) {
-    margin-left: 12rem;
-    margin-right: 12rem;
+    width: 40rem;
     @include tablet {
-      margin-left: 3rem;
-      margin-right: 3rem;
+      width: 30rem;
     }
     @include mobile {
+      width: auto;
       margin-left: 0.3rem;
       margin-right: 0.3rem;
     }
@@ -33,42 +30,38 @@
 }
 
 .btn {
-  @include center;
-  padding: 0.5rem;
+  @include btn-w(6rem);
   margin: 0.5rem 0.7rem;
-  border-radius: 18px;
-  width: 6rem;
-  transition: 0.3s ease 0s;
   &:hover {
-    font-weight: bold;
+    font-weight: 700;
   }
 
   &_status {
     width: 8rem;
-    @include btn($c-pros, $c-pros, $c-white);
+    @include btn-c($c-pros, $c-pros, $c-white);
     &_selected {
       width: 8rem;
-      @include btn($c-white, $c-pros, $c-pros);
+      @include btn-c($c-white, $c-pros, $c-pros);
     }
   }
 
   &_category {
-    @include btn($c-cons, $c-cons, $c-white);
+    @include btn-c($c-cons, $c-cons, $c-white);
     &_selected {
-      @include btn($c-white, $c-cons, $c-cons);
+      @include btn-c($c-white, $c-cons, $c-cons);
     }
   }
 
   &_all {
     border-radius: 9px;
     &_cancel {
-      @include btn($c-white, $c-cons, $c-cons);
+      @include btn-c($c-white, $c-cons, $c-cons);
       &:active {
         background-color: darken($c-cons, 20%);
       }
     }
     &_check {
-      @include btn($c-white, $c-pros, $c-pros);
+      @include btn-c($c-white, $c-pros, $c-pros);
       &:active {
         background-color: darken($c-pros, 20%);
       }
