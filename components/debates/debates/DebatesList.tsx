@@ -1,22 +1,29 @@
 import { Dispatch, SetStateAction } from "react";
 
 import { useGetDebates } from "../../../utils/queries/debates";
-import { useInput, useSelect } from "../../../utils/common/useInputSelect";
+import { useSelect } from "../../../utils/common/useInputSelect";
 
 import DebatesContainer from "./DebatesContainer";
 
+import { UseInputResult } from "../../../types";
+
 export default function DebatesList({
+  search,
   statuses,
   categories,
   order,
   setOrder,
+  isSearchListOn,
+  setIsSearchListOn,
 }: {
+  search: UseInputResult;
   statuses: string[];
   categories: string[];
   order: string;
   setOrder: Dispatch<SetStateAction<string>>;
+  isSearchListOn: boolean;
+  setIsSearchListOn: Dispatch<SetStateAction<boolean>>;
 }) {
-  const search = useInput("", "");
   const orderSelect = useSelect(order, refetch, setOrder);
 
   const debates = useGetDebates(search.value, orderSelect.value);
@@ -34,6 +41,8 @@ export default function DebatesList({
       refetch={refetch}
       search={search}
       orderSelect={orderSelect}
+      isSearchListOn={isSearchListOn}
+      setIsSearchListOn={setIsSearchListOn}
     />
   );
 }

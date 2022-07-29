@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { UseInfiniteQueryResult } from "react-query";
 import { useRouter } from "next/router";
 import { useInView } from "react-intersection-observer";
@@ -24,6 +24,8 @@ export default function DebatesContainer({
   refetch,
   search,
   orderSelect,
+  isSearchListOn,
+  setIsSearchListOn,
 }: {
   statuses: string[];
   categories: string[];
@@ -39,11 +41,12 @@ export default function DebatesContainer({
   refetch: () => void;
   search: UseInputResult;
   orderSelect: UseSelectResult;
+  isSearchListOn: boolean;
+  setIsSearchListOn: Dispatch<SetStateAction<boolean>>;
 }) {
   const router = useRouter();
   const { ref, inView } = useInView();
   const [isModalOn, setIsModalOn] = useState<boolean>(false);
-  const [isSearchListOn, setIsSearchListOn] = useState<boolean>(false);
 
   const user = useGetUser();
 
@@ -94,13 +97,23 @@ export default function DebatesContainer({
           </select>
           {isSearchListOn ? (
             <div className={styles.item}>
-              <input className={styles.input} {...search.attribute} disabled />
+              <input
+                className={`${styles.input} ${
+                  !isDisabledSearch ? "" : styles.input_disabled
+                }`}
+                {...search.attribute}
+                disabled
+              />
               <div
-                className={styles.btn_search}
+                className={`${styles.btn_search} ${
+                  !isDisabledSearch ? "" : styles.btn_search_disabled
+                }`}
                 onClick={() => {
-                  search.setValue("");
-                  refetch();
-                  setIsSearchListOn(false);
+                  if (!isDisabledSearch) {
+                    search.setValue("");
+                    refetch();
+                    setIsSearchListOn(false);
+                  }
                 }}
               >
                 x
@@ -109,7 +122,9 @@ export default function DebatesContainer({
           ) : (
             <div className={styles.item}>
               <input
-                className={styles.input}
+                className={`${styles.input} ${
+                  !isDisabledSearch ? "" : styles.input_disabled
+                }`}
                 {...search.attribute}
                 disabled={isDisabledSearch}
               />
