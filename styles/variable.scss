@@ -38,10 +38,10 @@ $c-cons: #6667ab;
   user-select: none;
 }
 
-@mixin btn-w($w, $b: 0.8rem) {
+@mixin btn-w($w, $s: 0.8rem) {
   @include disabledText;
   @include center;
-  font-size: $b;
+  font-size: $s;
   padding: 0.5rem;
   border-radius: 18px;
   width: $w;
@@ -59,4 +59,5 @@ $c-cons: #6667ab;
   padding: 0.2rem 0.4rem;
   border: 1px $c solid;
   width: $w;
+  background-color: $c-white;
 }
