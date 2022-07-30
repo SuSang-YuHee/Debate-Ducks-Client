@@ -1,0 +1,76 @@
+@import "../../../styles/variable.scss";
+
+@mixin mediaQuery($mw, $s) {
+  @include media($mw) {
+    width: $s;
+    height: $s;
+  }
+}
+
+.card {
+  @include center {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  border: 1px solid $c-gray-dark;
+  margin: 1rem;
+  border-radius: 18px;
+  $w: 22rem;
+  width: $w;
+  height: $w;
+  font-size: 1rem;
+
+  @include mediaQuery(1183px, 20rem);
+  // @include mediaQuery(1135px, 20rem);
+  // @include mediaQuery(1087px, 19rem);
+  // @include mediaQuery(1039px, 18rem);
+  // @include mediaQuery(991px, 17rem);
+  // @include mediaQuery(943px, 25rem);
+  // @include mediaQuery(895px, 24rem);
+  // @include mediaQuery(863px, 23rem);
+  // @include mediaQuery(831px, 22rem);
+  // @include mediaQuery(799px, 21rem);
+  // @include mediaQuery(767px, 20rem);
+  // @include mediaQuery(735px, 19rem);
+  // @include mediaQuery(703px, 18rem);
+  // @include mediaQuery(671px, 17rem);
+  // @include mediaQuery(639px, 16rem);
+  // @include mediaQuery(607px, 33rem);
+  // @include mediaQuery(600px, 32rem);
+  // @include mediaQuery(590px, 31rem);
+  // @include mediaQuery(580px, 30rem);
+  // @include mediaQuery(560px, 29rem);
+  // @include mediaQuery(540px, 28rem);
+  // @include mediaQuery(520px, 27rem);
+  // @include mediaQuery(500px, 26rem);
+  // @include mediaQuery(480px, 25rem);
+  // @include mediaQuery(460px, 24rem);
+  // @include mediaQuery(440px, 23rem);
+  // @include mediaQuery(420px, 22rem);
+  // @include mediaQuery(400px, 21em);
+  // @include mediaQuery(380px, 20rem);
+  // @include mediaQuery(360px, 19rem);
+  // @include mediaQuery(340px, 18rem);
+}
+
+.category {
+  width: 100%;
+  height: 40%;
+  border-radius: 18px 18px 0 0;
+  position: relative;
+  .image {
+    border-radius: 18px 18px 0 0;
+  }
+}
+
+.debaters {
+  transform: translateY(-50%);
+  width: 100%;
+  @include center;
+  .vs {
+    font-size: 150%;
+    font-weight: 900;
+    color: $c-black;
+    transform: translateY(100%);
+  }
+}
