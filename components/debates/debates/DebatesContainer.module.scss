@@ -13,6 +13,7 @@
   @include btn-w(7rem);
   @include btn-c($c-pros, $c-pros, $c-white);
   margin-right: auto;
+  margin-left: 1.2rem;
 }
 
 .container {
@@ -24,11 +25,13 @@
 
 .select {
   @include input(7rem, $c-cons);
+  margin-left: 1.2rem;
 }
 
 .item {
   @include center;
   gap: 0.5rem;
+  margin-right: 1.2rem;
 }
 
 .input {
@@ -61,6 +64,5 @@
     flex-wrap: wrap;
   }
   margin-top: 1rem;
-  background-color: $c-gray-light; //!
   width: 100%;
 }
