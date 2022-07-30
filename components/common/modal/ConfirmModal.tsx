@@ -27,7 +27,7 @@ export default function ConfirmModal({
     <div className={styles.outer}>
       <div className={styles.modal}>
         <div className={styles.title}>{title}</div>
-        <div className={styles.content}>{content}</div>
+        <pre className={styles.content}>{content}</pre>
         {secondBtn ? (
           <div className={styles.container}>
             <div
