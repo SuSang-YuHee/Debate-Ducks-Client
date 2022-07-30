@@ -79,7 +79,7 @@ export const usePostHeart = (
     },
     onError: (err: AxiosError<{ message: string }>, variables, rollback) => {
       if (rollback) rollback();
-      toast.error(`${err.response?.data.message}`);
+      toast.error(`${err.response?.data?.message || "네트워크 에러 발생"}`);
     },
   });
 };
@@ -137,7 +137,7 @@ export const useDeleteHeart = (
     },
     onError: (err: AxiosError<{ message: string }>, variables, rollback) => {
       if (rollback) rollback();
-      toast.error(`${err.response?.data.message}`);
+      toast.error(`${err.response?.data?.message || "네트워크 에러 발생"}`);
     },
   });
 };

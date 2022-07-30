@@ -37,7 +37,8 @@ export const login = (
       if (callback) callback();
     })
     .catch((err: AxiosError<{ message: string }>) => {
-      toast.error(`${err.response?.data.message}`);
+      console.log(err);
+      toast.error(`${err.response?.data?.message || "네트워크 에러 발생"}`);
     });
 };
 

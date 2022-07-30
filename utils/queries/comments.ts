@@ -41,7 +41,7 @@ export const usePostComment = (
       queryClient.invalidateQueries([queryStr.comments, `${debateId}`]);
     },
     onError: (err: AxiosError<{ message: string }>) => {
-      toast.error(`${err.response?.data.message}`);
+      toast.error(`${err.response?.data?.message || "네트워크 에러 발생"}`);
     },
   });
 };
@@ -57,7 +57,7 @@ export const usePatchComment = (
       queryClient.invalidateQueries([queryStr.comments, `${debateId}`]);
     },
     onError: (err: AxiosError<{ message: string }>) => {
-      toast.error(`${err.response?.data.message}`);
+      toast.error(`${err.response?.data?.message || "네트워크 에러 발생"}`);
     },
   });
 };
@@ -73,7 +73,7 @@ export const useDeleteComment = (
       queryClient.invalidateQueries([queryStr.comments, `${debateId}`]);
     },
     onError: (err: AxiosError<{ message: string }>) => {
-      toast.error(`${err.response?.data.message}`);
+      toast.error(`${err.response?.data?.message || "네트워크 에러 발생"}`);
     },
   });
 };

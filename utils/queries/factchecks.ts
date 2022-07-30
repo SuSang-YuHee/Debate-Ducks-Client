@@ -27,7 +27,7 @@ export const usePostFactcheck = (
       queryClient.invalidateQueries([queryStr.debates, `${debateId}`]);
     },
     onError: (err: AxiosError<{ message: string }>) => {
-      toast.error(`${err.response?.data.message}`);
+      toast.error(`${err.response?.data?.message || "네트워크 에러 발생"}`);
     },
   });
 };
@@ -71,7 +71,7 @@ export const usePatchFactcheck = (
     },
     onError: (err: AxiosError<{ message: string }>, variables, rollback) => {
       if (rollback) rollback();
-      toast.error(`${err.response?.data.message}`);
+      toast.error(`${err.response?.data?.message || "네트워크 에러 발생"}`);
     },
   });
 };
@@ -108,7 +108,7 @@ export const useDeleteFactcheck = (
     },
     onError: (err: AxiosError<{ message: string }>, variables, rollback) => {
       if (rollback) rollback();
-      toast.error(`${err.response?.data.message}`);
+      toast.error(`${err.response?.data?.message || "네트워크 에러 발생"}`);
     },
   });
 };
