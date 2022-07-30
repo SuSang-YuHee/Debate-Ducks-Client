@@ -18,6 +18,12 @@ $c-cons: #6667ab;
   }
 }
 
+@mixin media($mw) {
+  @media screen and (max-width: $mw) {
+    @content;
+  }
+}
+
 @mixin center {
   display: flex;
   justify-content: center;
