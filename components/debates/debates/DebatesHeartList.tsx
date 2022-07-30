@@ -1,71 +1,49 @@
-import { Dispatch, SetStateAction, useEffect } from "react";
-import { useInView } from "react-intersection-observer";
+import { Dispatch, SetStateAction } from "react";
 
-import { checkCategory } from "../../../utils/debates/checkCategory";
 import { useGetDebatesHeart } from "../../../utils/queries/debates";
 import { useSelect } from "../../../utils/common/useInputSelect";
-import { COMMENT_ORDER } from "../../../utils/common/constant";
 import { useGetUser } from "../../../utils/queries/users";
+import DebatesContainer from "./DebatesContainer";
 
-import { DebateOfDebates } from "../../../types";
+import { UseInputResult } from "../../../types";
 
 export default function DebatesHeartList({
-  list,
+  search,
+  statuses,
+  categories,
   order,
   setOrder,
+  isSearchListOn,
+  setIsSearchListOn,
 }: {
-  list: string[];
+  search: UseInputResult;
+  statuses: string[];
+  categories: string[];
   order: string;
   setOrder: Dispatch<SetStateAction<string>>;
+  isSearchListOn: boolean;
+  setIsSearchListOn: Dispatch<SetStateAction<boolean>>;
 }) {
-  const { ref, inView } = useInView();
   const orderSelect = useSelect(order, refetch, setOrder);
 
   const user = useGetUser();
   const debates = useGetDebatesHeart(user.data?.id || "", orderSelect.value);
 
-  useEffect(() => {
-    if (inView && debates.hasNextPage) debates.fetchNextPage();
-  }, [debates, inView]);
-
   function refetch() {
     setTimeout(() => debates.refetch(), 1);
   }
 
-  const checkEmpty = () => {
-    return (
-      debates.data?.pages
-        .map((page) =>
-          page.list.filter((debate: DebateOfDebates) =>
-            checkCategory(list, debate.category),
-          ),
-        )
-        .flat().length === 0
-    );
-  };
-
   return (
-    <div>
-      <select {...orderSelect.attribute}>
-        {COMMENT_ORDER.map((order) => (
-          <option key={order[0]} value={order[1]}>
-            {order[0]}
-          </option>
-        ))}
-      </select>
-      {debates.data?.pages.map((page, idx) => (
-        <div key={idx}>
-          {page.list.map((debate: DebateOfDebates) =>
-            checkCategory(list, debate.category) ? (
-              <div key={debate.id}>
-                <div>{debate.title}</div>
-              </div>
-            ) : null,
-          )}
-        </div>
-      ))}
-      <div>{checkEmpty() ? "토론이 없습니다." : null}</div>
-      <div ref={ref}></div>
-    </div>
+    <DebatesContainer
+      statuses={statuses}
+      categories={categories}
+      isDisabledSearch={true}
+      debates={debates}
+      refetch={refetch}
+      search={search}
+      orderSelect={orderSelect}
+      isSearchListOn={isSearchListOn}
+      setIsSearchListOn={setIsSearchListOn}
+    />
   );
 }

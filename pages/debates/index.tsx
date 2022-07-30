@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { useGetUser } from "../../utils/queries/users";
+import { useInput } from "../../utils/common/useInputSelect";
 
 import Filters from "../../components/debates/debates/Filters";
 import LikeBtn from "../../components/debates/debates/LikeBtn";
@@ -13,6 +14,9 @@ export default function Debates() {
   const [order, setOrder] = useState<string>("DESC");
   const [heartOrder, setHeartOrder] = useState<string>("DESC");
   const [isHeartListOn, setIsHeartListOn] = useState<boolean>(false);
+  const [isSearchListOn, setIsSearchListOn] = useState<boolean>(false);
+
+  const search = useInput("", "");
 
   const user = useGetUser();
 
@@ -35,14 +39,26 @@ export default function Debates() {
         isHeartListOn={isHeartListOn}
         setIsHeartListOn={setIsHeartListOn}
       />
-      {isHeartListOn && user.data ? (
+      {isHeartListOn ? (
         <DebatesHeartList
-          list={categories}
+          search={search}
+          statuses={statuses}
+          categories={categories}
           order={heartOrder}
           setOrder={setHeartOrder}
+          isSearchListOn={isSearchListOn}
+          setIsSearchListOn={setIsSearchListOn}
         />
       ) : (
-        <DebatesList list={categories} order={order} setOrder={setOrder} />
+        <DebatesList
+          search={search}
+          statuses={statuses}
+          categories={categories}
+          order={order}
+          setOrder={setOrder}
+          isSearchListOn={isSearchListOn}
+          setIsSearchListOn={setIsSearchListOn}
+        />
       )}
     </div>
   );

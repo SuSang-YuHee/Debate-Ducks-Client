@@ -22,8 +22,8 @@ export const createOrEdit = (
     titleRef.current?.focus();
     return;
   }
-  if (title.length < 5 || title.length > 80) {
-    toast.error("제목은 5자 이상, 80자 이하여야 합니다.");
+  if (title.length < 5 || title.length > 50) {
+    toast.error("제목은 5자 이상, 50자 이하여야 합니다.");
     titleRef.current?.focus();
     return;
   }

@@ -18,6 +18,12 @@ $c-cons: #6667ab;
   }
 }
 
+@mixin media($mw) {
+  @media screen and (max-width: $mw) {
+    @content;
+  }
+}
+
 @mixin center {
   display: flex;
   justify-content: center;
@@ -46,4 +52,11 @@ $c-cons: #6667ab;
   color: $c;
   border: 1px solid $b;
   background-color: $bc;
+}
+
+@mixin input($w: auto, $c: $c-black) {
+  border-radius: 9px;
+  padding: 0.2rem 0.4rem;
+  border: 1px $c solid;
+  width: $w;
 }

@@ -21,11 +21,11 @@ export interface Debate {
   author: User | null;
   participant: User | null;
   factchecks: Factcheck[];
-  heartCnt: number;
+  hearts_cnt: number;
   vote: { prosCnt: number; consCnt: number };
 }
 
-export type DebateOfDebates = Omit<Debate, "factchecks" | "heartCnt" | "vote">;
+export type DebateOfDebates = Omit<Debate, "factchecks" | "vote">;
 
 export interface DebatePost
   extends Pick<Debate, "title" | "contents" | "category" | "author_pros"> {

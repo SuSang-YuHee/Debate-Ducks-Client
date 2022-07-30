@@ -43,7 +43,7 @@ export default function Debate({ debateId }: { debateId: number }) {
       >
         {heart.data ? "true" : "false"}
       </p>
-      <p>{debate.data?.heartCnt}</p>
+      <p>{debate.data?.hearts_cnt}</p>
       <EditAndDelete debateId={debateId} />
       <DebaterInfo debateId={debateId} />
       <pre>{debate.data?.contents}</pre>

@@ -1,0 +1,77 @@
+@import "../../../styles/variable.scss";
+
+.outer {
+  font-size: 0.8rem;
+  margin: 1rem;
+  @include center {
+    flex-direction: column;
+  }
+  min-width: 20rem;
+}
+
+.btn_edit {
+  @include btn-w(7rem);
+  @include btn-c($c-pros, $c-pros, $c-white);
+  margin-right: auto;
+  margin-left: 1.2rem;
+  &:hover {
+    @include btn-c($c-white, $c-pros, $c-pros);
+  }
+}
+
+.container {
+  @include center;
+  margin-top: 1rem;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.select {
+  @include input(7rem, $c-cons);
+  margin-left: 1.2rem;
+}
+
+.item {
+  @include center;
+  gap: 0.5rem;
+  margin-right: 1.2rem;
+}
+
+.input {
+  @include input(9rem, $c-cons);
+  &_disabled {
+    color: darken($c-gray-dark, 20%);
+    text-decoration: line-through;
+    background-color: $c-gray-light;
+  }
+}
+
+.btn_search {
+  @include disabledText;
+  @include center;
+  color: $c-pros;
+  border: 1px solid $c-pros;
+  width: 1rem;
+  height: 1rem;
+  font-size: 1rem;
+  border-radius: 100%;
+  text-align: center;
+  &_disabled {
+    color: $c-cons;
+    border: 1px solid $c-cons;
+  }
+}
+
+.cards {
+  @include center {
+    flex-wrap: wrap;
+  }
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.empty_message {
+  margin-top: 4rem;
+  font-size: 1.5rem;
+  color: darken($c-gray-dark, 20%);
+}
