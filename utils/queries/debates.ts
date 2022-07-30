@@ -51,11 +51,17 @@ export const useGetDebate = (
   debateId: number,
   options?: UseQueryOptions<Debate, AxiosError>,
 ) => {
+  const router = useRouter();
   const query = useQuery<Debate, AxiosError>(
     [queryStr.debates, `${debateId}`],
     () => getDebate(debateId),
     options,
   );
+
+  if (query.isError) {
+    router.push("/404");
+  }
+
   return query;
 };
 
