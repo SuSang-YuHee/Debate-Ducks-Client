@@ -117,7 +117,7 @@ export default function DebatesContainer({
                   }
                 }}
               >
-                x
+                ☓
               </div>
             </div>
           ) : (
@@ -142,7 +142,7 @@ export default function DebatesContainer({
                   }
                 }}
               >
-                v
+                ⚲
               </div>
             </div>
           )}
