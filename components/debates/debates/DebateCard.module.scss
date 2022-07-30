@@ -27,7 +27,7 @@
   font-size: 1rem;
   color: $c-black;
   &:hover {
-    border: 5px solid $c-pros;
+    box-shadow: 10px 5px 5px $c-gray-dark;
     transform: scale(1.05);
     z-index: 999;
   }
