@@ -14,6 +14,9 @@
   @include btn-c($c-pros, $c-pros, $c-white);
   margin-right: auto;
   margin-left: 1.2rem;
+  &:hover {
+    @include btn-c($c-white, $c-pros, $c-pros);
+  }
 }
 
 .container {
@@ -65,4 +68,10 @@
   }
   margin-top: 1rem;
   width: 100%;
+}
+
+.empty_message {
+  margin-top: 4rem;
+  font-size: 1.5rem;
+  color: darken($c-gray-dark, 20%);
 }
