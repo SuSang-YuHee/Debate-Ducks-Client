@@ -1,7 +1,7 @@
 @import "../../../styles/variable.scss";
 
 .box {
-  width: 50%;
+  width: 40%;
   height: 100%;
   @include center {
     flex-direction: column;
@@ -12,7 +12,7 @@
   .nickname {
     margin-top: 1rem;
     text-align: center;
-    width: 90%;
+    width: 100%;
     font-size: 100%;
     font-weight: 700;
     overflow: hidden;
