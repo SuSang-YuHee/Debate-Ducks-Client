@@ -34,10 +34,10 @@
 
   @include mediaMargin(1184px, 0.9rem);
   @include mediaMargin(1174px, 0.8rem);
-  @include mediaMargin(1164px, 0.7rem);
+  @include mediaMargin(1165px, 0.7rem);
   @include mediaMargin(1155px, 0.6rem);
   @include mediaMargin(1145px, 0.5rem);
-  @include mediaMargin(1135px, 0.4rem);
+  @include mediaMargin(1136px, 0.4rem);
   @include mediaMargin(1127px, 0.3rem);
   @include mediaMargin(1117px, 0.2rem);
   @include mediaMargin(1107px, 0.1rem);
@@ -52,18 +52,18 @@
   @include mediaMargin(1039px, 0.4rem, 20rem);
   @include mediaMargin(1030px, 0.3rem, 20rem);
   @include mediaMargin(1020px, 0.2rem, 20rem);
-  @include mediaMargin(1011px, 0.1rem, 20rem);
+  @include mediaMargin(1012px, 0.1rem, 20rem);
   @include mediaMargin(1002px, 1rem, 18rem) {
     font-size: 0.8rem;
   }
   @include mediaMargin(992px, 0.9rem, 18rem);
-  @include mediaMargin(982px, 0.8rem, 18rem);
+  @include mediaMargin(983px, 0.8rem, 18rem);
   @include mediaMargin(973px, 0.7rem, 18rem);
   @include mediaMargin(963px, 0.6rem, 18rem);
-  @include mediaMargin(953px, 0.5rem, 18rem);
+  @include mediaMargin(954px, 0.5rem, 18rem);
   @include mediaMargin(944px, 0.4rem, 18rem);
   @include mediaMargin(934px, 0.3rem, 18rem);
-  @include mediaMargin(924px, 0.2rem, 18rem);
+  @include mediaMargin(925px, 0.2rem, 18rem);
   @include mediaMargin(915px, 0.1rem, 18rem);
   @include mediaMargin(915px, 0.1rem, 18rem);
   @include mediaMargin(906px, 1rem, 25rem) {
@@ -77,8 +77,8 @@
   @include mediaMargin(864px, 0.4rem, 25rem);
   @include mediaMargin(858px, 0.3rem, 25rem);
   @include mediaMargin(858px, 0.3rem, 25rem);
-  @include mediaMargin(851px, 0.2rem, 25rem);
-  @include mediaMargin(844px, 0.1rem, 25rem);
+  @include mediaMargin(852px, 0.2rem, 25rem);
+  @include mediaMargin(845px, 0.1rem, 25rem);
   @include mediaMargin(838px, 1rem, 23rem) {
     font-size: 1.1rem;
   }
@@ -88,7 +88,7 @@
   @include mediaMargin(813px, 0.6rem, 23rem);
   @include mediaMargin(807px, 0.5rem, 23rem);
   @include mediaMargin(799px, 0.4rem, 23rem);
-  @include mediaMargin(793px, 0.3rem, 23rem);
+  @include mediaMargin(794px, 0.3rem, 23rem);
   @include mediaMargin(787px, 0.2rem, 23rem);
   @include mediaMargin(781px, 0.1rem, 23rem);
   @include mediaMargin(774px, 1rem, 21rem) {
@@ -98,7 +98,7 @@
   @include mediaMargin(762px, 0.8rem, 21rem);
   @include mediaMargin(756px, 0.7rem, 21rem);
   @include mediaMargin(748px, 0.6rem, 21rem);
-  @include mediaMargin(742px, 0.5rem, 21rem);
+  @include mediaMargin(743px, 0.5rem, 21rem);
   @include mediaMargin(736px, 0.4rem, 21rem);
   @include mediaMargin(730px, 0.3rem, 21rem);
   @include mediaMargin(724px, 0.2rem, 21rem);
@@ -109,7 +109,7 @@
   @include mediaMargin(704px, 0.9rem, 19rem);
   @include mediaMargin(698px, 0.8rem, 19rem);
   @include mediaMargin(692px, 0.7rem, 19rem);
-  @include mediaMargin(684px, 0.6rem, 19rem);
+  @include mediaMargin(685px, 0.6rem, 19rem);
   @include mediaMargin(678px, 0.5rem, 19rem);
   @include mediaMargin(672px, 0.4rem, 19rem);
   @include mediaMargin(666px, 0.3rem, 19rem);
@@ -127,7 +127,7 @@
   @include mediaMargin(606px, 0.3rem, 17rem);
   @include mediaMargin(600px, 0.2rem, 17rem);
   @include mediaMargin(594px, 0.1rem, 17rem);
-  @include mediaMargin(582px, 0, 32rem) {
+  @include mediaMargin(583px, 0, 32rem) {
     font-size: 1.4rem;
   }
   @include mediaMargin(562px, 0, 30rem) {
@@ -192,7 +192,7 @@
     @include media(648px) {
       font-size: 0.9rem;
     }
-    @include media(582px) {
+    @include media(583px) {
       margin-top: 1.5rem;
       font-size: 1.6rem;
     }
