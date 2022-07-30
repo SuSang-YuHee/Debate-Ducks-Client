@@ -15,6 +15,7 @@ import {
   UseInputResult,
   UseSelectResult,
 } from "../../../types";
+import DebateCard from "./DebateCard";
 
 export default function DebatesContainer({
   statuses,
@@ -147,8 +148,8 @@ export default function DebatesContainer({
           )}
         </div>
         <div className={styles.cards}>
-          {debates.data?.pages.map((page, idx) => (
-            <div key={idx}>
+          {debates.data?.pages.map((page) => (
+            <>
               {page.list.map((debate: DebateOfDebates) => {
                 const status = debate.video_url
                   ? STATUSES[2]
@@ -161,12 +162,10 @@ export default function DebatesContainer({
                   categories,
                   debate.category,
                 ) ? (
-                  <div key={debate.id}>
-                    <div>{`${debate.title} / ${debate.video_url} / ${debate.participant}`}</div>
-                  </div>
+                  <DebateCard debate={debate} status={status} />
                 ) : null;
               })}
-            </div>
+            </>
           ))}
           <div>{checkEmpty() ? "토론이 없습니다." : null}</div>
           <div ref={ref}></div>
