@@ -167,7 +167,9 @@ export default function DebatesContainer({
               })}
             </>
           ))}
-          <div>{checkEmpty() ? "토론이 없습니다." : null}</div>
+          <div className={styles.empty_message}>
+            {checkEmpty() ? "해당하는 토론이 없습니다." : null}
+          </div>
           <div ref={ref}></div>
         </div>
       </div>
