@@ -51,11 +51,17 @@ export const useGetDebate = (
   debateId: number,
   options?: UseQueryOptions<Debate, AxiosError>,
 ) => {
+  const router = useRouter();
   const query = useQuery<Debate, AxiosError>(
     [queryStr.debates, `${debateId}`],
     () => getDebate(debateId),
     options,
   );
+
+  if (query.isError) {
+    router.push("/404");
+  }
+
   return query;
 };
 
@@ -71,7 +77,9 @@ export const usePostDebate = (
       router.push(`/debates`);
     },
     onError: (err: AxiosError<{ message: string }>) => {
-      toast.error(`${err.response?.data?.message || "네트워크 에러 발생"}`);
+      toast.error(
+        `${err.response?.data?.message || "네트워크 에러가 발생했습니다."}`,
+      );
     },
   });
 };
@@ -114,7 +122,9 @@ export const usePatchDebate = (
     },
     onError: (err: AxiosError<{ message: string }>, variables, rollback) => {
       if (rollback) rollback();
-      toast.error(`${err.response?.data?.message || "네트워크 에러 발생"}`);
+      toast.error(
+        `${err.response?.data?.message || "네트워크 에러가 발생했습니다."}`,
+      );
     },
   });
 };
@@ -131,7 +141,9 @@ export const useDeleteDebate = (
       router.push(`/debates`);
     },
     onError: (err: AxiosError<{ message: string }>) => {
-      toast.error(`${err.response?.data?.message || "네트워크 에러 발생"}`);
+      toast.error(
+        `${err.response?.data?.message || "네트워크 에러가 발생했습니다."}`,
+      );
     },
   });
 };

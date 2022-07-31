@@ -95,7 +95,9 @@ export const usePostVote = (
     },
     onError: (err: AxiosError<{ message: string }>, variables, rollback) => {
       if (rollback) rollback();
-      toast.error(`${err.response?.data?.message || "네트워크 에러 발생"}`);
+      toast.error(
+        `${err.response?.data?.message || "네트워크 에러가 발생했습니다."}`,
+      );
     },
   });
 };
@@ -165,7 +167,9 @@ export const usePatchVote = (
     },
     onError: (err: AxiosError<{ message: string }>, variables, rollback) => {
       if (rollback) rollback();
-      toast.error(`${err.response?.data?.message || "네트워크 에러 발생"}`);
+      toast.error(
+        `${err.response?.data?.message || "네트워크 에러가 발생했습니다."}`,
+      );
     },
   });
 };

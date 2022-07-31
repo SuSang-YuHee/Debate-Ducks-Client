@@ -60,11 +60,17 @@
       &:active {
         background-color: darken($c-cons, 20%);
       }
+      &:hover {
+        transform: scale(1);
+      }
     }
     &_check {
       @include btn-c($c-white, $c-pros, $c-pros);
       &:active {
         background-color: darken($c-pros, 20%);
+      }
+      &:hover {
+        transform: scale(1);
       }
     }
   }

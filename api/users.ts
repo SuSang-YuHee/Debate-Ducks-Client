@@ -35,10 +35,13 @@ export const login = (
     .then((res) => {
       localStorage.setItem("debate-ducks-token", res.data);
       if (callback) callback();
+      toast.success("로그인에 성공했습니다.");
     })
     .catch((err: AxiosError<{ message: string }>) => {
       console.log(err);
-      toast.error(`${err.response?.data?.message || "네트워크 에러 발생"}`);
+      toast.error(
+        `${err.response?.data?.message || "네트워크 에러가 발생했습니다."}`,
+      );
     });
 };
 
