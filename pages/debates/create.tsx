@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 import { CATEGORIES } from "../../utils/common/constant";
 import {
@@ -7,51 +7,58 @@ import {
   useRadio,
   useSelect,
 } from "../../utils/common/useInputSelect";
+import { useGetUser } from "../../utils/queries/users";
 import { usePostDebate } from "../../utils/queries/debates";
-import { createOrEdit } from "../../utils/debates/createOrEdit";
 
 import CreateOrEdit from "../../components/debates/CreateOrEdit";
+import CheckSignInModal from "../../components/common/modal/CheckSignInModal";
 
 export default function Create() {
   const router = useRouter();
+  const [isCheckModalOn, setIsCheckModalOn] = useState<boolean>(false);
   const [isCancelModalOn, setIsCancelModalOn] = useState<boolean>(false);
-  const titleRef = useRef<HTMLInputElement>(null);
-
-  const postDebate = usePostDebate();
 
   const titleInput = useInput("", "");
   const categorySelect = useSelect(CATEGORIES[0]);
   const prosConsRadio = useRadio("true", "prosCons");
   const contentsInput = useInput("", "");
 
-  const create = () => {
-    createOrEdit(titleRef, titleInput, () => {
+  const user = useGetUser();
+  const postDebate = usePostDebate();
+
+  const handleCreate = () => {
+    if (!user.data) {
+      setIsCheckModalOn(true);
+    } else {
       postDebate.mutate({
         title: titleInput.value,
         author_pros: prosConsRadio.value,
         category: categorySelect.value,
         contents: contentsInput.value,
-        author_id: "01G85SA6V8NXD7XGB155SC4S17",
+        author_id: user.data?.id || "",
       });
-    });
+    }
   };
 
   return (
-    <div>
+    <>
+      <CheckSignInModal
+        isModalOn={isCheckModalOn}
+        setIsModalOn={setIsCheckModalOn}
+      />
       <CreateOrEdit
         isCancelModalOn={isCancelModalOn}
         setIsCancelModalOn={setIsCancelModalOn}
-        titleRef={titleRef}
         titleInput={titleInput}
         categorySelect={categorySelect}
         prosConsRadio={prosConsRadio}
         contentsInput={contentsInput}
-        createOrEdit={create}
-        createOrEditStr="작성"
+        handler={handleCreate}
+        createOrEdit="작성"
         routerPush={() => {
           router.push("/debates");
         }}
       />
-    </div>
+    </>
   );
 }

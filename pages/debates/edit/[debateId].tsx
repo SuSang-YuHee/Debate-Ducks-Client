@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { dehydrate, QueryClient } from "react-query";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 
 import { CATEGORIES } from "../../../utils/common/constant";
@@ -11,19 +11,21 @@ import {
   useRadio,
   useSelect,
 } from "../../../utils/common/useInputSelect";
+import { useGetUser } from "../../../utils/queries/users";
 import { useGetDebate, usePatchDebate } from "../../../utils/queries/debates";
-import { createOrEdit } from "../../../utils/debates/createOrEdit";
 
 import CreateOrEdit from "../../../components/debates/CreateOrEdit";
+import CheckSignInModal from "../../../components/common/modal/CheckSignInModal";
 
 export default function Edit() {
   const router = useRouter();
   const param = router.query;
   const debateId =
     typeof param?.debateId === "string" ? parseInt(param?.debateId) : 0;
+  const [isCheckModalOn, setIsCheckModalOn] = useState<boolean>(false);
   const [isCancelModalOn, setIsCancelModalOn] = useState<boolean>(false);
-  const titleRef = useRef<HTMLInputElement>(null);
 
+  const user = useGetUser();
   const debate = useGetDebate(debateId);
   const postDebate = usePatchDebate(debateId);
 
@@ -35,45 +37,56 @@ export default function Edit() {
   );
   const contentsInput = useInput(debate.data?.contents || "", "");
 
-  const edit = () => {
-    if (
+  const handleEdit = () => {
+    if (!user.data) {
+      setIsCheckModalOn(true);
+    } else if (user.data?.id !== debate.data?.author?.id) {
+      router.push(`/debates/${debate.data?.id}`);
+      toast.error("해당 토론의 작성자만 토론을 수정할 수 있습니다.");
+    } else if (debate.data?.video_url) {
+      router.push(`/debates/${debate.data?.id}`);
+      toast.error("이미 진행된 토론은 수정할 수 없습니다.");
+    } else if (debate.data?.participant) {
+      router.push(`/debates/${debate.data?.id}`);
+      toast.error("참여자가 있어 토론을 수정할 수 없습니다.");
+    } else if (
       debate.data?.title === titleInput.value &&
       debate.data?.author_pros === prosConsRadio.value &&
       debate.data?.category === categorySelect.value &&
       debate.data?.contents === contentsInput.value
     ) {
-      toast.error("변경 내용이 없습니다.");
+      toast.error("변경된 내용이 없습니다.");
     } else {
-      createOrEdit(titleRef, titleInput, () => {
-        postDebate.mutate({
-          title: titleInput.value,
-          author_pros: prosConsRadio.value,
-          category: categorySelect.value,
-          contents: contentsInput.value,
-          id: debate.data?.id || 0,
-        });
+      postDebate.mutate({
+        title: titleInput.value,
+        author_pros: prosConsRadio.value,
+        category: categorySelect.value,
+        contents: contentsInput.value,
+        id: debate.data?.id || 0,
       });
     }
   };
 
-  if (!debate.data) return <>404</>;
   return (
-    <div>
+    <>
+      <CheckSignInModal
+        isModalOn={isCheckModalOn}
+        setIsModalOn={setIsCheckModalOn}
+      />
       <CreateOrEdit
         isCancelModalOn={isCancelModalOn}
         setIsCancelModalOn={setIsCancelModalOn}
-        titleRef={titleRef}
         titleInput={titleInput}
         categorySelect={categorySelect}
         prosConsRadio={prosConsRadio}
         contentsInput={contentsInput}
-        createOrEdit={edit}
-        createOrEditStr="수정"
+        handler={handleEdit}
+        createOrEdit="수정"
         routerPush={() => {
           router.push(`/debates/${debateId}`);
         }}
       />
-    </div>
+    </>
   );
 }
 
