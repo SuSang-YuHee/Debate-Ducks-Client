@@ -225,7 +225,8 @@
   transform: translateY(-50%);
   position: relative;
   height: 22%;
-  text-align: center;
+  text-align: justify;
+  word-break: break-all;
   line-height: 105%;
   font-size: 115%;
   overflow: auto;

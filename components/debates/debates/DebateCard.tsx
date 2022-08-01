@@ -39,6 +39,7 @@ export default function DebateCard({
           alt={`${debate.category}`}
           layout="fill"
           objectFit="cover"
+          objectPosition="center"
         />
       </div>
       <div className={styles.debaters}>
