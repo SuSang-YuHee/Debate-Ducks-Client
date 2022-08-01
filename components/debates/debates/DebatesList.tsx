@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 import { useGetDebates } from "../../../utils/queries/debates";
 import { useSelect } from "../../../utils/common/useInputSelect";
 
-import DebatesContainer from "./DebatesContainer";
+import DebatesCards from "./DebatesCards";
 
 import { UseInputResult } from "../../../types";
 
@@ -33,7 +33,7 @@ export default function DebatesList({
   }
 
   return (
-    <DebatesContainer
+    <DebatesCards
       statuses={statuses}
       categories={categories}
       isDisabledSearch={false}

@@ -1,10 +1,10 @@
 import Image from "next/image";
 
-import styles from "./Debater.module.scss";
+import styles from "./DebaterOfDebateCard.module.scss";
 
 import { DebateOfDebates } from "../../../types";
 
-export default function DebaterInfo({
+export default function DebaterOfDebateCard({
   debate,
   isAuthorPros,
   isPros,

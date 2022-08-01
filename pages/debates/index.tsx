@@ -20,6 +20,7 @@ export default function Debates() {
 
   const user = useGetUser();
 
+  // Todo: 로그아웃 기능 추가 우 확인 필요
   useEffect(() => {
     if (!user.data) {
       setHeartOrder("DESC");
