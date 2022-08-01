@@ -31,7 +31,7 @@ export default function Edit() {
   const postDebate = usePatchDebate(debateId);
 
   const titleInput = useInput(debate.data?.title || "", "");
-  const categorySelect = useSelect(debate.data?.category || CATEGORIES[0]);
+  const categorySelect = useSelect(debate.data?.category || CATEGORIES[9]);
   const prosConsRadio = useRadio(
     debate.data?.author_pros ? `${debate.data?.author_pros}` : "false",
     "prosCons",

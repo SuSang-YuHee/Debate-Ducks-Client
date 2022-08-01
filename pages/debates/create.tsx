@@ -20,7 +20,7 @@ export default function Create() {
   const [isCancelModalOn, setIsCancelModalOn] = useState<boolean>(false);
 
   const titleInput = useInput("", "");
-  const categorySelect = useSelect(CATEGORIES[0]);
+  const categorySelect = useSelect(CATEGORIES[9]);
   const prosConsRadio = useRadio("true", "prosCons");
   const contentsInput = useInput("", "");
 
