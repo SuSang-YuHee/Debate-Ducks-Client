@@ -1,27 +1,41 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useGetUser, useGetUserImage } from "../utils/queries/users";
+import styles from "./Header.module.scss";
 
 export default function Header() {
-  const token =
-    typeof window !== "undefined"
-      ? localStorage.getItem("debate-ducks-token")
-      : null;
-  const user = useGetUser(token || "");
-  // console.log(user.data?.id);
+  const user = useGetUser();
   const userImage = useGetUserImage(user.data?.id || "");
-  console.log(userImage.data);
+  const router = useRouter();
+  const handleLogoClick = () => {
+    router.push("/");
+  };
+  const handleProfileClick = () => {
+    router.push("/mypage");
+  };
   return (
-    <div>
-      <h1>DEBATE DUCKS</h1>
-      {userImage.data ? (
+    <div className={styles.container}>
+      <div className={styles.logo_container} onClick={handleLogoClick}>
         <Image
-          src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${userImage.data}`}
-          alt="profile_image"
-          width="300"
-          height="300"
-          unoptimized={true}
+          src="/images/logo/debate-ducks-symbol.svg"
+          alt="logo_image"
+          width="40"
+          height="40"
         />
-      ) : null}
+        <h1 className={styles.title}>DEBATE DUCKS</h1>
+      </div>
+      <div className={styles.profile_container}>
+        {userImage.data ? (
+          <Image
+            src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${userImage.data}`}
+            alt="profile_image"
+            width="30"
+            height="30"
+            unoptimized={true}
+            onClick={handleProfileClick}
+          />
+        ) : null}
+      </div>
     </div>
   );
 }

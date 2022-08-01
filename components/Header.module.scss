@@ -1,0 +1,32 @@
+@import "../styles/variable.scss";
+
+.container {
+  position: relative;
+  padding: 10px;
+  .logo_container {
+    display: flex;
+    font-size: 1.8rem;
+    font-weight: bold;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    user-select: none;
+    cursor: pointer;
+    width: 300px;
+    margin: 0 auto;
+    .title {
+      margin: 0 10px;
+    }
+  }
+  .profile_container {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    & img {
+      border-radius: 50%;
+      object-fit: fill;
+    }
+  }
+}
