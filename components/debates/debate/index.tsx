@@ -16,6 +16,7 @@ import CheckSignInModal from "../../common/modal/CheckSignInModal";
 import DebaterInfo from "../DebaterInfo";
 import AfterDebate from "./AfterDebate";
 import EditAndDelete from "./EditAndDelete";
+import { thousandDigit } from "../../../utils/common/thousandDigit";
 // import Comments from "./Comments";
 
 export default function Debate({ debateId }: { debateId: number }) {
@@ -95,7 +96,9 @@ export default function Debate({ debateId }: { debateId: number }) {
             heart.data ? styles.heart_fill : styles.heart_empty
           }`}
           onClick={handleHeart}
-        >{`♥︎ ${debate.data?.hearts_cnt || 0}명이 이 토론를 좋아합니다.`}</div>
+        >{`♥︎ ${thousandDigit(
+          debate.data?.hearts_cnt || 0,
+        )}명이 이 토론를 좋아합니다.`}</div>
         <div className={styles.line}></div>
         <div className={styles.name}>주제 설명</div>
         <pre className={styles.contents}>{debate.data?.contents}</pre>
