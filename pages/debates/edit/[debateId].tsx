@@ -13,6 +13,7 @@ import {
 } from "../../../utils/common/useInputSelect";
 import { useGetUser } from "../../../utils/queries/users";
 import { useGetDebate, usePatchDebate } from "../../../utils/queries/debates";
+import { removeSpace } from "../../../utils/common/removeSpace";
 
 import CreateOrEdit from "../../../components/debates/CreateOrEdit";
 import CheckSignInModal from "../../../components/common/modal/CheckSignInModal";
@@ -58,10 +59,10 @@ export default function Edit() {
       toast.error("변경된 내용이 없습니다.");
     } else {
       postDebate.mutate({
-        title: titleInput.value,
+        title: removeSpace(titleInput.value),
         author_pros: prosConsRadio.value,
         category: categorySelect.value,
-        contents: contentsInput.value,
+        contents: removeSpace(contentsInput.value),
         id: debate.data?.id || 0,
       });
     }
