@@ -24,7 +24,12 @@ export default function DebateCard({
       onClick={() => router.push(`/debates/${debate.id}`)}
     >
       <div className={styles.category}>
-        {status === STATUSES[2] ? <div className={styles.status}>◉</div> : null}
+        <div className={`${styles.status} ${styles.status_name}`}>
+          {debate.category}
+        </div>
+        {status === STATUSES[2] ? (
+          <div className={`${styles.status} ${styles.status_emoji}`}>◉</div>
+        ) : null}
         <Image
           className={styles.image}
           src={`/images/categories/${CATEGORIES.indexOf(debate.category)}.jpg`}
