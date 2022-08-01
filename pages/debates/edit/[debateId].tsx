@@ -67,6 +67,7 @@ export default function Edit() {
     }
   };
 
+  if (!debate.data) return <>404</>;
   return (
     <div className="inner">
       <CheckSignInModal
