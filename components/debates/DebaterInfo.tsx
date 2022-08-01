@@ -1,17 +1,17 @@
 import Image from "next/image";
 
-import styles from "./DebaterOfDebateCard.module.scss";
+import styles from "./DebaterInfo.module.scss";
 
-import { DebateOfDebates } from "../../../types";
+import { DebateOfDebates } from "../../types";
 
-export default function DebaterOfDebateCard({
+export default function DebaterInfo({
   debate,
   isAuthorPros,
-  isPros,
+  size,
 }: {
   debate: DebateOfDebates;
   isAuthorPros: boolean;
-  isPros: boolean;
+  size: string;
 }) {
   return isAuthorPros ? (
     <div className={styles.box}>
@@ -23,14 +23,16 @@ export default function DebaterOfDebateCard({
             : "/images/profiles/default-gray.png"
         }
         alt={debate.author?.nickname || "기본 이미지"}
-        width="90%"
-        height="90%"
+        width={`${size}`}
+        height={`${size}`}
         objectFit="cover"
         objectPosition="center"
       />
       <div
         className={`${styles.nickname} ${
-          isPros ? styles.nickname_pros : styles.nickname_cons
+          isAuthorPros === debate.author_pros
+            ? styles.nickname_pros
+            : styles.nickname_cons
         }`}
       >
         {debate.author?.nickname || "탈퇴한 회원"}
@@ -46,14 +48,16 @@ export default function DebaterOfDebateCard({
             : "/images/profiles/default-gray.png"
         }
         alt={debate.participant?.nickname || "기본 이미지"}
-        width="90%"
-        height="90%"
+        width={`${size}`}
+        height={`${size}`}
         objectFit="cover"
         objectPosition="center"
       />
       <div
         className={`${styles.nickname} ${
-          isPros ? styles.nickname_pros : styles.nickname_cons
+          isAuthorPros === debate.author_pros
+            ? styles.nickname_pros
+            : styles.nickname_cons
         }
         ${
           !debate.participant?.nickname && !debate.video_url

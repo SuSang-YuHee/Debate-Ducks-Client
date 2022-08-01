@@ -5,7 +5,7 @@ import { CATEGORIES, STATUSES } from "../../../utils/common/constant";
 import { DMYorHM } from "../../../utils/common/formatStrDate";
 import styles from "./DebateCard.module.scss";
 
-import DebaterOfDebateCard from "./DebaterOfDebateCard";
+import DebaterInfo from "../DebaterInfo";
 
 import { DebateOfDebates } from "../../../types";
 
@@ -43,16 +43,16 @@ export default function DebateCard({
         />
       </div>
       <div className={styles.debaters}>
-        <DebaterOfDebateCard
+        <DebaterInfo
           debate={debate}
           isAuthorPros={debate.author_pros}
-          isPros={true}
+          size={"90"}
         />
         <div className={styles.vs}>VS</div>
-        <DebaterOfDebateCard
+        <DebaterInfo
           debate={debate}
           isAuthorPros={!debate.author_pros}
-          isPros={false}
+          size={"90"}
         />
       </div>
       <div className={styles.title}>{debate.title}</div>
