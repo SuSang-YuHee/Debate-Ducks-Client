@@ -105,9 +105,13 @@ export default function Debate({ debateId }: { debateId: number }) {
           debate.data?.hearts_cnt || 0,
         )}명이 이 토론를 좋아합니다.`}</div>
         <div className={styles.line}></div>
-        <div className={styles.name}>주제 설명</div>
-        <pre className={styles.contents}>{debate.data?.contents}</pre>
-        <div className={styles.line}></div>
+        {debate.data?.contents ? (
+          <>
+            <div className={styles.name}>주제 설명</div>
+            <pre className={styles.contents}>{debate.data?.contents}</pre>
+            <div className={styles.line}></div>
+          </>
+        ) : null}
         <AfterDebate debateId={debateId} />
         {/* <Comments debateId={debateId} /> */}
       </div>
