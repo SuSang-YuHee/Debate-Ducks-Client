@@ -28,6 +28,7 @@
 }
 
 .select {
+  cursor: pointer;
   @include input(7rem, $c-cons);
   margin-left: 1.2rem;
 }
@@ -50,6 +51,7 @@
 .btn_search {
   @include disabledText;
   @include center;
+  cursor: pointer;
   color: $c-pros;
   border: 1px solid $c-pros;
   width: 1rem;

@@ -11,13 +11,8 @@
 .btn {
   @include disabledText;
   color: darken($c-gray_dark, 20%);
-  &:hover {
-    color: darken($c-gray_dark, 30%);
-  }
+  cursor: pointer;
   &_clicked {
-    color: $c-cons;
-    &:hover {
-      color: darken($c-cons, 10%);
-    }
+    color: $c-pros;
   }
 }

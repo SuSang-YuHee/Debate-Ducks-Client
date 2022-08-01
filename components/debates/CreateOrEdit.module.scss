@@ -65,6 +65,7 @@
 
 .category {
   @include input(7rem);
+  cursor: pointer;
 }
 
 .radio_box {
@@ -75,6 +76,7 @@
     @include center {
       justify-content: flex-start;
     }
+    cursor: pointer;
   }
   .radio {
     accent-color: $c-cons;

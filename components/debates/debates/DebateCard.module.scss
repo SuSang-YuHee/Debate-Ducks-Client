@@ -31,6 +31,7 @@
     transform: scale(1.05);
     z-index: 999;
   }
+  cursor: pointer;
 
   @include mediaMargin(1185.5px, 0.9rem);
   @include mediaMargin(1175.5px, 0.8rem);
