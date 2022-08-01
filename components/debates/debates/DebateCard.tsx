@@ -44,7 +44,7 @@ export default function DebateCard({
       <div className={styles.debaters}>
         <DebaterInfo
           debateId={debateId}
-          isAuthorPros={debate.data?.author_pros || true}
+          isAuthorPros={debate.data?.author_pros || false}
           size={"90"}
         />
         <div className={styles.vs}>VS</div>
