@@ -1,0 +1,149 @@
+@import "../../../styles/variable.scss";
+$m: 5rem;
+
+.outer {
+  font-size: 1rem;
+  color: $c-black;
+  @include center {
+    flex-direction: column;
+  }
+  min-width: 20rem;
+  margin-bottom: 5rem;
+}
+
+.title {
+  position: relative;
+  background-color: $c-cons;
+  &_bg {
+    width: 100vw;
+    height: 25rem;
+    mix-blend-mode: exclusion;
+  }
+  &_name {
+    color: $c-white;
+    font-size: 250%;
+    font-weight: 700;
+    @include textJustify;
+  }
+  &_date {
+    color: $c-white;
+    position: absolute;
+    bottom: 100%;
+    left: 100%;
+    transform: translateX(-110%) translateY(150%);
+    width: fit-content;
+    font-weight: 700;
+  }
+}
+
+.debaterInfo {
+  @include center;
+  width: 50%;
+  margin-top: $m;
+  gap: 1rem;
+  @include disabledText;
+  .vs {
+    font-size: 150%;
+    font-weight: 900;
+  }
+}
+
+.heart {
+  transition: all 0.4s ease 0;
+  font-weight: 700;
+  margin-top: $m;
+  text-align: center;
+  cursor: pointer;
+  @include disabledText;
+  &_fill {
+    color: $c-pros;
+  }
+  &_empty {
+    color: darken($c-gray-dark, 20%);
+  }
+}
+
+.line {
+  width: 80%;
+  height: 1px;
+  background-color: $c-gray-dark;
+  margin-top: $m;
+  margin-bottom: $m;
+}
+
+.name {
+  @include disabledText;
+  color: $c-cons;
+  font-size: 200%;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.contents {
+  max-width: 90%;
+  text-align: justify;
+  word-break: break-all;
+  white-space: pre-line;
+  line-height: 150%;
+  color: darken($c-gray-dark, 30%);
+}
+
+.video_box {
+  width: 100%;
+  cursor: pointer;
+  @include center;
+  video {
+    width: 90%;
+  }
+}
+
+@include tablet {
+  .outer {
+    font-size: 0.9rem;
+  }
+  .title {
+    &_bg {
+      height: 23rem;
+    }
+  }
+  $m: 4rem;
+  .debaterInfo {
+    margin-top: $m;
+  }
+  .heart {
+    margin-top: $m;
+  }
+  .line {
+    margin-top: $m;
+    margin-bottom: $m;
+  }
+  .name {
+    margin-bottom: 2rem;
+  }
+}
+
+@include mobile {
+  .outer {
+    font-size: 0.8rem;
+  }
+  .title {
+    &_bg {
+      height: 20rem;
+    }
+  }
+  $m: 3rem;
+  .debaterInfo {
+    margin-top: $m;
+  }
+  .heart {
+    margin-top: $m;
+  }
+  .line {
+    margin-top: $m;
+    margin-bottom: $m;
+  }
+  .name {
+    margin-bottom: 1rem;
+  }
+}
