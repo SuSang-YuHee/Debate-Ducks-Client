@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { Toaster } from "react-hot-toast";
-import "../styles/globals.scss";
 import Head from "next/head";
+
+import "../styles/globals.scss";
 
 import Header from "../components/Header";
 
