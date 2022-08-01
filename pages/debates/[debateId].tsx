@@ -6,7 +6,6 @@ import { getDebate } from "../../api/debates";
 import { useGetDebate } from "../../utils/queries/debates";
 
 import Debate from "../../components/debates/debate";
-import Comments from "../../components/debates/debate/Comments";
 
 export default function Debates() {
   const router = useRouter();
@@ -18,10 +17,8 @@ export default function Debates() {
 
   if (!debate.data) return <>404</>;
   return (
-    <div>
+    <div className="inner">
       <Debate debateId={debateId} />
-      <Comments debateId={debateId} />
-      <p>이전, 다음, 목록 등등</p>
     </div>
   );
 }
