@@ -163,7 +163,7 @@ export default function DebatesCards({
                   debate.category,
                 ) ? (
                   <div key={debate.id}>
-                    <DebateCard debate={debate} status={status} />
+                    <DebateCard debateId={debate.id} status={status} />
                   </div>
                 ) : null;
               })}
