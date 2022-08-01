@@ -118,8 +118,21 @@
 
 @include media(700px) {
   .validator {
+    font-size: 0.8rem;
     .message {
       width: 80%;
     }
+  }
+}
+
+@include media(450px) {
+  .details {
+    font-size: 0.8rem;
+  }
+}
+
+@include media(400px) {
+  .details {
+    font-size: 0.75rem;
   }
 }
