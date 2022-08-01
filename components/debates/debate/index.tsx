@@ -24,10 +24,15 @@ export default function Debate({ debateId }: { debateId: number }) {
 
   const user = useGetUser();
   const debate = useGetDebate(debateId);
-  const heart = useGetHeart({
-    target_debate_id: debateId,
-    target_user_id: user.data?.id || "",
-  });
+  const heart = useGetHeart(
+    {
+      target_debate_id: debateId,
+      target_user_id: user.data?.id || "",
+    },
+    {
+      enabled: !!user.data?.id,
+    },
+  );
   const postHeart = usePostHeart();
   const deleteHeart = useDeleteHeart();
 
