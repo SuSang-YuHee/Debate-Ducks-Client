@@ -41,7 +41,7 @@ export default function Create() {
   };
 
   return (
-    <>
+    <div className="inner">
       <CheckSignInModal
         isModalOn={isCheckModalOn}
         setIsModalOn={setIsCheckModalOn}
@@ -59,6 +59,6 @@ export default function Create() {
           router.push("/debates");
         }}
       />
-    </>
+    </div>
   );
 }

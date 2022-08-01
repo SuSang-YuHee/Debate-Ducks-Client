@@ -68,7 +68,7 @@ export default function Edit() {
   };
 
   return (
-    <>
+    <div className="inner">
       <CheckSignInModal
         isModalOn={isCheckModalOn}
         setIsModalOn={setIsCheckModalOn}
@@ -86,7 +86,7 @@ export default function Edit() {
           router.push(`/debates/${debateId}`);
         }}
       />
-    </>
+    </div>
   );
 }
 
