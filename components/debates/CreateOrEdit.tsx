@@ -34,7 +34,7 @@ export default function CreateOrEdit({
     createOrEdit === "작성" ? "토론 만들기" : "토론 수정하기";
   const details =
     createOrEdit === "작성"
-      ? "찬반 의견이 확실히 갈리는 내용으로 토론을 만들어 주세요.\n당신이 만든 토론에 흥미를 느낀 사람이 참여할 것입니다."
+      ? "찬반 의견이 확실히 갈리는 주제로 토론을 만들어 주세요.\n내용은 해당 주제의 쟁점을 위주로 적어주세요."
       : "";
 
   const titleRef = useRef<HTMLInputElement>(null);
@@ -135,7 +135,7 @@ export default function CreateOrEdit({
                 {titleCnt} / 50
               </div>
             </div>
-            <div className={styles.name}>주제</div>
+            <div className={styles.name}>분류</div>
             <select className={styles.category} {...categorySelect.attribute}>
               {CATEGORIES.map((category) => (
                 <option key={category}>{category}</option>
