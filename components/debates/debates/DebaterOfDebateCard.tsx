@@ -26,6 +26,7 @@ export default function DebaterOfDebateCard({
         width="90%"
         height="90%"
         objectFit="cover"
+        objectPosition="center"
       />
       <div
         className={`${styles.nickname} ${
@@ -48,6 +49,7 @@ export default function DebaterOfDebateCard({
         width="90%"
         height="90%"
         objectFit="cover"
+        objectPosition="center"
       />
       <div
         className={`${styles.nickname} ${
