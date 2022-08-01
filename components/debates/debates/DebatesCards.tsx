@@ -162,7 +162,9 @@ export default function DebatesCards({
                   categories,
                   debate.category,
                 ) ? (
-                  <DebateCard debate={debate} status={status} />
+                  <div key={debate.id}>
+                    <DebateCard debate={debate} status={status} />
+                  </div>
                 ) : null;
               })}
             </>
