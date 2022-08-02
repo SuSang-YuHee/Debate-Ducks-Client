@@ -1,0 +1,30 @@
+@import "../../../styles/variable.scss";
+
+.editAndDelete {
+  margin-top: 0.5rem;
+  margin-right: 2rem;
+  width: 100%;
+  @include center {
+    justify-content: flex-end;
+  }
+  gap: 1rem;
+
+  .edit {
+    @include btn-w(4rem) {
+      border-radius: 9px;
+    }
+    @include btn-c($c-pros, $c-pros, $c-white);
+    &:hover {
+      @include btn-c($c-white, $c-pros, $c-pros);
+    }
+  }
+  .delete {
+    @include btn-w(4rem) {
+      border-radius: 9px;
+    }
+    @include btn-c($c-cons, $c-cons, $c-white);
+    &:hover {
+      @include btn-c($c-white, $c-cons, $c-cons);
+    }
+  }
+}

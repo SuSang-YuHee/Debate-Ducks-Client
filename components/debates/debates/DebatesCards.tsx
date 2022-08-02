@@ -6,18 +6,18 @@ import { useInView } from "react-intersection-observer";
 import { checkFilters } from "../../../utils/debates/checkFilters";
 import { useGetUser } from "../../../utils/queries/users";
 import { COMMENT_ORDER, STATUSES } from "../../../utils/common/constant";
-import styles from "./DebatesContainer.module.scss";
+import styles from "./DebatesCards.module.scss";
 
 import CheckSignInModal from "../../common/modal/CheckSignInModal";
+import DebateCard from "./DebateCard";
 
 import {
   DebateOfDebates,
   UseInputResult,
   UseSelectResult,
 } from "../../../types";
-import DebateCard from "./DebateCard";
 
-export default function DebatesContainer({
+export default function DebatesCards({
   statuses,
   categories,
   isDisabledSearch,
@@ -162,7 +162,9 @@ export default function DebatesContainer({
                   categories,
                   debate.category,
                 ) ? (
-                  <DebateCard debate={debate} status={status} />
+                  <div key={debate.id}>
+                    <DebateCard debateId={debate.id} status={status} />
+                  </div>
                 ) : null;
               })}
             </>

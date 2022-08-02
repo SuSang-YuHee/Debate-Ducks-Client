@@ -31,6 +31,15 @@ $c-cons: #6667ab;
   @content;
 }
 
+@mixin textJustify {
+  position: absolute;
+  text-align: justify;
+  word-break: break-all;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
 @mixin disabledText {
   -moz-user-select: none;
   -webkit-user-select: none;
@@ -45,7 +54,9 @@ $c-cons: #6667ab;
   padding: 0.5rem;
   border-radius: 18px;
   width: $w;
-  transition: 0.3s ease 0s;
+  transition: all 0.4s ease 0s;
+  cursor: pointer;
+  @content;
 }
 
 @mixin btn-c($c, $b, $bc) {

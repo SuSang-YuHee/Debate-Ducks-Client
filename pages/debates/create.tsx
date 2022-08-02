@@ -9,6 +9,7 @@ import {
 } from "../../utils/common/useInputSelect";
 import { useGetUser } from "../../utils/queries/users";
 import { usePostDebate } from "../../utils/queries/debates";
+import { removeSpace } from "../../utils/common/removeSpace";
 
 import CreateOrEdit from "../../components/debates/CreateOrEdit";
 import CheckSignInModal from "../../components/common/modal/CheckSignInModal";
@@ -19,7 +20,7 @@ export default function Create() {
   const [isCancelModalOn, setIsCancelModalOn] = useState<boolean>(false);
 
   const titleInput = useInput("", "");
-  const categorySelect = useSelect(CATEGORIES[0]);
+  const categorySelect = useSelect(CATEGORIES[9]);
   const prosConsRadio = useRadio("true", "prosCons");
   const contentsInput = useInput("", "");
 
@@ -31,17 +32,17 @@ export default function Create() {
       setIsCheckModalOn(true);
     } else {
       postDebate.mutate({
-        title: titleInput.value,
+        title: removeSpace(titleInput.value),
         author_pros: prosConsRadio.value,
         category: categorySelect.value,
-        contents: contentsInput.value,
+        contents: removeSpace(contentsInput.value),
         author_id: user.data?.id || "",
       });
     }
   };
 
   return (
-    <>
+    <div className="inner">
       <CheckSignInModal
         isModalOn={isCheckModalOn}
         setIsModalOn={setIsCheckModalOn}
@@ -59,6 +60,6 @@ export default function Create() {
           router.push("/debates");
         }}
       />
-    </>
+    </div>
   );
 }

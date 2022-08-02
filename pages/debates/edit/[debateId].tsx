@@ -13,6 +13,7 @@ import {
 } from "../../../utils/common/useInputSelect";
 import { useGetUser } from "../../../utils/queries/users";
 import { useGetDebate, usePatchDebate } from "../../../utils/queries/debates";
+import { removeSpace } from "../../../utils/common/removeSpace";
 
 import CreateOrEdit from "../../../components/debates/CreateOrEdit";
 import CheckSignInModal from "../../../components/common/modal/CheckSignInModal";
@@ -30,7 +31,7 @@ export default function Edit() {
   const postDebate = usePatchDebate(debateId);
 
   const titleInput = useInput(debate.data?.title || "", "");
-  const categorySelect = useSelect(debate.data?.category || CATEGORIES[0]);
+  const categorySelect = useSelect(debate.data?.category || CATEGORIES[9]);
   const prosConsRadio = useRadio(
     debate.data?.author_pros ? `${debate.data?.author_pros}` : "false",
     "prosCons",
@@ -58,17 +59,18 @@ export default function Edit() {
       toast.error("변경된 내용이 없습니다.");
     } else {
       postDebate.mutate({
-        title: titleInput.value,
+        title: removeSpace(titleInput.value),
         author_pros: prosConsRadio.value,
         category: categorySelect.value,
-        contents: contentsInput.value,
+        contents: removeSpace(contentsInput.value),
         id: debate.data?.id || 0,
       });
     }
   };
 
+  if (!debate.data) return <>404</>;
   return (
-    <>
+    <div className="inner">
       <CheckSignInModal
         isModalOn={isCheckModalOn}
         setIsModalOn={setIsCheckModalOn}
@@ -86,7 +88,7 @@ export default function Edit() {
           router.push(`/debates/${debateId}`);
         }}
       />
-    </>
+    </div>
   );
 }
 

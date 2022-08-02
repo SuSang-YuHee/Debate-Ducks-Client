@@ -52,7 +52,7 @@
 }
 
 .btn {
-  @include btn-w(7rem);
+  @include btn-w(6rem);
   &_pros {
     @include btn-c($c-pros, $c-pros, $c-white);
     &:hover {

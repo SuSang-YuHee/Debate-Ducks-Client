@@ -57,7 +57,7 @@ function DMYorHM(strDate: string) {
       if (String(min).length === 1) {
         min = `0${min}`;
       }
-      return `${date.getHours()}:${min}`;
+      return `오늘 ${date.getHours()}:${min}`;
     } else {
       return formatted_date;
     }

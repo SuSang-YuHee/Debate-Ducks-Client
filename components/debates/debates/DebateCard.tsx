@@ -5,59 +5,61 @@ import { CATEGORIES, STATUSES } from "../../../utils/common/constant";
 import { DMYorHM } from "../../../utils/common/formatStrDate";
 import styles from "./DebateCard.module.scss";
 
-import Debater from "./Debater";
-
-import { DebateOfDebates } from "../../../types";
+import DebaterInfo from "../DebaterInfo";
+import { useGetDebate } from "../../../utils/queries/debates";
 
 export default function DebateCard({
-  debate,
+  debateId,
   status,
 }: {
-  debate: DebateOfDebates;
+  debateId: number;
   status: string;
 }) {
+  const debate = useGetDebate(debateId);
   const router = useRouter();
 
   return (
     <div
       className={styles.card}
-      onClick={() => router.push(`/debates/${debate.id}`)}
+      onClick={() => router.push(`/debates/${debate.data?.id}`)}
     >
       <div className={styles.category}>
-        <div
-          className={`${styles.status} ${
-            status === STATUSES[0] ? styles.status_0 : ""
-          } ${status === STATUSES[1] ? styles.status_1 : ""} ${
-            status === STATUSES[2] ? styles.status_2 : ""
-          }`}
-        >
-          {status}
+        <div className={`${styles.status} ${styles.status_name}`}>
+          {debate.data?.category}
         </div>
+        {status === STATUSES[2] ? (
+          <div className={`${styles.status} ${styles.status_emoji}`}>◉</div>
+        ) : null}
         <Image
           className={styles.image}
-          src={`/images/categories/${CATEGORIES.indexOf(debate.category)}.jpg`}
-          alt={`${debate.category}`}
+          src={`/images/categories/${CATEGORIES.indexOf(
+            debate.data?.category || "기타",
+          )}.jpg`}
+          alt={`${debate.data?.category}`}
           layout="fill"
           objectFit="cover"
+          objectPosition="center"
         />
       </div>
       <div className={styles.debaters}>
-        <Debater
-          debate={debate}
-          isAuthorPros={debate.author_pros}
-          isPros={true}
+        <DebaterInfo
+          debateId={debateId}
+          isAuthorPros={debate.data?.author_pros || false}
+          size={"90"}
         />
         <div className={styles.vs}>VS</div>
-        <Debater
-          debate={debate}
-          isAuthorPros={!debate.author_pros}
-          isPros={false}
+        <DebaterInfo
+          debateId={debateId}
+          isAuthorPros={!debate.data?.author_pros || false}
+          size={"90"}
         />
       </div>
-      <div className={styles.title}>{debate.title}</div>
+      <div className={styles.title}>{debate.data?.title}</div>
       <div className={styles.box}>
-        <div className={styles.box_heart}>♥︎ {debate.hearts_cnt}</div>
-        <div className={styles.box_date}>{DMYorHM(debate.created_date)}</div>
+        <div className={styles.box_heart}>♥︎ {debate.data?.hearts_cnt}</div>
+        <div className={styles.box_date}>
+          {DMYorHM(debate.data?.created_date || "")}
+        </div>
       </div>
     </div>
   );
