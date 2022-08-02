@@ -40,11 +40,19 @@ export default function Factcheck({
     }
   };
 
-  const handleEdit = () => {
+  const handleEdit = (desc: string, ref: string) => {
     const description = removeSpace(descriptionEdithInput.value);
     const reference_url = removeSpace(referenceEditInput.value);
 
-    if (reference_url.length > 0 && !/^http[s]?\:\/\//i.test(reference_url)) {
+    if (
+      removeSpace(desc) === description &&
+      removeSpace(ref) === reference_url
+    ) {
+      toast.error("변경 내용이 없습니다.");
+    } else if (
+      reference_url.length > 0 &&
+      !/^http[s]?\:\/\//i.test(reference_url)
+    ) {
       toast.error("참조 주소는 url 형태여야 합니다.");
     } else if (description.length > 500) {
       toast.error("팩트체크 내용은 500자 이하여야 합니다.");
@@ -115,7 +123,12 @@ export default function Factcheck({
                       </button>
                       <button
                         className={`${styles.btn} ${styles.btn_cons}`}
-                        onClick={handleEdit}
+                        onClick={() =>
+                          handleEdit(
+                            factcheck.description,
+                            factcheck.reference_url,
+                          )
+                        }
                       >
                         수정
                       </button>
