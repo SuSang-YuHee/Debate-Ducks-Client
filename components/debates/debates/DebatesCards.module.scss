@@ -62,6 +62,7 @@
   &_disabled {
     color: $c-cons;
     border: 1px solid $c-cons;
+    cursor: default;
   }
 }
 
