@@ -1,0 +1,100 @@
+@import "../../styles/variable.scss";
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 100px;
+  .inner {
+    width: 768px;
+    text-align: center;
+    .wrapper {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      // background-color: #ccc;
+      .profile_container {
+        text-align: center;
+        position: relative;
+        .image_wrapper {
+          border-radius: 50%;
+          border: 5px solid $c-pros;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          img {
+            border-radius: 50%;
+            vertical-align: bottom;
+            object-fit: cover;
+          }
+        }
+        .form {
+          .file_btn {
+            position: absolute;
+            left: 50%;
+            bottom: -1.2rem;
+            padding: 10px 15px;
+            border-radius: 900px;
+            transform: translateX(-50%);
+            cursor: pointer;
+            background-color: $c-pros;
+            font-size: 1.2rem;
+            display: flex;
+            color: #fff;
+            justify-content: center;
+            align-items: center;
+            span {
+              font-size: 1rem;
+              font-weight: 600;
+              margin-left: 5px;
+            }
+          }
+          input[type="file"] {
+            display: none;
+          }
+        }
+      }
+      .info_container {
+        .name_wrapper {
+          display: flex;
+          align-items: center;
+          .name {
+            border: none;
+            padding: 10px;
+            font-size: 1.1rem;
+            font-weight: 100;
+            background-color: transparent;
+            margin-bottom: 10px;
+          }
+          .name:focus {
+            border: 1px solid $c-pros;
+            outline: none;
+          }
+          .name::placeholder {
+            color: $c-pros;
+          }
+          .icon_wrapper {
+            color: $c-pros;
+          }
+        }
+        .email {
+          margin-left: 10px;
+        }
+      }
+    }
+    .save_btn {
+      border: none;
+      border-radius: 999px;
+      background-color: $c-pros;
+      padding: 10px 50px;
+      position: fixed;
+      bottom: 3rem;
+      left: 50%;
+      transform: translateX(-50%);
+      cursor: pointer;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+  }
+}
