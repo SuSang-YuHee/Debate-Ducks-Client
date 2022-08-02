@@ -30,3 +30,9 @@ export const COMMENT_ORDER = [
   ["최신순", "DESC"],
   ["오래된 순", "ASC"],
 ];
+
+export const OPINIONS = [
+  ["찬성", "true"],
+  ["중립", ""],
+  ["반대", "false"],
+];
