@@ -80,6 +80,15 @@ $m: 5rem;
   text-align: center;
 }
 
+.details {
+  text-align: center;
+  word-break: break-all;
+  white-space: pre-line;
+  line-height: 130%;
+  color: darken($c-gray-dark, 30%);
+  margin-bottom: 3rem;
+}
+
 .contents {
   max-width: 90%;
   text-align: justify;
@@ -121,6 +130,9 @@ $m: 5rem;
   .name {
     margin-bottom: 2rem;
   }
+  .details {
+    margin-bottom: 2rem;
+  }
 }
 
 @include mobile {
@@ -145,5 +157,8 @@ $m: 5rem;
   }
   .name {
     margin-bottom: 1rem;
+  }
+  .details {
+    margin-bottom: 2rem;
   }
 }

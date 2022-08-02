@@ -16,6 +16,7 @@ import CheckSignInModal from "../../common/modal/CheckSignInModal";
 import DebaterInfo from "../DebaterInfo";
 import AfterDebate from "./AfterDebate";
 import EditAndDelete from "./EditAndDelete";
+import { thousandDigit } from "../../../utils/common/thousandDigit";
 // import Comments from "./Comments";
 
 export default function Debate({ debateId }: { debateId: number }) {
@@ -23,10 +24,15 @@ export default function Debate({ debateId }: { debateId: number }) {
 
   const user = useGetUser();
   const debate = useGetDebate(debateId);
-  const heart = useGetHeart({
-    target_debate_id: debateId,
-    target_user_id: user.data?.id || "",
-  });
+  const heart = useGetHeart(
+    {
+      target_debate_id: debateId,
+      target_user_id: user.data?.id || "",
+    },
+    {
+      enabled: !!user.data?.id,
+    },
+  );
   const postHeart = usePostHeart();
   const deleteHeart = useDeleteHeart();
 
@@ -95,11 +101,17 @@ export default function Debate({ debateId }: { debateId: number }) {
             heart.data ? styles.heart_fill : styles.heart_empty
           }`}
           onClick={handleHeart}
-        >{`♥︎ ${debate.data?.hearts_cnt || 0}명이 이 토론를 좋아합니다.`}</div>
+        >{`♥︎ ${thousandDigit(
+          debate.data?.hearts_cnt || 0,
+        )}명이 이 토론를 좋아합니다.`}</div>
         <div className={styles.line}></div>
-        <div className={styles.name}>주제 설명</div>
-        <pre className={styles.contents}>{debate.data?.contents}</pre>
-        <div className={styles.line}></div>
+        {debate.data?.contents ? (
+          <>
+            <div className={styles.name}>주제 설명</div>
+            <pre className={styles.contents}>{debate.data?.contents}</pre>
+            <div className={styles.line}></div>
+          </>
+        ) : null}
         <AfterDebate debateId={debateId} />
         {/* <Comments debateId={debateId} /> */}
       </div>

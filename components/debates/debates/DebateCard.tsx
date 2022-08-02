@@ -3,10 +3,11 @@ import { useRouter } from "next/router";
 
 import { CATEGORIES, STATUSES } from "../../../utils/common/constant";
 import { DMYorHM } from "../../../utils/common/formatStrDate";
+import { useGetDebate } from "../../../utils/queries/debates";
+import { thousandDigit } from "../../../utils/common/thousandDigit";
 import styles from "./DebateCard.module.scss";
 
 import DebaterInfo from "../DebaterInfo";
-import { useGetDebate } from "../../../utils/queries/debates";
 
 export default function DebateCard({
   debateId,
@@ -56,7 +57,9 @@ export default function DebateCard({
       </div>
       <div className={styles.title}>{debate.data?.title}</div>
       <div className={styles.box}>
-        <div className={styles.box_heart}>♥︎ {debate.data?.hearts_cnt}</div>
+        <div className={styles.box_heart}>
+          ♥︎ {thousandDigit(debate.data?.hearts_cnt || 0)}
+        </div>
         <div className={styles.box_date}>
           {DMYorHM(debate.data?.created_date || "")}
         </div>
