@@ -1,0 +1,159 @@
+@import "../../../styles/variable.scss";
+
+.create_box {
+  @include center {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  width: 90%;
+  .select {
+    transition: all 0.4s ease 0;
+    align-self: start;
+    @include input(6rem, darken($c-gray_dark, 20%));
+    &_pros {
+      border: 1px solid $c-pros;
+      color: $c-pros;
+    }
+    &_cons {
+      border: 1px solid $c-cons;
+      color: $c-cons;
+    }
+  }
+  .textarea {
+    @include input(100%, darken($c-gray_dark, 20%));
+    resize: vertical;
+    height: 5rem;
+  }
+  .btn {
+    align-self: end;
+    @include btn-w(6rem, 100%);
+    @include btn-c($c-pros, $c-pros, $c-white);
+    &:hover {
+      @include btn-c($c-white, $c-pros, $c-pros);
+    }
+    &:active {
+      background-color: darken($c-pros, 10%);
+    }
+  }
+}
+
+.order_box {
+  width: 90%;
+  .select {
+    @include input(6rem, darken($c-gray_dark, 20%));
+  }
+}
+
+.comments_box {
+  width: 90%;
+  margin-top: 1rem;
+  @include center {
+    flex-direction: column;
+    align-items: start;
+  }
+  .comment_box {
+    width: 100%;
+    .comment {
+      border: 1px solid darken($c-gray_dark, 20%);
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      border-radius: 18px;
+      &_pros {
+        border: 1.5px solid $c-pros;
+      }
+      &_cons {
+        border: 1.5px solid $c-cons;
+      }
+      .info_box {
+        width: 100%;
+        @include center {
+          justify-content: space-between;
+        }
+        .imageAndName_box {
+          @include center;
+          .image_box {
+            width: 4rem;
+            .image {
+              border-radius: 100%;
+            }
+            min-width: 4rem;
+          }
+          .name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: darken($c-gray_dark, 40%);
+            word-break: break-all;
+            white-space: pre-line;
+            text-overflow: normal;
+          }
+        }
+        .date {
+          font-size: 0.9rem;
+          color: darken($c-gray_dark, 20%);
+          white-space: nowrap;
+          margin-left: 0.5rem;
+        }
+      }
+      .contents_box {
+        .contents {
+          width: 100%;
+          margin-top: 0.5rem;
+          word-break: break-all;
+          white-space: pre-line;
+          text-overflow: normal;
+          line-height: 110%;
+        }
+        .select {
+          margin-top: 0.5rem;
+          @include input(4rem, darken($c-gray_dark, 20%));
+          &_pros {
+            border: 1px solid $c-pros;
+            color: $c-pros;
+          }
+          &_cons {
+            border: 1px solid $c-cons;
+            color: $c-cons;
+          }
+        }
+        .input {
+          @include input(100%, darken($c-gray_dark, 20%));
+          resize: vertical;
+          line-height: 110%;
+          height: 5rem;
+          margin-top: 0.5rem;
+        }
+        .btn_box {
+          @include center {
+            justify-content: end;
+            gap: 0.5rem;
+          }
+          margin-top: 0.5rem;
+          .btn {
+            @include btn-w(3rem, 80%) {
+              height: 1.5rem;
+              border-radius: 9px;
+            }
+            &_pros {
+              @include btn-c($c-pros, $c-pros, $c-white);
+              &:hover {
+                @include btn-c($c-white, $c-pros, $c-pros);
+              }
+            }
+            &_cons {
+              @include btn-c($c-cons, $c-cons, $c-white);
+              &:hover {
+                @include btn-c($c-white, $c-cons, $c-cons);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.empty_message {
+  margin-top: 4rem;
+  font-size: 1.2rem;
+  color: darken($c-gray-dark, 20%);
+}
