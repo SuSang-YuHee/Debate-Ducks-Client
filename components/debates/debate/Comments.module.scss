@@ -8,7 +8,7 @@
   width: 90%;
   .select {
     transition: all 0.4s ease 0;
-    align-self: start;
+    align-self: flex-start;
     @include input(6rem, darken($c-gray_dark, 20%));
     &_pros {
       border: 1px solid $c-pros;
@@ -25,7 +25,7 @@
     height: 5rem;
   }
   .btn {
-    align-self: end;
+    align-self: flex-end;
     @include btn-w(6rem, 100%);
     @include btn-c($c-pros, $c-pros, $c-white);
     &:hover {
@@ -49,7 +49,7 @@
   margin-top: 1rem;
   @include center {
     flex-direction: column;
-    align-items: start;
+    align-items: flex-start;
   }
   .comment_box {
     width: 100%;
@@ -124,7 +124,7 @@
         }
         .btn_box {
           @include center {
-            justify-content: end;
+            justify-content: flex-end;
             gap: 0.5rem;
           }
           margin-top: 0.5rem;
