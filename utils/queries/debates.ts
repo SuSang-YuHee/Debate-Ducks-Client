@@ -115,7 +115,11 @@ export const usePatchDebate = (
         router.push(`/debates/${debateId}`);
       }
     },
-    onError: (err: AxiosError<{ message: string }>, variables, rollback) => {
+    onError: (
+      err: AxiosError<{ message: string }>,
+      _,
+      rollback: (() => Debate) | undefined,
+    ) => {
       if (rollback) rollback();
       toast.error(
         `${err.response?.data?.message || "네트워크 에러가 발생했습니다."}`,
