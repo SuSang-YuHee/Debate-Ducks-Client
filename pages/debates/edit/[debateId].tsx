@@ -1,11 +1,8 @@
-import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { dehydrate, QueryClient } from "react-query";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
 import { CATEGORIES } from "../../../utils/common/constant";
-import { getDebate } from "../../../api/debates";
 import {
   useInput,
   useRadio,
@@ -27,7 +24,9 @@ export default function Edit() {
   const [isCancelModalOn, setIsCancelModalOn] = useState<boolean>(false);
 
   const user = useGetUser();
-  const debate = useGetDebate(debateId);
+  const debate = useGetDebate(debateId, {
+    enabled: !!debateId,
+  });
   const postDebate = usePatchDebate(debateId);
 
   const titleInput = useInput(debate.data?.title || "", "");
@@ -91,19 +90,3 @@ export default function Edit() {
     </div>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const debateId =
-    typeof context.params?.debateId === "string"
-      ? parseInt(context.params?.debateId)
-      : 0;
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(["debates", `${debateId}`], () =>
-    getDebate(debateId),
-  );
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-};
