@@ -28,5 +28,12 @@
       border-radius: 50%;
       object-fit: fill;
     }
+    .sign_btn {
+      background-color: $c-pros;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 20px;
+      color: #fff;
+    }
   }
 }

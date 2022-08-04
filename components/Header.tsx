@@ -13,6 +13,9 @@ export default function Header() {
   const handleProfileClick = () => {
     router.push("/mypage");
   };
+  const handleSigninBtnClick = () => {
+    router.push("/signin");
+  };
   return (
     <div className={styles.container}>
       <div className={styles.logo_container} onClick={handleLogoClick}>
@@ -34,7 +37,11 @@ export default function Header() {
             unoptimized={true}
             onClick={handleProfileClick}
           />
-        ) : null}
+        ) : (
+          <button className={styles.sign_btn} onClick={handleSigninBtnClick}>
+            로그인
+          </button>
+        )}
       </div>
     </div>
   );
