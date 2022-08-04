@@ -5,7 +5,6 @@ import styles from "./Header.module.scss";
 
 export default function Header() {
   const user = useGetUser();
-  const userImage = useGetUserImage(user.data?.id || "");
   const router = useRouter();
   const handleLogoClick = () => {
     router.push("/");
@@ -28,9 +27,9 @@ export default function Header() {
         <h1 className={styles.title}>DEBATE DUCKS</h1>
       </div>
       <div className={styles.profile_container}>
-        {userImage.data ? (
+        {user.data ? (
           <Image
-            src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${userImage.data}`}
+            src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${user.data.profile_image}`}
             alt="profile_image"
             width="30"
             height="30"
