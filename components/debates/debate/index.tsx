@@ -17,7 +17,7 @@ import DebaterInfo from "../DebaterInfo";
 import AfterDebate from "./AfterDebate";
 import EditAndDelete from "./EditAndDelete";
 import { thousandDigit } from "../../../utils/common/thousandDigit";
-// import Comments from "./Comments";
+import Comments from "./Comments";
 
 export default function Debate({ debateId }: { debateId: number }) {
   const [isCheckModalOn, setIsCheckModalOn] = useState<boolean>(false);
@@ -113,7 +113,8 @@ export default function Debate({ debateId }: { debateId: number }) {
           </>
         ) : null}
         <AfterDebate debateId={debateId} />
-        {/* <Comments debateId={debateId} /> */}
+        <div className={styles.name}>댓글</div>
+        <Comments debateId={debateId} />
       </div>
     </>
   );

@@ -71,7 +71,11 @@ export const usePatchFactcheck = (
         };
       }
     },
-    onError: (err: AxiosError<{ message: string }>, variables, rollback) => {
+    onError: (
+      err: AxiosError<{ message: string }>,
+      _,
+      rollback: (() => void) | undefined,
+    ) => {
       if (rollback) rollback();
       toast.error(
         `${err.response?.data?.message || "네트워크 에러가 발생했습니다."}`,
@@ -110,7 +114,11 @@ export const useDeleteFactcheck = (
         };
       }
     },
-    onError: (err: AxiosError<{ message: string }>, variables, rollback) => {
+    onError: (
+      err: AxiosError<{ message: string }>,
+      _,
+      rollback: (() => void) | undefined,
+    ) => {
       if (rollback) rollback();
       toast.error(
         `${err.response?.data?.message || "네트워크 에러가 발생했습니다."}`,

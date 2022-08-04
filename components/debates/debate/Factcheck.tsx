@@ -54,8 +54,10 @@ export default function Factcheck({
       !/^http[s]?\:\/\//i.test(reference_url)
     ) {
       toast.error("참조 주소는 url 형태여야 합니다.");
-    } else if (description.length > 500) {
-      toast.error("팩트체크 내용은 500자 이하여야 합니다.");
+    } else if (description.length < 5 || description.length > 500) {
+      toast.error(
+        `팩트체크 내용은 5자 이상, 500자 이하여야 합니다.\n(현재 ${description.length}자)`,
+      );
     } else {
       patchFactcheck.mutate({
         description,

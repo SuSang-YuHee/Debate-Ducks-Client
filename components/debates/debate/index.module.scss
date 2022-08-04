@@ -23,7 +23,12 @@ $m: 5rem;
     color: $c-white;
     font-size: 250%;
     font-weight: 700;
-    @include textJustify;
+    text-align: justify;
+    position: absolute;
+    word-break: break-all;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
   }
   &_date {
     color: $c-white;

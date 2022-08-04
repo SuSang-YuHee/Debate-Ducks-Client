@@ -31,15 +31,6 @@ $c-cons: #6667ab;
   @content;
 }
 
-@mixin textJustify {
-  position: absolute;
-  text-align: justify;
-  word-break: break-all;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%);
-}
-
 @mixin disabledText {
   -moz-user-select: none;
   -webkit-user-select: none;

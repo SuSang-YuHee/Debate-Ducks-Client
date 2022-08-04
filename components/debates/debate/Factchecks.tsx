@@ -63,7 +63,6 @@ export default function Factchecks({ debateId }: { debateId: number }) {
         <Factcheck debateId={debateId} isPros={true} />
         <Factcheck debateId={debateId} isPros={false} />
       </div>
-
       {isCreateOn ? (
         <div className={styles.create_factcheck}>
           <div className={styles.name}>팩트체크 내용</div>

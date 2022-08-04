@@ -5,7 +5,9 @@
   gap: 1rem;
   margin-bottom: 3rem;
   .btn {
-    @include btn-w(8rem, 130%);
+    @include btn-w(8rem, 130%) {
+      border-radius: 9px;
+    }
     &_pros {
       @include btn-c($c-pros, $c-pros, $c-white);
       &:hover {

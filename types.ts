@@ -81,7 +81,7 @@ export interface VotePostOrPatch extends DebateAndUserID {
 //*- comments
 export interface CommentOfDebate {
   id: number;
-  pros: boolean;
+  pros: boolean | null;
   contents: string;
   created_date: string;
   updated_date: string | null;
@@ -89,13 +89,13 @@ export interface CommentOfDebate {
 }
 
 export interface CommentPost extends DebateAndUserID {
-  pros: boolean;
+  pros: boolean | null;
   contents: string;
 }
 
 export interface CommentPatch {
   id: number;
-  pros: boolean;
+  pros: boolean | null;
   contents: string;
 }
 
