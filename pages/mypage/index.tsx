@@ -4,7 +4,7 @@ import styles from "./MyPage.module.scss";
 import { BaseSyntheticEvent, useState } from "react";
 import axios from "axios";
 import { FiEdit } from "react-icons/fi";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 
 export default function MyPage() {
   const [image, setImage] = useState<File>();
