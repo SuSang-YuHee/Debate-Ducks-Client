@@ -15,6 +15,14 @@ jobs:
       - name: Install Dependencies # 의존 파일 설치
         run: npm install
 
+      - name: Generate Environment Variables File for Production
+        run: |
+          echo "NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL" >> .env
+          echo "NEXT_PUBLIC_URL=$NEXT_PUBLIC_URL" >> .env
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_URL: ${{ secrets.NEXT_PUBLIC_URL }}
+
       - name: Build # React Build
         run: npm run build
 
