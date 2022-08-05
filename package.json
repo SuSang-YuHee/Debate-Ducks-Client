@@ -3,20 +3,30 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "next dev -p 3001",
+    "build": "next build && next export",
+    "start": "next start -p 3001",
     "lint": "next lint"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "next": "12.1.6",
+    "next-optimized-images": "^2.6.2",
     "react": "18.1.0",
-    "react-dom": "18.1.0"
+    "react-dom": "18.1.0",
+    "react-hot-toast": "^2.3.0",
+    "react-icons": "^4.4.0",
+    "react-intersection-observer": "^9.4.0",
+    "react-query": "^3.39.2",
+    "sass": "^1.54.0",
+    "simple-peer": "^9.11.1",
+    "socket.io-client": "^4.5.0"
   },
   "devDependencies": {
     "@types/node": "17.0.31",
     "@types/react": "18.0.9",
     "@types/react-dom": "18.0.3",
+    "@types/simple-peer": "^9.11.4",
     "@typescript-eslint/eslint-plugin": "^5.22.0",
     "eslint": "^8.15.0",
     "eslint-config-next": "12.1.6",

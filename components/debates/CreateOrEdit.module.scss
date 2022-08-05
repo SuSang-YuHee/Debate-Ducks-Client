@@ -1,0 +1,140 @@
+@import "../../styles/variable.scss";
+
+.outer {
+  min-width: 20rem;
+  @include center {
+    flex-direction: column;
+  }
+  font-size: 1rem;
+}
+
+.box {
+  width: 80%;
+}
+
+.createOrEdit {
+  margin-top: 4rem;
+  font-size: 3rem;
+  font-weight: 700;
+  color: $c-cons;
+}
+
+.details {
+  margin-top: 1rem;
+  line-height: 150%;
+  font-size: 1rem;
+  font-weight: 700;
+  color: darken($c-gray_dark, 30%);
+}
+
+.small_box {
+  margin-top: 3rem;
+}
+
+.name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: $c-pros;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
+
+.title {
+  @include input(100%);
+  height: 1.5rem;
+}
+
+.validator {
+  @include center {
+    justify-content: space-between;
+  }
+  margin-top: 0.5rem;
+  .message {
+    color: $c-cons;
+  }
+  .count {
+    color: $c-pros;
+    &_fail {
+      color: darken($c-gray_dark, 20%);
+    }
+    &:focus-visible {
+      color: red;
+    }
+  }
+}
+
+.category {
+  @include input(7rem);
+  cursor: pointer;
+}
+
+.radio_box {
+  @include center {
+    justify-content: flex-start;
+  }
+  .label {
+    @include center {
+      justify-content: flex-start;
+    }
+    cursor: pointer;
+  }
+  .radio {
+    accent-color: $c-cons;
+    margin-right: 0.4rem;
+    margin-left: 0.5rem;
+  }
+  .radio_name {
+    margin-right: 1rem;
+  }
+}
+
+.contents {
+  @include input(100%);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  resize: vertical;
+  min-height: 15rem;
+}
+
+.btn_box {
+  @include center;
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+  gap: 2rem;
+  .btn {
+    @include btn-w(8rem, 1.1rem);
+    &_cancel {
+      @include btn-c($c-cons, $c-cons, $c-white);
+      &:hover {
+        @include btn-c($c-white, $c-cons, $c-cons);
+      }
+    }
+    &_confirm {
+      @include btn-c($c-pros, $c-pros, $c-white);
+      &:hover {
+        @include btn-c($c-white, $c-pros, $c-pros);
+      }
+    }
+  }
+}
+
+@include media(700px) {
+  .validator {
+    font-size: 0.8rem;
+    .message {
+      width: 80%;
+    }
+  }
+}
+
+@include media(450px) {
+  .details {
+    font-size: 0.8rem;
+  }
+}
+
+@include media(400px) {
+  .details {
+    font-size: 0.75rem;
+  }
+}

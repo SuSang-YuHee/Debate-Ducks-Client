@@ -1,0 +1,65 @@
+$c-white: #f8fbfd;
+$c-black: #292929;
+$c-gray_light: #eeeeee;
+$c-gray_dark: #cccccc;
+
+$c-pros: #ff9425;
+$c-cons: #6667ab;
+
+@mixin tablet {
+  @media screen and (max-width: 899px) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media screen and (max-width: 599px) {
+    @content;
+  }
+}
+
+@mixin media($mw) {
+  @media screen and (max-width: $mw) {
+    @content;
+  }
+}
+
+@mixin center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @content;
+}
+
+@mixin disabledText {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+@mixin btn-w($w, $s: 0.8rem) {
+  @include disabledText;
+  @include center;
+  font-size: $s;
+  padding: 0.5rem;
+  border-radius: 18px;
+  width: $w;
+  transition: all 0.4s ease 0s;
+  cursor: pointer;
+  @content;
+}
+
+@mixin btn-c($c, $b, $bc) {
+  color: $c;
+  border: 1px solid $b;
+  background-color: $bc;
+}
+
+@mixin input($w: auto, $c: $c-black) {
+  border-radius: 9px;
+  padding: 0.2rem 0.4rem;
+  border: 1px $c solid;
+  width: $w;
+  background-color: $c-white;
+}

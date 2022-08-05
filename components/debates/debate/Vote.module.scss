@@ -1,0 +1,89 @@
+@import "../../../styles/variable.scss";
+
+.box_vote {
+  @include center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  .btn {
+    @include btn-w(8rem, 130%) {
+      border-radius: 9px;
+    }
+    &_pros {
+      @include btn-c($c-pros, $c-pros, $c-white);
+      &:hover {
+        @include btn-c($c-white, $c-pros, $c-pros);
+      }
+      &_clicked {
+        @include btn-c($c-white, $c-pros, $c-pros);
+        cursor: default;
+      }
+    }
+    &_cons {
+      @include btn-c($c-cons, $c-cons, $c-white);
+      &:hover {
+        @include btn-c($c-white, $c-cons, $c-cons);
+      }
+      &_clicked {
+        @include btn-c($c-white, $c-cons, $c-cons);
+        cursor: default;
+      }
+    }
+  }
+}
+
+.box_result {
+  background-color: red;
+  width: 60%;
+  height: 1rem;
+  border-radius: 9px;
+  transition: all 0.4s ease 0;
+  .box_chart {
+    width: 100%;
+    height: 100%;
+    border-radius: 9px;
+    @include center {
+      justify-content: center;
+    }
+    .chart {
+      &_pros {
+        @include center;
+        height: 100%;
+        border-radius: 9px 0 0 9px;
+        background-color: $c-pros;
+      }
+      &_cons {
+        @include center;
+        height: 100%;
+        border-radius: 0 9px 9px 0;
+        background-color: $c-cons;
+      }
+      &_100 {
+        border-radius: 9px;
+      }
+    }
+  }
+  .box_cnt {
+    @include center {
+      justify-content: space-between;
+    }
+    margin-top: 0.5rem;
+  }
+}
+
+@include tablet {
+  .box_vote {
+    margin-bottom: 2rem;
+    .btn {
+      @include btn-w(6rem, 130%);
+    }
+  }
+  .box_result {
+    width: 70%;
+  }
+}
+
+@include mobile {
+  .box_result {
+    width: 80%;
+  }
+}

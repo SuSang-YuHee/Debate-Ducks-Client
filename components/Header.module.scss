@@ -1,0 +1,58 @@
+@import "../styles/variable.scss";
+
+.container {
+  position: relative;
+  padding: 10px;
+  .logo_container {
+    display: flex;
+    font-size: 1.8rem;
+    font-weight: bold;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    user-select: none;
+    cursor: pointer;
+    width: 300px;
+    margin: 0 auto;
+    .title {
+      margin: 0 10px;
+    }
+  }
+  .profile_container {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    & img {
+      border-radius: 50%;
+      object-fit: fill;
+    }
+    .list {
+      position: absolute;
+      top: 50px;
+      right: 10px;
+      // z-index: 999;
+      background-color: #fff;
+      border: 1px solid $c-pros;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .item {
+      font-size: 0.8rem;
+      width: 100px;
+      padding: 10px;
+      &:hover {
+        background-color: $c-pros;
+        color: #fff;
+      }
+    }
+    .sign_btn {
+      background-color: $c-pros;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 20px;
+      color: #fff;
+    }
+  }
+}

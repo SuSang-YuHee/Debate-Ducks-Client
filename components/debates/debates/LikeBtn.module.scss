@@ -1,0 +1,18 @@
+@import "../../../styles/variable.scss";
+
+.outer {
+  @include center;
+  font-size: 0.8rem;
+  margin: 1rem;
+  font-weight: 700;
+  min-width: 20rem;
+}
+
+.btn {
+  @include disabledText;
+  color: darken($c-gray_dark, 20%);
+  cursor: pointer;
+  &_clicked {
+    color: $c-pros;
+  }
+}
