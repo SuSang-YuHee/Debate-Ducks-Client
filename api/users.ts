@@ -45,10 +45,15 @@ export const login = (
     });
 };
 
-export const getUserImage = async (id: string) => {
-  const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/users/image?user=${id}`,
+export const patchUserImage = async (
+  id: string,
+  formData: FormData | undefined,
+) => {
+  const { data } = await axios.patch(
+    `${process.env.NEXT_PUBLIC_API_URL}/users/${id}/upload`,
+    formData,
     {
+      headers: { "content-type": "multipart/form-data" },
       withCredentials: true,
     },
   );
@@ -59,7 +64,7 @@ export const patchUser = async (id: string) => {
   const { data } = await axios.patch(
     `${process.env.NEXT_PUBLIC_API_URL}/users/${id}`,
     {
-      withCredential: true,
+      withCredentials: true,
     },
   );
   return data;

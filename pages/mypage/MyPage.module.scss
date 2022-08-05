@@ -53,6 +53,20 @@
             display: none;
           }
         }
+        .save_btn {
+          border: none;
+          border-radius: 999px;
+          background-color: $c-pros;
+          padding: 10px 50px;
+          // position: fixed;
+          // bottom: 3rem;
+          // left: 50%;
+          transform: translateX(-50%);
+          cursor: pointer;
+          color: #fff;
+          font-size: 1.1rem;
+          font-weight: 600;
+        }
       }
       .info_container {
         .name_wrapper {
@@ -81,20 +95,6 @@
           margin-left: 10px;
         }
       }
-    }
-    .save_btn {
-      border: none;
-      border-radius: 999px;
-      background-color: $c-pros;
-      padding: 10px 50px;
-      position: fixed;
-      bottom: 3rem;
-      left: 50%;
-      transform: translateX(-50%);
-      cursor: pointer;
-      color: #fff;
-      font-size: 1.1rem;
-      font-weight: 600;
     }
   }
 }
