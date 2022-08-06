@@ -165,18 +165,19 @@
     text-shadow: -1px 0 $c-black, 0 1px $c-black, 1px 0 $c-black,
       0 -1px $c-black;
   }
-  .status_name {
+  .status_category {
     margin-top: 0.7rem;
     margin-left: 3%;
     font-size: 110%;
     color: $c-white;
   }
-  .status_emoji {
+  .status_vote {
     margin-top: 0.5rem;
-    margin-left: 90%;
-    font-size: 150%;
-
+    margin-left: 77%;
+    font-size: 110%;
     color: $c-pros;
+    text-shadow: -1px 0 $c-white, 0 1px $c-white, 1px 0 $c-white,
+      0 -1px $c-white;
   }
 }
 
