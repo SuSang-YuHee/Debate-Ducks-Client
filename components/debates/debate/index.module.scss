@@ -54,6 +54,15 @@ $m: 5rem;
   }
 }
 
+.participant {
+  margin-top: 1rem;
+  @include btn-w(7rem, 100%);
+  @include btn-c($c-pros, $c-pros, $c-white);
+  &:hover {
+    @include btn-c($c-white, $c-pros, $c-pros);
+  }
+}
+
 .heart {
   transition: all 0.4s ease 0;
   font-weight: 700;
@@ -126,6 +135,9 @@ $m: 5rem;
   .debaterInfo {
     margin-top: $m;
   }
+  .participant {
+    @include btn-w(6rem, 100%);
+  }
   .heart {
     margin-top: $m;
   }
@@ -153,6 +165,9 @@ $m: 5rem;
   $m: 3rem;
   .debaterInfo {
     margin-top: $m;
+  }
+  .participant {
+    @include btn-w(5rem, 100%);
   }
   .heart {
     margin-top: $m;
