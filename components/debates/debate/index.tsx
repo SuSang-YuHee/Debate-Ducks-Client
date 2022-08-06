@@ -2,7 +2,7 @@ import { useState } from "react";
 import Image from "next/image";
 
 import { useGetUser } from "../../../utils/queries/users";
-import { useGetDebate } from "../../../utils/queries/debates";
+import { useGetDebate, usePatchDebate } from "../../../utils/queries/debates";
 import {
   useDeleteHeart,
   useGetHeart,
@@ -33,8 +33,17 @@ export default function Debate({ debateId }: { debateId: number }) {
       enabled: !!user.data?.id,
     },
   );
+  const patchDebate = usePatchDebate(debateId, user.data);
   const postHeart = usePostHeart();
   const deleteHeart = useDeleteHeart();
+
+  const handleParticipant = () => {
+    if (!user.data) {
+      setIsCheckModalOn(true);
+    } else {
+      patchDebate.mutate({ id: debateId, participant_id: user.data.id });
+    }
+  };
 
   const handleHeart = () => {
     if (!user.data) {
@@ -96,6 +105,13 @@ export default function Debate({ debateId }: { debateId: number }) {
             size={"150"}
           />
         </div>
+        {!debate.data?.video_url &&
+        !debate.data?.participant &&
+        debate.data?.author?.id !== user.data?.id ? (
+          <div className={styles.participant} onClick={handleParticipant}>
+            참여 하기
+          </div>
+        ) : null}
         <div
           className={`${styles.heart} ${
             heart.data ? styles.heart_fill : styles.heart_empty
