@@ -13,9 +13,18 @@ import { queryStr } from ".";
 import { User } from "../../types";
 
 export const useGetUser = (options?: UseQueryOptions<User, AxiosError>) => {
-  const query = useQuery<User, AxiosError>([queryStr.users], () => getUser(), {
-    ...options,
-  });
+  const token =
+    typeof window !== "undefined"
+      ? localStorage.getItem("debate-ducks-token")
+      : null;
+  const query = useQuery<User, AxiosError>(
+    [queryStr.users],
+    () => getUser(token),
+    {
+      enabled: !!token,
+      ...options,
+    },
+  );
   return query;
 };
 
