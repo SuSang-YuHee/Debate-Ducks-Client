@@ -184,7 +184,15 @@ export default function Comments({ debateId }: { debateId: number }) {
                     >
                       <div className={styles.info_box}>
                         <div className={styles.imageAndName_box}>
-                          <div className={styles.image_box}>
+                          <div
+                            className={`${styles.image_box} ${
+                              comment.pros
+                                ? styles.image_box_pros
+                                : comment.pros !== null
+                                ? styles.image_box_cons
+                                : ""
+                            }`}
+                          >
                             <Image
                               className={styles.image}
                               src={
