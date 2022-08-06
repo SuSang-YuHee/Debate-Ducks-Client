@@ -182,7 +182,7 @@ export default function Comments({ debateId }: { debateId: number }) {
                               className={styles.image}
                               src={
                                 comment.target_user.profile_image
-                                  ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${comment.target_user.profile_image}.jpg`
+                                  ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${comment.target_user.profile_image}`
                                   : "/images/profiles/default-gray.png"
                               }
                               alt={
@@ -192,6 +192,7 @@ export default function Comments({ debateId }: { debateId: number }) {
                               height="50"
                               objectFit="cover"
                               objectPosition="center"
+                              unoptimized={true}
                             />
                           </div>
                           <div className={styles.name}>
