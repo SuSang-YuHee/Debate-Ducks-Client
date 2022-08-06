@@ -1,18 +1,14 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-import { CATEGORIES } from "../../utils/common/constant";
-import {
-  useInput,
-  useRadio,
-  useSelect,
-} from "../../utils/common/useInputSelect";
-import { useGetUser } from "../../utils/queries/users";
-import { usePostDebate } from "../../utils/queries/debates";
-import { removeSpace } from "../../utils/common/removeSpace";
+import { CATEGORIES } from "../utils/common/constant";
+import { useInput, useRadio, useSelect } from "../utils/common/useInputSelect";
+import { useGetUser } from "../utils/queries/users";
+import { usePostDebate } from "../utils/queries/debates";
+import { removeSpace } from "../utils/common/removeSpace";
 
-import CreateOrEdit from "../../components/debates/CreateOrEdit";
-import CheckSignInModal from "../../components/common/modal/CheckSignInModal";
+import CreateOrEdit from "../components/debates/CreateOrEdit";
+import CheckSignInModal from "../components/common/modal/CheckSignInModal";
 
 export default function Create() {
   const router = useRouter();
@@ -57,7 +53,7 @@ export default function Create() {
         handler={handleCreate}
         createOrEdit="작성"
         routerPush={() => {
-          router.push("/debates");
+          router.push("/");
         }}
       />
     </div>

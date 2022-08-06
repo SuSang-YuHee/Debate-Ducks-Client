@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
 
-import { useGetDebate } from "../../utils/queries/debates";
+import { useGetDebate } from "../utils/queries/debates";
 
-import Debate from "../../components/debates/debate";
+import Debate from "../components/debates/debate";
 
 export default function Debates() {
   const router = useRouter();
