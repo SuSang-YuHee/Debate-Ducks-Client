@@ -73,16 +73,23 @@ export default function Comments({ debateId }: { debateId: number }) {
         {
           onSuccess: () => {
             commentCreateInput.setValue("");
-            commentCreateSelect.setValue("");
+            commentCreateSelect.setValue("null");
           },
         },
       );
     }
   };
 
-  const handleEdit = (commentId: number, contents: string) => {
+  const handleEdit = (
+    commentId: number,
+    contents: string,
+    pros: boolean | null,
+  ) => {
     const comment = removeSpace(commentEditInput.value);
-    if (comment === removeSpace(contents)) {
+    if (
+      comment === removeSpace(contents) &&
+      commentEditSelect.value === String(pros)
+    ) {
       toast.error("변경된 내용이 없습니다.");
     } else if (comment.length < 1 || comment.length > 500) {
       toast.error(
@@ -231,7 +238,11 @@ export default function Comments({ debateId }: { debateId: number }) {
                             <button
                               className={`${styles.btn} ${styles.btn_pros}`}
                               onClick={() =>
-                                handleEdit(comment.id, comment.contents)
+                                handleEdit(
+                                  comment.id,
+                                  comment.contents,
+                                  comment.pros,
+                                )
                               }
                             >
                               수정
