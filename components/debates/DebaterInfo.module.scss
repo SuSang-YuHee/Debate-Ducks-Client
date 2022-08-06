@@ -7,8 +7,19 @@
     flex-direction: column;
   }
   min-width: 4rem;
-  .image {
-    border-radius: 100%;
+  .image_box {
+    border-radius: 50%;
+    padding: 3%;
+    @include center;
+    &_pros {
+      background-color: $c-pros;
+    }
+    &_cons {
+      background-color: $c-cons;
+    }
+    .image {
+      border-radius: 50%;
+    }
   }
   .nickname {
     margin-top: 1rem;

@@ -19,20 +19,28 @@ export default function DebaterInfo({
 
   return isAuthorPros ? (
     <div className={styles.box}>
-      <Image
-        className={styles.image}
-        src={
-          debate.data?.author?.profile_image
-            ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${debate.data?.author.profile_image}`
-            : "/images/profiles/default-gray.png"
-        }
-        alt={debate.data?.author?.nickname || "기본 이미지"}
-        width={`${size}`}
-        height={`${size}`}
-        objectFit="cover"
-        objectPosition="center"
-        unoptimized={true}
-      />
+      <div
+        className={`${styles.image_box} ${
+          isAuthorPros === debate.data?.author_pros
+            ? styles.image_box_pros
+            : styles.image_box_cons
+        }`}
+      >
+        <Image
+          className={styles.image}
+          src={
+            debate.data?.author?.profile_image
+              ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${debate.data?.author.profile_image}`
+              : "/images/profiles/default-gray.png"
+          }
+          alt={debate.data?.author?.nickname || "기본 이미지"}
+          width={`${size}`}
+          height={`${size}`}
+          objectFit="cover"
+          objectPosition="center"
+          unoptimized={true}
+        />
+      </div>
       <div
         className={`${styles.nickname} ${
           isAuthorPros === debate.data?.author_pros
@@ -45,20 +53,28 @@ export default function DebaterInfo({
     </div>
   ) : (
     <div className={styles.box}>
-      <Image
-        className={styles.image}
-        src={
-          debate.data?.participant?.profile_image
-            ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${debate.data?.participant.profile_image}`
-            : "/images/profiles/default-gray.png"
-        }
-        alt={debate.data?.participant?.nickname || "기본 이미지"}
-        width={`${size}`}
-        height={`${size}`}
-        objectFit="cover"
-        objectPosition="center"
-        unoptimized={true}
-      />
+      <div
+        className={`${styles.image_box} ${
+          isAuthorPros === debate.data?.author_pros
+            ? styles.image_box_pros
+            : styles.image_box_cons
+        }`}
+      >
+        <Image
+          className={styles.image}
+          src={
+            debate.data?.participant?.profile_image
+              ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${debate.data?.participant.profile_image}`
+              : "/images/profiles/default-gray.png"
+          }
+          alt={debate.data?.participant?.nickname || "기본 이미지"}
+          width={`${size}`}
+          height={`${size}`}
+          objectFit="cover"
+          objectPosition="center"
+          unoptimized={true}
+        />
+      </div>
       <div
         className={`${styles.nickname} ${
           isAuthorPros === debate.data?.author_pros
