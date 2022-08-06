@@ -50,7 +50,7 @@ export const patchUserImage = async (
   formData: FormData | undefined,
 ) => {
   const { data } = await axios.patch(
-    `${process.env.NEXT_PUBLIC_API_URL}/users/${id}/upload`,
+    `${process.env.NEXT_PUBLIC_API_URL}/users/${id}/image`,
     formData,
     {
       headers: { "content-type": "multipart/form-data" },
