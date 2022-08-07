@@ -1,6 +1,8 @@
+import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import Peer from "simple-peer";
+import { useRouter } from "next/router";
 
 import { drawNotice } from "./draw";
 import { beep } from "./beep";
@@ -8,7 +10,6 @@ import { offScreenShare } from "./screenShare";
 import { connectHostPeer, connectGuestPeer } from "./simple-peer";
 
 import { IDebateroom, IDebateData, TTurn } from "../../../types";
-import toast from "react-hot-toast";
 
 export const useWebSocket = ({
   debateId,
@@ -64,6 +65,7 @@ export const useWebSocket = ({
   | "mergedAudioRef"
   | "recorderRef"
 >) => {
+  const router = useRouter();
   const [reConnect, setReConnect] = useState<boolean>(false);
 
   //*- 연결
@@ -81,6 +83,7 @@ export const useWebSocket = ({
 
         socketRef.current.on("overcapacity", () => {
           toast.error("정원 초과입니다.");
+          router.push(`/${debateId}`);
         });
 
         socketRef.current.on("peerJoin", () => {
@@ -179,6 +182,7 @@ export const useWebSocket = ({
     timeRef,
     videoRef,
     reConnect,
+    router,
   ]); // dependency에 reConnect 필요
 
   useEffect(() => {
