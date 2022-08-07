@@ -1,0 +1,60 @@
+@import "../../../styles/variable.scss";
+
+.btn_box {
+  margin-top: 0.5rem;
+  @include center;
+  gap: 0.5rem;
+  min-width: 22rem;
+}
+
+.box {
+  @include center {
+    flex-direction: column;
+  }
+  gap: 1rem;
+  font-size: 1rem;
+  min-width: 5.5rem;
+}
+
+.btn {
+  @include center;
+  border-radius: 50%;
+  padding: 0.5rem;
+  cursor: pointer;
+  &_pros {
+    border: 1px solid $c-pros;
+    background-color: $c-pros;
+    color: $c-white;
+    &:hover {
+      background-color: $c-white;
+      color: $c-pros;
+    }
+  }
+  &_cons {
+    border: 1px solid $c-cons;
+    background-color: $c-cons;
+    color: $c-white;
+    &:hover {
+      background-color: $c-white;
+      color: $c-cons;
+    }
+  }
+  &_disabled {
+    cursor: default;
+    border: 1px solid darken($c-gray-dark, 30%);
+    background-color: darken($c-gray-dark, 30%);
+    color: $c-white;
+  }
+}
+
+.name {
+  color: darken($c-gray-dark, 30%);
+}
+
+@include mobile {
+  .box {
+    gap: 0.5rem;
+    font-size: 0.7rem;
+    min-width: 3.5rem;
+  }
+}
