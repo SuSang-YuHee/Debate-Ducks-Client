@@ -1,17 +1,17 @@
 import { MutableRefObject, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
+import { useRouter } from "next/router";
 import Peer from "simple-peer";
 
 import { useWebSocket } from "../../../utils/debates/debateroom/webSocket";
 import { useAutoOff } from "../../../utils/debates/debateroom/useAutoOff";
 import { useSetRecorder } from "../../../utils/debates/debateroom/useSetRecorder";
+import { usePreventBack } from "../../../utils/debates/debateroom/usePreventBack";
 
 import Canvas from "./Canvas";
 import Buttons from "./Buttons";
 
 import { IDummy, TTurn } from "../../../types";
-import usePreventBack from "../../../utils/debates/debateroom/usePreventBack";
-import { useRouter } from "next/router";
 
 interface IRoomProps {
   debateId: string | string[] | undefined;
@@ -19,7 +19,7 @@ interface IRoomProps {
   isPros: boolean;
 }
 
-export default function DebateRoom({ debateId, socket, isPros }: IRoomProps) {
+export default function Debateroom({ debateId, socket, isPros }: IRoomProps) {
   const router = useRouter();
   //* WebRTC 변수
   const peerRef = useRef<Peer.Instance | undefined>();

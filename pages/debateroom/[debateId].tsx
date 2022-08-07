@@ -2,9 +2,9 @@ import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 
-import DebateRoom from "../../components/debates/debateroom";
+import Debateroom from "../../components/debates/debateroom";
 
-export default function Debateroom() {
+export default function DebateroomPage() {
   const router = useRouter();
   const { debateId, isPros } = router.query; //! 임시 (isPros)
   const socketRef = useRef<Socket>();
@@ -14,7 +14,7 @@ export default function Debateroom() {
   }, []);
 
   return (
-    <DebateRoom
+    <Debateroom
       debateId={debateId}
       socket={socketRef}
       isPros={isPros === "true" ? true : false}

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export default function usePreventBack() {
+export const usePreventBack = () => {
   useEffect(() => {
     const preventGoBack = () => {
       history.pushState(null, "", location.href);
@@ -12,4 +12,4 @@ export default function usePreventBack() {
 
     return () => window.removeEventListener("popstate", preventGoBack);
   }, []);
-}
+};
