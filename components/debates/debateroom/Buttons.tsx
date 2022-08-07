@@ -90,7 +90,7 @@ export default function Buttons({
       {isStart ? (
         <button
           onClick={() => {
-            wsTransmitSkip({ debateId, socketRef, isPros, timeRef });
+            wsTransmitSkip({ debateId, socketRef, isPros, turn, timeRef });
           }}
         >
           Skip Turn
@@ -112,8 +112,6 @@ export default function Buttons({
   //*- utils
   function checkAudioDisable() {
     if (turn === "notice") return true;
-    if (isPros && turn === "cons") return true;
-    if (!isPros && turn === "pros") return true;
     return false;
   }
 

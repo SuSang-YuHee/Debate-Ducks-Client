@@ -257,12 +257,25 @@ export const wsTransmitSkip = ({
   debateId,
   socketRef,
   isPros,
+  turn,
   timeRef,
-}: Pick<IDebateroom, "debateId" | "socketRef" | "isPros" | "timeRef">) => {
-  socketRef.current.emit("skip", { debateId, isPros }); //!
-  if (timeRef.current < 60 && timeRef.current > 1) {
-    socketRef.current.emit("skip", { debateId, isPros });
+}: Pick<
+  IDebateroom,
+  "debateId" | "socketRef" | "isPros" | "turn" | "timeRef"
+>) => {
+  const checkTurn = () => {
+    if (isPros && (turn === "pros" || turn === "prosCross")) return true;
+    if (!isPros && (turn === "cons" || turn === "consCross")) return true;
+    return false;
+  };
+  if (checkTurn()) {
+    socketRef.current.emit("skip", { debateId, isPros }); //!
+    if (timeRef.current < 60 && timeRef.current > 1) {
+      socketRef.current.emit("skip", { debateId, isPros });
+    } else {
+      toast.error("스킵은 1분 미만일 때만 할 수 있습니다.");
+    }
   } else {
-    toast.error("스킵은 1분 미만일 때만 할 수 있습니다.");
+    toast.error("스킵은 자신의 차례일 때만 할 수 있습니다.");
   }
 };
