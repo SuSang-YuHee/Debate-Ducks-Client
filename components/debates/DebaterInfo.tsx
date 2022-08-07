@@ -15,8 +15,6 @@ export default function DebaterInfo({
 }) {
   const debate = useGetDebate(debateId);
 
-  console.log(debate.data?.author?.profile_image);
-
   return isAuthorPros ? (
     <div className={styles.box}>
       <div

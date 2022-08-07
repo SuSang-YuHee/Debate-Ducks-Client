@@ -50,7 +50,6 @@ export default function Comments({ debateId }: { debateId: number }) {
 
   const handleCreate = () => {
     const comment = removeSpace(commentCreateInput.value);
-    console.log(comment);
     if (!user.data) {
       setIsCheckModalOn(true);
     } else if (comment.length < 1 || comment.length > 500) {
