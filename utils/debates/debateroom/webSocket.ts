@@ -77,6 +77,9 @@ export const useWebSocket = ({
         audio: { echoCancellation: true, noiseSuppression: true },
       })
       .then((stream) => {
+        streamRef.current?.getTracks().forEach((track) => {
+          track.stop();
+        });
         streamRef.current = stream;
         if (videoRef.current) videoRef.current.srcObject = stream;
         socketRef.current.emit("join", { debateId });
