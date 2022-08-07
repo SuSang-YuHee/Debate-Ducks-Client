@@ -1,8 +1,12 @@
-import { screenShare } from "./utils/screenShare";
-import { toggleMic, toggleReady, toggleVideo } from "./utils/toggle";
-import { wsTransmitSkip } from "./utils/webSocket";
+import { screenShare } from "../../../utils/debates/debateroom/screenShare";
+import {
+  toggleMic,
+  toggleReady,
+  toggleVideo,
+} from "../../../utils/debates/debateroom/toggle";
+import { wsTransmitSkip } from "../../../utils/debates/debateroom/webSocket";
 
-import { IDebateroom } from "./types";
+import { IDebateroom } from "../../../types";
 
 export default function Buttons({
   debateId,

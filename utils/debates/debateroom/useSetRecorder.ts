@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import { upload } from "./upload";
 
-import { IDebateroom } from "../types";
+import { IDebateroom } from "../../../types";
 
 export const useSetRecorder = ({
   socket,

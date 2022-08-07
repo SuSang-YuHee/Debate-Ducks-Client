@@ -1,6 +1,6 @@
-import { COLORS } from "../../../../utils/common/constant";
+import { COLORS } from "../../common/constant";
 
-import { IDebateroom, IDebateData } from "../types";
+import { IDebateroom, IDebateData } from "../../../types";
 
 export const drawContents = ({
   isPros,

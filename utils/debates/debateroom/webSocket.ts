@@ -7,7 +7,7 @@ import { beep } from "./beep";
 import { offScreenShare } from "./screenShare";
 import { connectHostPeer, connectGuestPeer } from "./simple-peer";
 
-import { IDebateroom, IDebateData, TTurn } from "../types";
+import { IDebateroom, IDebateData, TTurn } from "../../../types";
 
 export const useWebSocket = ({
   debateId,

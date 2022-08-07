@@ -1,6 +1,6 @@
 import Peer from "simple-peer";
 
-import { IDebateroom } from "../types";
+import { IDebateroom } from "../../../types";
 
 export const connectHostPeer = ({
   debateId,

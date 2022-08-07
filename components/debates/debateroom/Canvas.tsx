@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 
-import { drawContents } from "./utils/draw";
-import { useSetInterval } from "./utils/useSetInterval";
+import { drawContents } from "../../../utils/debates/debateroom/draw";
+import { useSetInterval } from "../../../utils/debates/debateroom/useSetInterval";
 
-import { IDebateroom } from "./types";
+import { IDebateroom } from "../../../types";
 
 export default function Canvas({
   isPros,

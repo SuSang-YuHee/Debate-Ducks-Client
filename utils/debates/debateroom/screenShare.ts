@@ -1,4 +1,4 @@
-import { IDebateroom } from "../types";
+import { IDebateroom } from "../../../types";
 
 export const screenShare = async ({
   peerRef,

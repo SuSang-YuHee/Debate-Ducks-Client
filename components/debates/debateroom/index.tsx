@@ -2,14 +2,16 @@ import { MutableRefObject, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
-import { useWebSocket } from "./utils/webSocket";
-import { useAutoOff } from "./utils/useAutoOff";
-import { useSetRecorder } from "./utils/useSetRecorder";
+import { useWebSocket } from "../../../utils/debates/debateroom/webSocket";
+import { useAutoOff } from "../../../utils/debates/debateroom/useAutoOff";
+import { useSetRecorder } from "../../../utils/debates/debateroom/useSetRecorder";
 
 import Canvas from "./Canvas";
 import Buttons from "./Buttons";
 
-import { IDummy, TTurn } from "./types";
+import { IDummy, TTurn } from "../../../types";
+import usePreventBack from "../../../utils/debates/debateroom/usePreventBack";
+import { useRouter } from "next/router";
 
 interface IRoomProps {
   debateId: string | string[] | undefined;
@@ -18,6 +20,7 @@ interface IRoomProps {
 }
 
 export default function DebateRoom({ debateId, socket, isPros }: IRoomProps) {
+  const router = useRouter();
   //* WebRTC 변수
   const peerRef = useRef<Peer.Instance | undefined>();
   const isHostRef = useRef<boolean>(false);
@@ -54,6 +57,8 @@ export default function DebateRoom({ debateId, socket, isPros }: IRoomProps) {
     consName: "반대중",
   });
   const testARef = useRef<HTMLAnchorElement | null>(null);
+
+  usePreventBack();
 
   useWebSocket({
     debateId,
@@ -115,9 +120,15 @@ export default function DebateRoom({ debateId, socket, isPros }: IRoomProps) {
     blobRef,
   });
 
+  function handleExit() {
+    socket.current?.disconnect();
+    router.push(`/${debateId}`);
+  }
+
   return (
     <div>
       <h1>Room</h1>
+      <div onClick={handleExit}>나가기</div>
       <video
         ref={videoRef}
         muted

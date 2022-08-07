@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { toggleMic } from "./toggle";
 import { offScreenShare } from "./screenShare";
 
-import { IDebateroom } from "../types";
+import { IDebateroom } from "../../../types";
 
 export const useAutoOff = ({
   isPros,
