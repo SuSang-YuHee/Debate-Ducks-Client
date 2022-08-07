@@ -120,7 +120,7 @@ export default function Debate({ debateId }: { debateId: number }) {
           >
             참여하기
           </div>
-        ) : debate.data?.video_url &&
+        ) : !debate.data?.video_url &&
           debate.data?.participant &&
           user.data &&
           (debate.data?.author?.id === user.data?.id ||
