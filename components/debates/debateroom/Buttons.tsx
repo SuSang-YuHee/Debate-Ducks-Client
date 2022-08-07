@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useRouter } from "next/router";
 import {
   IoMic,
@@ -18,6 +19,8 @@ import {
 import { wsTransmitSkip } from "../../../utils/debates/debateroom/webSocket";
 import { offScreenShare } from "../../../utils/debates/debateroom/screenShare";
 import styles from "./Buttons.module.scss";
+
+import ConfirmModal from "../../common/modal/ConfirmModal";
 
 import { IDebateroom } from "../../../types";
 
@@ -66,137 +69,152 @@ export default function Buttons({
   | "recorderRef"
 >) {
   const router = useRouter();
+  const [isExitModalOn, setIsExitModalOn] = useState<boolean>(false);
 
   return (
-    <div className={styles.btn_box}>
-      {checkAudioDisable() ? (
-        <div className={styles.box}>
-          <div className={`${styles.btn} ${styles.btn_disabled}`}>
-            <IoMicOff />
+    <>
+      {isExitModalOn ? (
+        <ConfirmModal
+          title={"나가기"}
+          content={"토론방을 나가시겠습니까?"}
+          firstBtn={"머무르기"}
+          firstFunc={() => {
+            setIsExitModalOn(false);
+          }}
+          secondBtn={"나가기"}
+          secondFunc={handleExit}
+        />
+      ) : null}
+      <div className={styles.btn_box}>
+        {checkAudioDisable() ? (
+          <div className={styles.box}>
+            <div className={`${styles.btn} ${styles.btn_disabled}`}>
+              <IoMicOff />
+            </div>
+            <div className={styles.name}>음소거 해제</div>
           </div>
-          <div className={styles.name}>음소거 해제</div>
-        </div>
-      ) : (
+        ) : (
+          <div
+            onClick={() =>
+              toggleMic({ streamRef, isMicOn: !isMicOn, setIsMicOn })
+            }
+          >
+            {isMicOn ? (
+              <div className={styles.box}>
+                <div className={`${styles.btn} ${styles.btn_pros}`}>
+                  <IoMic />
+                </div>
+                <div className={styles.name}>음소거</div>
+              </div>
+            ) : (
+              <div className={styles.box}>
+                <div className={`${styles.btn} ${styles.btn_cons}`}>
+                  <IoMicOff />
+                </div>
+                <div className={styles.name}>음소거 해제</div>
+              </div>
+            )}
+          </div>
+        )}
         <div
           onClick={() =>
-            toggleMic({ streamRef, isMicOn: !isMicOn, setIsMicOn })
+            toggleVideo({ streamRef, isVideoOn: !isVideoOn, setIsVideoOn })
           }
         >
-          {isMicOn ? (
+          {isVideoOn ? (
             <div className={styles.box}>
               <div className={`${styles.btn} ${styles.btn_pros}`}>
-                <IoMic />
+                <IoVideocam />
               </div>
-              <div className={styles.name}>음소거</div>
+              <div className={styles.name}>비디오 중지</div>
             </div>
           ) : (
             <div className={styles.box}>
               <div className={`${styles.btn} ${styles.btn_cons}`}>
-                <IoMicOff />
+                <IoVideocamOff />
               </div>
-              <div className={styles.name}>음소거 해제</div>
+              <div className={styles.name}>비디오 시작</div>
             </div>
           )}
         </div>
-      )}
-      <div
-        onClick={() =>
-          toggleVideo({ streamRef, isVideoOn: !isVideoOn, setIsVideoOn })
-        }
-      >
-        {isVideoOn ? (
+        {checkScreenShareDisable() ? (
           <div className={styles.box}>
-            <div className={`${styles.btn} ${styles.btn_pros}`}>
-              <IoVideocam />
+            <div className={`${styles.btn} ${styles.btn_disabled}`}>
+              <MdOutlineScreenShare />
             </div>
-            <div className={styles.name}>비디오 중지</div>
+            <div className={styles.name}>화면공유</div>
           </div>
         ) : (
           <div className={styles.box}>
-            <div className={`${styles.btn} ${styles.btn_cons}`}>
-              <IoVideocamOff />
+            <div
+              className={`${styles.btn} ${styles.btn_pros}`}
+              onClick={() =>
+                screenShare({
+                  peerRef,
+                  streamRef,
+                  videoRef,
+                  screenStreamRef,
+                  setIsScreenOn,
+                })
+              }
+            >
+              <MdOutlineScreenShare />
             </div>
-            <div className={styles.name}>비디오 시작</div>
+            <div className={styles.name}>화면공유</div>
+          </div>
+        )}
+        {isStart ? (
+          <div className={styles.box}>
+            <div
+              className={`${styles.btn} ${styles.btn_pros}`}
+              onClick={() => {
+                wsTransmitSkip({ debateId, socketRef, isPros, turn, timeRef });
+              }}
+            >
+              <MdDoubleArrow />
+            </div>
+            <div className={styles.name}>넘기기</div>
+          </div>
+        ) : peerStream ? (
+          <div
+            onClick={() => {
+              toggleReady({ isReady: !isReady, setIsReady });
+            }}
+          >
+            {isReady ? (
+              <div className={styles.box}>
+                <div className={`${styles.btn} ${styles.btn_pros}`}>
+                  <MdStop />
+                </div>
+                <div className={styles.name}>준비 취소</div>
+              </div>
+            ) : (
+              <div className={styles.box}>
+                <div className={`${styles.btn} ${styles.btn_cons}`}>
+                  <IoPlay />
+                </div>
+                <div className={styles.name}>준비</div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className={styles.box}>
+            <div className={`${styles.btn} ${styles.btn_disabled}`}>
+              <IoPlay />
+            </div>
+            <div className={styles.name}>준비</div>
+          </div>
+        )}
+        {isStart ? null : (
+          <div className={styles.box} onClick={() => setIsExitModalOn(true)}>
+            <div className={`${styles.btn} ${styles.btn_pros}`}>
+              <TbArrowBarRight />
+            </div>
+            <div className={styles.name}>나가기</div>
           </div>
         )}
       </div>
-      {checkScreenShareDisable() ? (
-        <div className={styles.box}>
-          <div className={`${styles.btn} ${styles.btn_disabled}`}>
-            <MdOutlineScreenShare />
-          </div>
-          <div className={styles.name}>화면공유</div>
-        </div>
-      ) : (
-        <div className={styles.box}>
-          <div
-            className={`${styles.btn} ${styles.btn_pros}`}
-            onClick={() =>
-              screenShare({
-                peerRef,
-                streamRef,
-                videoRef,
-                screenStreamRef,
-                setIsScreenOn,
-              })
-            }
-          >
-            <MdOutlineScreenShare />
-          </div>
-          <div className={styles.name}>화면공유</div>
-        </div>
-      )}
-      {isStart ? (
-        <div className={styles.box}>
-          <div
-            className={`${styles.btn} ${styles.btn_pros}`}
-            onClick={() => {
-              wsTransmitSkip({ debateId, socketRef, isPros, turn, timeRef });
-            }}
-          >
-            <MdDoubleArrow />
-          </div>
-          <div className={styles.name}>넘기기</div>
-        </div>
-      ) : peerStream ? (
-        <div
-          onClick={() => {
-            toggleReady({ isReady: !isReady, setIsReady });
-          }}
-        >
-          {isReady ? (
-            <div className={styles.box}>
-              <div className={`${styles.btn} ${styles.btn_pros}`}>
-                <MdStop />
-              </div>
-              <div className={styles.name}>준비 취소</div>
-            </div>
-          ) : (
-            <div className={styles.box}>
-              <div className={`${styles.btn} ${styles.btn_cons}`}>
-                <IoPlay />
-              </div>
-              <div className={styles.name}>준비</div>
-            </div>
-          )}
-        </div>
-      ) : (
-        <div className={styles.box}>
-          <div className={`${styles.btn} ${styles.btn_disabled}`}>
-            <IoPlay />
-          </div>
-          <div className={styles.name}>준비</div>
-        </div>
-      )}
-      {isStart ? null : (
-        <div className={styles.box} onClick={handleExit}>
-          <div className={`${styles.btn} ${styles.btn_pros}`}>
-            <TbArrowBarRight />
-          </div>
-          <div className={styles.name}>나가기</div>
-        </div>
-      )}
-    </div>
+    </>
   );
 
   //*- utils
