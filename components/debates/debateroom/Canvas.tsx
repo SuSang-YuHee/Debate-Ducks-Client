@@ -58,15 +58,5 @@ export default function Canvas({
     isPeerScreenOn,
   ]);
 
-  return (
-    <div>
-      <h1>Canvas</h1>
-      <canvas
-        ref={canvasRef}
-        width="1280px"
-        height="720px"
-        style={{ border: "2px solid red", width: "100vw" }} //! 임시
-      ></canvas>
-    </div>
-  );
+  return <canvas ref={canvasRef} width="1280px" height="720px"></canvas>;
 }

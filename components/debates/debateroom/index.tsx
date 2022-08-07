@@ -1,12 +1,11 @@
 import { useRef, useState } from "react";
-import { useRouter } from "next/router";
+
 import Peer from "simple-peer";
 
 import { useWebSocket } from "../../../utils/debates/debateroom/webSocket";
 import { useAutoOff } from "../../../utils/debates/debateroom/useAutoOff";
 import { useSetRecorder } from "../../../utils/debates/debateroom/useSetRecorder";
 import { usePreventBack } from "../../../utils/debates/debateroom/usePreventBack";
-import { offScreenShare } from "../../../utils/debates/debateroom/screenShare";
 
 import Canvas from "./Canvas";
 import Buttons from "./Buttons";
@@ -19,7 +18,6 @@ export default function Debateroom({
   debate,
   isPros,
 }: Pick<IDebateroom, "debateId" | "socketRef" | "debate" | "isPros">) {
-  const router = useRouter();
   //* WebRTC 변수
   const peerRef = useRef<Peer.Instance | undefined>();
   //* 캔버스 변수
@@ -108,30 +106,8 @@ export default function Debateroom({
     blobRef,
   });
 
-  function handleExit() {
-    if (recorderRef.current?.state === "recording") {
-      recorderRef.current?.stop();
-    }
-    offScreenShare({
-      peerRef,
-      streamRef,
-      videoRef,
-      screenStreamRef,
-      setIsScreenOn,
-    });
-    streamRef.current?.getTracks().forEach((track) => {
-      track.stop();
-    });
-    peerRef.current?.destroy();
-    peerRef.current = undefined;
-    socketRef.current.disconnect();
-    router.push(`/${debateId}`);
-  }
-
   return (
-    <div>
-      <h1>Room</h1>
-      <div onClick={handleExit}>나가기</div>
+    <div className="inner">
       <video
         ref={videoRef}
         muted
@@ -181,6 +157,7 @@ export default function Debateroom({
         isStart={isStart}
         turn={turn}
         timeRef={timeRef}
+        recorderRef={recorderRef}
       />
       <a ref={testARef} download={debate.title} />
       <button

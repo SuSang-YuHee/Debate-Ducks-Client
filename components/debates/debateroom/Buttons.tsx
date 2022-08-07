@@ -1,3 +1,5 @@
+import { useRouter } from "next/router";
+
 import { screenShare } from "../../../utils/debates/debateroom/screenShare";
 import {
   toggleMic,
@@ -5,6 +7,7 @@ import {
   toggleVideo,
 } from "../../../utils/debates/debateroom/toggle";
 import { wsTransmitSkip } from "../../../utils/debates/debateroom/webSocket";
+import { offScreenShare } from "../../../utils/debates/debateroom/screenShare";
 
 import { IDebateroom } from "../../../types";
 
@@ -28,6 +31,7 @@ export default function Buttons({
   isStart,
   turn,
   timeRef,
+  recorderRef,
 }: Pick<
   IDebateroom,
   | "debateId"
@@ -49,7 +53,10 @@ export default function Buttons({
   | "isStart"
   | "turn"
   | "timeRef"
+  | "recorderRef"
 >) {
+  const router = useRouter();
+
   return (
     <div>
       {checkAudioDisable() ? (
@@ -106,6 +113,7 @@ export default function Buttons({
       ) : (
         "사용못함"
       )}
+      <div onClick={handleExit}>나가기</div>
     </div>
   );
 
@@ -123,5 +131,25 @@ export default function Buttons({
     if (isPros && turn === "cons") return true;
     if (!isPros && turn === "pros") return true;
     return false;
+  }
+
+  function handleExit() {
+    if (recorderRef.current?.state === "recording") {
+      recorderRef.current?.stop();
+    }
+    offScreenShare({
+      peerRef,
+      streamRef,
+      videoRef,
+      screenStreamRef,
+      setIsScreenOn,
+    });
+    streamRef.current?.getTracks().forEach((track) => {
+      track.stop();
+    });
+    peerRef.current?.destroy();
+    peerRef.current = undefined;
+    socketRef.current.disconnect();
+    router.push(`/${debateId}`);
   }
 }
