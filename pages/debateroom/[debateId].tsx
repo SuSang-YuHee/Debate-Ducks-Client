@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 
-import DebateRoom from "../../../components/debates/debateroom";
+import DebateRoom from "../../components/debates/debateroom";
 
 export default function Debateroom() {
   const router = useRouter();

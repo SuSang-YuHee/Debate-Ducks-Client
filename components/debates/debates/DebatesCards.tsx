@@ -80,7 +80,7 @@ export default function DebatesCards({
           className={styles.btn_edit}
           onClick={() => {
             if (user.data) {
-              router.push("/debates/create");
+              router.push("/create");
             } else {
               setIsModalOn(true);
             }

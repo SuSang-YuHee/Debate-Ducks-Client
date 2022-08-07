@@ -22,7 +22,7 @@ export default function DebateCard({
   return (
     <div
       className={styles.card}
-      onClick={() => router.push(`/debates/${debate.data?.id}`)}
+      onClick={() => router.push(`/${debate.data?.id}`)}
     >
       <div className={styles.category}>
         <div className={`${styles.status} ${styles.status_category}`}>
