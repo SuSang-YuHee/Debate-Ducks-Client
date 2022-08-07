@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useState } from "react";
 import Image from "next/image";
 
@@ -10,6 +11,7 @@ import {
 } from "../../../utils/queries/hearts";
 import { CATEGORIES } from "../../../utils/common/constant";
 import { DMYHM } from "../../../utils/common/formatStrDate";
+import { thousandDigit } from "../../../utils/common/thousandDigit";
 import styles from "./index.module.scss";
 
 import CheckSignInModal from "../../common/modal/CheckSignInModal";
@@ -17,10 +19,10 @@ import HomeAndTopBtn from "../../common/btn/HomeAndTopBtn";
 import DebaterInfo from "../DebaterInfo";
 import AfterDebate from "./AfterDebate";
 import EditAndDelete from "./EditAndDelete";
-import { thousandDigit } from "../../../utils/common/thousandDigit";
 import Comments from "./Comments";
 
 export default function Debate({ debateId }: { debateId: number }) {
+  const router = useRouter();
   const [isCheckModalOn, setIsCheckModalOn] = useState<boolean>(false);
 
   const user = useGetUser();
@@ -112,8 +114,22 @@ export default function Debate({ debateId }: { debateId: number }) {
         {!debate.data?.video_url &&
         !debate.data?.participant &&
         debate.data?.author?.id !== user.data?.id ? (
-          <div className={styles.participant} onClick={handleParticipant}>
-            참여 하기
+          <div
+            className={styles.participantOrEnterBtn}
+            onClick={handleParticipant}
+          >
+            참여하기
+          </div>
+        ) : debate.data?.video_url &&
+          debate.data?.participant &&
+          user.data &&
+          (debate.data?.author?.id === user.data?.id ||
+            debate.data?.participant?.id) ? (
+          <div
+            className={styles.participantOrEnterBtn}
+            onClick={() => router.push(`/debateroom/${debateId}`)}
+          >
+            입장하기
           </div>
         ) : null}
         <div
