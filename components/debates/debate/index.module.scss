@@ -33,10 +33,11 @@ $m: 5rem;
   &_date {
     color: $c-white;
     position: absolute;
-    bottom: 100%;
+    word-break: nowrap;
+    bottom: 99%;
     left: 100%;
     transform: translateX(-110%) translateY(150%);
-    width: fit-content;
+    width: max-content;
     font-weight: 700;
   }
 }

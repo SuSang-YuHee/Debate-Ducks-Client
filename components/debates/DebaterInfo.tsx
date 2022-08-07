@@ -15,13 +15,15 @@ export default function DebaterInfo({
 }) {
   const debate = useGetDebate(debateId);
 
+  console.log(debate.data?.author?.profile_image);
+
   return isAuthorPros ? (
     <div className={styles.box}>
       <Image
         className={styles.image}
         src={
           debate.data?.author?.profile_image
-            ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${debate.data?.author.profile_image}.jpg`
+            ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${debate.data?.author.profile_image}`
             : "/images/profiles/default-gray.png"
         }
         alt={debate.data?.author?.nickname || "기본 이미지"}
@@ -29,6 +31,7 @@ export default function DebaterInfo({
         height={`${size}`}
         objectFit="cover"
         objectPosition="center"
+        unoptimized={true}
       />
       <div
         className={`${styles.nickname} ${
@@ -46,7 +49,7 @@ export default function DebaterInfo({
         className={styles.image}
         src={
           debate.data?.participant?.profile_image
-            ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${debate.data?.participant.profile_image}.jpg`
+            ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${debate.data?.participant.profile_image}`
             : "/images/profiles/default-gray.png"
         }
         alt={debate.data?.participant?.nickname || "기본 이미지"}
@@ -54,6 +57,7 @@ export default function DebaterInfo({
         height={`${size}`}
         objectFit="cover"
         objectPosition="center"
+        unoptimized={true}
       />
       <div
         className={`${styles.nickname} ${
