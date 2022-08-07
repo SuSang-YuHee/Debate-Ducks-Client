@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useGetUser } from "../utils/queries/users";
 import { useInput } from "../utils/common/useInputSelect";
 
+import HomeAndTopBtn from "../components/common/btn/HomeAndTopBtn";
 import Filters from "../components/debates/debates/Filters";
 import LikeBtn from "../components/debates/debates/LikeBtn";
 import DebatesHeartList from "../components/debates/debates/DebatesHeartList";
@@ -31,6 +32,7 @@ const Home: NextPage = () => {
 
   return (
     <div className="inner">
+      <HomeAndTopBtn isHomeBtnOn={false} />
       <Filters
         statuses={statuses}
         setStatuses={setStatuses}

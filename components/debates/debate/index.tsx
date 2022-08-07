@@ -13,6 +13,7 @@ import { DMYHM } from "../../../utils/common/formatStrDate";
 import styles from "./index.module.scss";
 
 import CheckSignInModal from "../../common/modal/CheckSignInModal";
+import HomeAndTopBtn from "../../common/btn/HomeAndTopBtn";
 import DebaterInfo from "../DebaterInfo";
 import AfterDebate from "./AfterDebate";
 import EditAndDelete from "./EditAndDelete";
@@ -69,6 +70,7 @@ export default function Debate({ debateId }: { debateId: number }) {
         isModalOn={isCheckModalOn}
         setIsModalOn={setIsCheckModalOn}
       />
+      <HomeAndTopBtn isHomeBtnOn={true} />
       <div className={styles.outer}>
         <div className={styles.title}>
           <div className={styles.title_bg}>
