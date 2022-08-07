@@ -10,10 +10,10 @@ import { IDebateroom } from "../../../types";
 
 export default function Buttons({
   debateId,
-  socket,
+  socketRef,
   isPros,
   peerRef,
-  stream,
+  streamRef,
   videoRef,
   screenStreamRef,
   isMicOn,
@@ -30,10 +30,10 @@ export default function Buttons({
 }: Pick<
   IDebateroom,
   | "debateId"
-  | "socket"
+  | "socketRef"
   | "isPros"
   | "peerRef"
-  | "stream"
+  | "streamRef"
   | "videoRef"
   | "screenStreamRef"
   | "isMicOn"
@@ -54,14 +54,16 @@ export default function Buttons({
         "AudioOff"
       ) : (
         <button
-          onClick={() => toggleMic({ stream, isMicOn: !isMicOn, setIsMicOn })}
+          onClick={() =>
+            toggleMic({ streamRef, isMicOn: !isMicOn, setIsMicOn })
+          }
         >
           {isMicOn ? "AudioOn" : "AudioOff"}
         </button>
       )}
       <button
         onClick={() =>
-          toggleVideo({ stream, isVideoOn: !isVideoOn, setIsVideoOn })
+          toggleVideo({ streamRef, isVideoOn: !isVideoOn, setIsVideoOn })
         }
       >
         {isVideoOn ? "VideoOn" : "VideoOff"}
@@ -73,7 +75,7 @@ export default function Buttons({
           onClick={() =>
             screenShare({
               peerRef,
-              stream,
+              streamRef,
               videoRef,
               screenStreamRef,
               setIsScreenOn,
@@ -86,7 +88,7 @@ export default function Buttons({
       {isStart ? (
         <button
           onClick={() => {
-            wsTransmitSkip({ debateId, socket, isPros, timeRef });
+            wsTransmitSkip({ debateId, socketRef, isPros, timeRef });
           }}
         >
           Skip Turn

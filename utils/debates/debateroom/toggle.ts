@@ -1,22 +1,22 @@
 import { IDebateroom } from "../../../types";
 
 export const toggleMic = ({
-  stream,
+  streamRef,
   isMicOn,
   setIsMicOn,
-}: Pick<IDebateroom, "stream" | "isMicOn" | "setIsMicOn">) => {
-  if (!stream) return;
-  stream.getAudioTracks()[0].enabled = isMicOn;
+}: Pick<IDebateroom, "streamRef" | "isMicOn" | "setIsMicOn">) => {
+  if (!streamRef.current) return;
+  streamRef.current.getAudioTracks()[0].enabled = isMicOn;
   setIsMicOn(isMicOn);
 };
 
 export const toggleVideo = ({
-  stream,
+  streamRef,
   isVideoOn,
   setIsVideoOn,
-}: Pick<IDebateroom, "stream" | "isVideoOn" | "setIsVideoOn">) => {
-  if (!stream) return;
-  stream.getVideoTracks()[0].enabled = isVideoOn;
+}: Pick<IDebateroom, "streamRef" | "isVideoOn" | "setIsVideoOn">) => {
+  if (!streamRef.current) return;
+  streamRef.current.getVideoTracks()[0].enabled = isVideoOn;
   setIsVideoOn(isVideoOn);
 };
 

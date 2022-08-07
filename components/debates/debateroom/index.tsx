@@ -1,5 +1,4 @@
-import { MutableRefObject, useRef, useState } from "react";
-import { Socket } from "socket.io-client";
+import { useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Peer from "simple-peer";
 
@@ -11,23 +10,21 @@ import { usePreventBack } from "../../../utils/debates/debateroom/usePreventBack
 import Canvas from "./Canvas";
 import Buttons from "./Buttons";
 
-import { IDummy, TTurn } from "../../../types";
+import { IDebateroom, TTurn } from "../../../types";
 
-interface IRoomProps {
-  debateId: string | string[] | undefined;
-  socket: MutableRefObject<Socket | undefined>;
-  isPros: boolean;
-}
-
-export default function Debateroom({ debateId, socket, isPros }: IRoomProps) {
+export default function Debateroom({
+  debateId,
+  socketRef,
+  debate,
+  isPros,
+}: Pick<IDebateroom, "debateId" | "socketRef" | "debate" | "isPros">) {
   const router = useRouter();
   //* WebRTC 변수
   const peerRef = useRef<Peer.Instance | undefined>();
-  const isHostRef = useRef<boolean>(false);
   //* 캔버스 변수
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   //* 스트림 변수
-  const [stream, setStream] = useState<MediaStream | undefined>();
+  const streamRef = useRef<MediaStream | undefined>();
   const [peerStream, setPeerStream] = useState<MediaStream | undefined>();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const peerVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -51,24 +48,18 @@ export default function Debateroom({ debateId, socket, isPros }: IRoomProps) {
   const blobRef = useRef<Blob | undefined>();
 
   //! 임시
-  const [dummy] = useState<IDummy>({
-    topic: "Is Alien Exist?",
-    prosName: "이찬성",
-    consName: "반대중",
-  });
   const testARef = useRef<HTMLAnchorElement | null>(null);
 
   usePreventBack();
 
   useWebSocket({
     debateId,
-    socket,
+    socketRef,
+    debate,
     isPros,
     peerRef,
-    isHostRef,
     canvasRef,
-    stream,
-    setStream,
+    streamRef,
     peerStream,
     setPeerStream,
     videoRef,
@@ -87,15 +78,12 @@ export default function Debateroom({ debateId, socket, isPros }: IRoomProps) {
     timeRef,
     mergedAudioRef,
     recorderRef,
-    blobsRef,
-    dummy,
   });
 
   useAutoOff({
     isPros,
     peerRef,
-    stream,
-    peerStream,
+    streamRef,
     videoRef,
     screenStreamRef,
     setIsMicOn,
@@ -106,11 +94,10 @@ export default function Debateroom({ debateId, socket, isPros }: IRoomProps) {
   });
 
   useSetRecorder({
-    socket,
+    socketRef,
     debateId,
-    isHostRef,
     canvasRef,
-    stream,
+    streamRef,
     peerStream,
     isStart,
     isDoneRef,
@@ -121,7 +108,7 @@ export default function Debateroom({ debateId, socket, isPros }: IRoomProps) {
   });
 
   function handleExit() {
-    socket.current?.disconnect();
+    socketRef.current.disconnect();
     router.push(`/${debateId}`);
   }
 
@@ -147,23 +134,23 @@ export default function Debateroom({ debateId, socket, isPros }: IRoomProps) {
         style={{ position: "sticky", top: 0 }}
       ></video>
       <Canvas
+        debate={debate}
         isPros={isPros}
-        peerRef={peerRef}
         canvasRef={canvasRef}
+        peerStream={peerStream}
         videoRef={videoRef}
         peerVideoRef={peerVideoRef}
         isVideoOn={isVideoOn}
         isPeerVideoOn={isPeerVideoOn}
         isScreenOn={isScreenOn}
         isPeerScreenOn={isPeerScreenOn}
-        dummy={dummy}
       />
       <Buttons
         debateId={debateId}
-        socket={socket}
+        socketRef={socketRef}
         isPros={isPros}
         peerRef={peerRef}
-        stream={stream}
+        streamRef={streamRef}
         videoRef={videoRef}
         screenStreamRef={screenStreamRef}
         isMicOn={isMicOn}
@@ -178,7 +165,7 @@ export default function Debateroom({ debateId, socket, isPros }: IRoomProps) {
         turn={turn}
         timeRef={timeRef}
       />
-      <a ref={testARef} download={dummy.topic} />
+      <a ref={testARef} download={debate.title} />
       <button
         onClick={() => {
           if (!blobRef.current) return;

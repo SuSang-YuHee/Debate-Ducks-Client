@@ -1,20 +1,21 @@
+import toast from "react-hot-toast";
 import Peer from "simple-peer";
 
 import { IDebateroom } from "../../../types";
 
 export const connectHostPeer = ({
   debateId,
-  socket,
+  socketRef,
   peerRef,
-  stream,
+  streamRef,
   setPeerStream,
   peerVideoRef,
 }: Pick<
   IDebateroom,
   | "debateId"
-  | "socket"
+  | "socketRef"
   | "peerRef"
-  | "stream"
+  | "streamRef"
   | "setPeerStream"
   | "peerVideoRef"
 >) => {
@@ -31,13 +32,13 @@ export const connectHostPeer = ({
         { urls: "stun:stun.nextcloud.com:443" },
       ],
     },
-    stream,
+    stream: streamRef.current,
   });
 
   peerRef.current = simplePeer;
 
   simplePeer.on("signal", (signal) => {
-    socket.current?.emit("offer", { debateId, signal });
+    socketRef.current.emit("offer", { debateId, signal });
   });
 
   simplePeer.on("stream", (stream) => {
@@ -48,10 +49,10 @@ export const connectHostPeer = ({
   });
 
   simplePeer.on("error", (err) => {
-    console.log(err);
+    toast.error(err.message);
   });
 
-  socket.current?.on("answer", (signal: Peer.SignalData) => {
+  socketRef.current.on("answer", (signal: Peer.SignalData) => {
     simplePeer.signal(signal);
   });
 };
@@ -59,17 +60,17 @@ export const connectHostPeer = ({
 export const connectGuestPeer = (
   {
     debateId,
-    socket,
+    socketRef,
     peerRef,
-    stream,
+    streamRef,
     setPeerStream,
     peerVideoRef,
   }: Pick<
     IDebateroom,
     | "debateId"
-    | "socket"
+    | "socketRef"
     | "peerRef"
-    | "stream"
+    | "streamRef"
     | "setPeerStream"
     | "peerVideoRef"
   >,
@@ -78,13 +79,13 @@ export const connectGuestPeer = (
   const simplePeer = new Peer({
     initiator: false,
     trickle: false,
-    stream,
+    stream: streamRef.current,
   });
 
   peerRef.current = simplePeer;
 
   simplePeer.on("signal", (signal) => {
-    socket.current?.emit("answer", { debateId, signal });
+    socketRef.current.emit("answer", { debateId, signal });
   });
 
   simplePeer.on("stream", (stream) => {
@@ -95,7 +96,7 @@ export const connectGuestPeer = (
   });
 
   simplePeer.on("error", (err) => {
-    console.log(err);
+    toast.error(err.message);
   });
 
   simplePeer.signal(signal);

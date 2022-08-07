@@ -8,8 +8,7 @@ import { IDebateroom } from "../../../types";
 export const useAutoOff = ({
   isPros,
   peerRef,
-  stream,
-  peerStream,
+  streamRef,
   videoRef,
   screenStreamRef,
   setIsMicOn,
@@ -21,8 +20,7 @@ export const useAutoOff = ({
   IDebateroom,
   | "isPros"
   | "peerRef"
-  | "stream"
-  | "peerStream"
+  | "streamRef"
   | "videoRef"
   | "screenStreamRef"
   | "setIsMicOn"
@@ -35,7 +33,7 @@ export const useAutoOff = ({
   useEffect(() => {
     offScreenShare({
       peerRef,
-      stream,
+      streamRef,
       videoRef,
       screenStreamRef,
       setIsScreenOn,
@@ -45,27 +43,27 @@ export const useAutoOff = ({
 
     if (isPros) {
       if (turn === "pros" || turn === "prosCross") {
-        toggleMic({ stream, isMicOn: true, setIsMicOn });
+        toggleMic({ streamRef, isMicOn: true, setIsMicOn });
       } else {
-        toggleMic({ stream, isMicOn: false, setIsMicOn });
+        toggleMic({ streamRef, isMicOn: false, setIsMicOn });
       }
     } else {
       if (turn === "cons" || turn === "consCross") {
-        toggleMic({ stream, isMicOn: true, setIsMicOn });
+        toggleMic({ streamRef, isMicOn: true, setIsMicOn });
       } else {
-        toggleMic({ stream, isMicOn: false, setIsMicOn });
+        toggleMic({ streamRef, isMicOn: false, setIsMicOn });
       }
     }
   }, [
     isPros,
-    isReady,
     peerRef,
     screenStreamRef,
     setIsMicOn,
     setIsScreenOn,
-    stream,
+    streamRef,
     turn,
     videoRef,
+    isReady,
   ]); // dependency에 isReady 필요
 
   //*- 상대 화면 공유 및 재연결 시 화면 공유 끄기
@@ -73,7 +71,7 @@ export const useAutoOff = ({
     if (!isPeerScreenOn) return;
     offScreenShare({
       peerRef,
-      stream,
+      streamRef,
       videoRef,
       screenStreamRef,
       setIsScreenOn,
@@ -81,10 +79,9 @@ export const useAutoOff = ({
   }, [
     isPeerScreenOn,
     peerRef,
-    peerStream,
     screenStreamRef,
     setIsScreenOn,
-    stream,
+    streamRef,
     videoRef,
   ]); // dependency에 peerStream 필요
 };

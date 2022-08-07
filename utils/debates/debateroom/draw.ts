@@ -3,28 +3,28 @@ import { COLORS } from "../../common/constant";
 import { IDebateroom, IDebateData } from "../../../types";
 
 export const drawContents = ({
+  debate,
   isPros,
   canvasRef,
-  peerRef,
+  peerStream,
   videoRef,
   peerVideoRef,
   isVideoOn,
   isPeerVideoOn,
   isScreenOn,
   isPeerScreenOn,
-  dummy,
 }: Pick<
   IDebateroom,
+  | "debate"
   | "isPros"
   | "canvasRef"
-  | "peerRef"
+  | "peerStream"
   | "videoRef"
   | "peerVideoRef"
   | "isVideoOn"
   | "isPeerVideoOn"
   | "isScreenOn"
   | "isPeerScreenOn"
-  | "dummy"
 >) => {
   drawSquare({ canvasRef }, COLORS.white, 0, 80, 1280, 640);
 
@@ -58,7 +58,11 @@ export const drawContents = ({
       { canvasRef },
       COLORS.pros,
       "bold 32px san-serif",
-      `${dummy.prosName}`,
+      `${
+        debate.author_pros
+          ? debate.author?.nickname
+          : debate.participant?.nickname
+      }`,
       300,
       680,
     );
@@ -66,7 +70,7 @@ export const drawContents = ({
       { canvasRef },
       COLORS.white,
       "bold 32px san-serif",
-      peerRef.current ? "Camera Off" : isPros ? "Camera Off" : "Not connected",
+      peerStream ? "Camera Off" : isPros ? "Camera Off" : "Not connected",
       300,
       380,
     );
@@ -77,7 +81,11 @@ export const drawContents = ({
       { canvasRef },
       COLORS.cons,
       "bold 32px san-serif",
-      `${dummy.consName}`,
+      `${
+        !debate.author_pros
+          ? debate.author?.nickname
+          : debate.participant?.nickname
+      }`,
       980,
       680,
     );
@@ -85,7 +93,7 @@ export const drawContents = ({
       { canvasRef },
       COLORS.white,
       "bold 32px san-serif",
-      peerRef.current ? "Camera Off" : !isPros ? "Camera Off" : "Not connected",
+      peerStream ? "Camera Off" : !isPros ? "Camera Off" : "Not connected",
       980,
       380,
     );

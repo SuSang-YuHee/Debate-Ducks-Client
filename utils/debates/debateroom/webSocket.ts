@@ -8,16 +8,16 @@ import { offScreenShare } from "./screenShare";
 import { connectHostPeer, connectGuestPeer } from "./simple-peer";
 
 import { IDebateroom, IDebateData, TTurn } from "../../../types";
+import toast from "react-hot-toast";
 
 export const useWebSocket = ({
   debateId,
-  socket,
+  socketRef,
+  debate,
   isPros,
   peerRef,
-  isHostRef,
   canvasRef,
-  stream,
-  setStream,
+  streamRef,
   peerStream,
   setPeerStream,
   videoRef,
@@ -36,18 +36,15 @@ export const useWebSocket = ({
   timeRef,
   mergedAudioRef,
   recorderRef,
-  blobsRef,
-  dummy,
 }: Pick<
   IDebateroom,
   | "debateId"
-  | "socket"
+  | "socketRef"
+  | "debate"
   | "isPros"
   | "peerRef"
-  | "isHostRef"
   | "canvasRef"
-  | "stream"
-  | "setStream"
+  | "streamRef"
   | "peerStream"
   | "setPeerStream"
   | "videoRef"
@@ -66,15 +63,11 @@ export const useWebSocket = ({
   | "timeRef"
   | "mergedAudioRef"
   | "recorderRef"
-  | "blobsRef"
-  | "dummy"
 >) => {
-  const [reconnect, setReconnect] = useState<boolean>(false);
+  const [reConnect, setReConnect] = useState<boolean>(false);
 
   //*- 연결
   useEffect(() => {
-    if (!debateId) return;
-
     //* 미디어 획득 및 연결
     navigator.mediaDevices
       .getUserMedia({
@@ -82,34 +75,32 @@ export const useWebSocket = ({
         audio: { echoCancellation: true, noiseSuppression: true },
       })
       .then((stream) => {
-        setStream(stream);
+        streamRef.current = stream;
         if (videoRef.current) videoRef.current.srcObject = stream;
-        socket.current?.emit("join", { debateId });
+        socketRef.current.emit("join", { debateId });
 
-        socket.current?.on("overcapacity", () => {
-          //Todo: 입장 초과 모달
-          console.log("overcapacity");
+        socketRef.current.on("overcapacity", () => {
+          toast.error("정원 초과입니다.");
         });
 
-        socket.current?.on("peerJoin", () => {
+        socketRef.current.on("peerJoin", () => {
           connectHostPeer({
             debateId,
-            socket,
+            socketRef,
             peerRef,
-            stream,
+            streamRef,
             setPeerStream,
             peerVideoRef,
           });
-          isHostRef.current = true;
         });
 
-        socket.current?.on("offer", (signal: Peer.SignalData) => {
+        socketRef.current.on("offer", (signal: Peer.SignalData) => {
           connectGuestPeer(
             {
               debateId,
-              socket,
+              socketRef,
               peerRef,
-              stream,
+              streamRef,
               setPeerStream,
               peerVideoRef,
             },
@@ -119,15 +110,15 @@ export const useWebSocket = ({
       });
 
     //* 정보 수신
-    socket.current?.on("peerVideo", (isPeerVideoOn: boolean) => {
+    socketRef.current.on("peerVideo", (isPeerVideoOn: boolean) => {
       setIsPeerVideoOn(isPeerVideoOn);
     });
 
-    socket.current?.on("peerScreen", (isPeerScreenOn: boolean) => {
+    socketRef.current.on("peerScreen", (isPeerScreenOn: boolean) => {
       setIsPeerScreenOn(isPeerScreenOn);
     });
 
-    socket.current?.on("debateStart", () => {
+    socketRef.current.on("debateStart", () => {
       setIsStart(true);
     });
 
@@ -135,15 +126,15 @@ export const useWebSocket = ({
     drawNotice(
       { canvasRef, turn: "none" },
       {
-        notice: dummy.topic,
+        notice: debate.title,
         turn: 7,
         time: 0,
       },
-      dummy.topic,
+      debate.title,
     );
 
     //* 토론 및 공지
-    socket.current?.on("debate", (debateData: IDebateData) => {
+    socketRef.current.on("debate", (debateData: IDebateData) => {
       let turn: TTurn = "notice";
       if (debateData.turn === 7 && debateData.time < 0) {
         isDoneRef.current = true;
@@ -157,46 +148,48 @@ export const useWebSocket = ({
         if (debateData.turn === 2) turn = "consCross";
         setTurn(turn);
         timeRef.current = debateData.time;
-        drawNotice({ canvasRef, turn }, debateData, dummy.topic);
+        drawNotice({ canvasRef, turn }, debateData, debate.title);
         if (debateData.time === 10 || debateData.time === 1) beep();
       }
     });
 
-    socket.current?.on("debateDone", () => {
+    socketRef.current.on("debateDone", () => {
       //Todo: 토론 종료 모달
       console.log("토론 종료 모달");
     });
   }, [
     canvasRef,
+    debate.title,
     debateId,
-    dummy.topic,
     isDoneRef,
-    isHostRef,
+    mergedAudioRef,
     peerRef,
     peerVideoRef,
-    reconnect,
     recorderRef,
+    screenStreamRef,
     setIsPeerScreenOn,
     setIsPeerVideoOn,
+    setIsReady,
+    setIsScreenOn,
     setIsStart,
     setPeerStream,
-    setStream,
     setTurn,
-    socket,
+    socketRef,
+    streamRef,
     timeRef,
     videoRef,
-  ]); // dependency에 reconnect 필요
+    reConnect,
+  ]); // dependency에 reConnect 필요
 
-  //*- 연결 해제
   useEffect(() => {
-    socket.current?.on("peerDisconnect", () => {
+    socketRef.current.on("peerDisconnect", () => {
       if (recorderRef.current?.state === "recording") {
         recorderRef.current?.stop();
       }
 
       offScreenShare({
         peerRef,
-        stream,
+        streamRef,
         videoRef,
         screenStreamRef,
         setIsScreenOn,
@@ -216,13 +209,11 @@ export const useWebSocket = ({
       peerRef.current?.destroy();
       peerRef.current = undefined;
 
-      socket.current?.disconnect();
-      socket.current = io(`${process.env.NEXT_PUBLIC_API_URL}`);
-
-      setReconnect((state) => !state);
+      socketRef.current.disconnect();
+      socketRef.current = io(`${process.env.NEXT_PUBLIC_API_URL}`);
+      setReConnect((state) => !state);
     });
   }, [
-    blobsRef,
     mergedAudioRef,
     peerRef,
     peerVideoRef,
@@ -235,36 +226,36 @@ export const useWebSocket = ({
     setIsStart,
     setPeerStream,
     setTurn,
-    socket,
-    stream,
+    socketRef,
+    streamRef,
     timeRef,
     videoRef,
   ]);
 
   //*- 정보 송신
   useEffect(() => {
-    socket.current?.emit("peerVideo", { debateId, isVideoOn });
-  }, [debateId, isVideoOn, peerStream, socket]); // dependency에 peerStream 필요
+    socketRef.current.emit("peerVideo", { debateId, isVideoOn });
+  }, [debateId, isVideoOn, peerStream, socketRef]); // dependency에 peerStream 필요
 
   useEffect(() => {
-    socket.current?.emit("peerScreen", { debateId, isScreenOn });
-  }, [debateId, isScreenOn, socket]);
+    socketRef.current.emit("peerScreen", { debateId, isScreenOn });
+  }, [debateId, isScreenOn, socketRef]);
 
   useEffect(() => {
-    socket.current?.emit("ready", { debateId, isReady, isPros });
-  }, [debateId, isReady, socket, isPros]);
+    socketRef.current.emit("ready", { debateId, isReady, isPros });
+  }, [debateId, isReady, socketRef, isPros]);
 };
 
 export const wsTransmitSkip = ({
   debateId,
-  socket,
+  socketRef,
   isPros,
   timeRef,
-}: Pick<IDebateroom, "debateId" | "socket" | "isPros" | "timeRef">) => {
-  socket.current?.emit("skip", { debateId, isPros }); //!
+}: Pick<IDebateroom, "debateId" | "socketRef" | "isPros" | "timeRef">) => {
+  socketRef.current.emit("skip", { debateId, isPros }); //!
   if (timeRef.current < 60 && timeRef.current > 1) {
-    socket.current?.emit("skip", { debateId, isPros });
+    socketRef.current.emit("skip", { debateId, isPros });
   } else {
-    //Todo: 스킵 안내 모달
+    toast.error("스킵은 1분 미만일 때만 할 수 있습니다.");
   }
 };

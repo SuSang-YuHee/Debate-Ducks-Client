@@ -4,17 +4,17 @@ import Peer from "simple-peer";
 
 //*> debateroom
 export interface IDebateroom {
-  debateId: string | string[] | undefined;
-  socket: MutableRefObject<Socket | undefined>;
-  isPros: boolean; //! 임시
+  //* Props 타입
+  debateId: string;
+  socketRef: MutableRefObject<Socket>;
+  debate: Debate;
+  isPros: boolean;
   //* WebRTC 타입
   peerRef: MutableRefObject<Peer.Instance | undefined>;
-  isHostRef: MutableRefObject<boolean>;
   //* 캔버스 타입
   canvasRef: MutableRefObject<HTMLCanvasElement | null>;
   //* 스트림 타입
-  stream: MediaStream | undefined;
-  setStream: Dispatch<SetStateAction<MediaStream | undefined>>;
+  streamRef: MutableRefObject<MediaStream | undefined>;
   peerStream: MediaStream | undefined;
   setPeerStream: Dispatch<SetStateAction<MediaStream | undefined>>;
   videoRef: MutableRefObject<HTMLVideoElement | null>;
@@ -47,7 +47,6 @@ export interface IDebateroom {
   blobRef: MutableRefObject<Blob | undefined>;
 
   //! 임시
-  dummy: IDummy;
   testARef: MutableRefObject<HTMLAnchorElement | null>;
 }
 
