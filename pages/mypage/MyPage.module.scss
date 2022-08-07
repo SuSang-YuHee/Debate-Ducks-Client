@@ -12,11 +12,13 @@
       display: flex;
       justify-content: space-around;
       align-items: center;
-      // background-color: #ccc;
       .profile_container {
-        text-align: center;
-        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         .image_wrapper {
+          position: relative;
           border-radius: 50%;
           border: 5px solid $c-pros;
           display: flex;
@@ -27,72 +29,142 @@
             vertical-align: bottom;
             object-fit: cover;
           }
-        }
-        .form {
-          .file_btn {
-            position: absolute;
-            left: 50%;
-            bottom: -1.2rem;
-            padding: 10px 15px;
-            border-radius: 900px;
-            transform: translateX(-50%);
-            cursor: pointer;
-            background-color: $c-pros;
-            font-size: 1.2rem;
-            display: flex;
-            color: #fff;
-            justify-content: center;
-            align-items: center;
-            span {
-              font-size: 1rem;
-              font-weight: 600;
-              margin-left: 5px;
+          .form {
+            .file_btn {
+              position: absolute;
+              left: 50%;
+              bottom: -1.2rem;
+              padding: 10px 15px;
+              border-radius: 900px;
+              transform: translateX(-50%);
+              cursor: pointer;
+              background-color: $c-pros;
+              font-size: 1.2rem;
+              display: flex;
+              color: #fff;
+              justify-content: center;
+              align-items: center;
+              span {
+                font-size: 1rem;
+                font-weight: 600;
+                margin-left: 5px;
+              }
             }
-          }
-          input[type="file"] {
-            display: none;
+            input[type="file"] {
+              display: none;
+            }
           }
         }
         .save_btn {
           border: none;
           border-radius: 999px;
-          background-color: $c-pros;
-          padding: 10px 50px;
-          // position: fixed;
-          // bottom: 3rem;
-          // left: 50%;
-          transform: translateX(-50%);
+          background-color: transparent;
+          padding: 10px 15px;
+          margin-top: 20px;
           cursor: pointer;
-          color: #fff;
-          font-size: 1.1rem;
-          font-weight: 600;
+          color: $c-pros;
+          font-size: 1.2rem;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          transition: background-color, color, 0.2s ease-in-out;
+          &:hover {
+            background-color: $c-pros;
+            color: #fff;
+          }
+          span {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-left: 5px;
+          }
         }
       }
       .info_container {
+        text-align: left;
         .name_wrapper {
           display: flex;
-          align-items: center;
           .name {
-            border: none;
-            padding: 10px;
-            font-size: 1.1rem;
-            font-weight: 100;
-            background-color: transparent;
-            margin-bottom: 10px;
-          }
-          .name:focus {
-            border: 1px solid $c-pros;
-            outline: none;
-          }
-          .name::placeholder {
-            color: $c-pros;
-          }
-          .icon_wrapper {
-            color: $c-pros;
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+            .validation {
+              position: absolute;
+              top: -3rem;
+              font-size: 0.8rem;
+              color: $c-cons;
+            }
+            .nickname {
+              color: $c-pros;
+              font-size: 1.1rem;
+            }
+            .edit {
+              display: flex;
+              border: none;
+              color: $c-pros;
+              font-size: 1.2rem;
+              padding: 5px 10px;
+              cursor: pointer;
+              background-color: transparent;
+              margin-left: 20px;
+              span {
+                margin-left: 5px;
+                font-size: 1rem;
+              }
+            }
+            .input {
+              outline: none;
+              border: none;
+              border-bottom: 1px solid $c-pros;
+              padding: 10px;
+              background-color: transparent;
+              color: $c-pros;
+              font-size: 1.1rem;
+            }
+            .input::placeholder {
+              color: $c-pros;
+            }
+            .save {
+              border: none;
+              color: $c-pros;
+              background-color: transparent;
+              font-size: 1.2rem;
+              cursor: pointer;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+            .cancel {
+              border: none;
+              color: $c-cons;
+              background-color: transparent;
+              font-size: 1.2rem;
+              cursor: pointer;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
           }
         }
         .email {
-          margin-left: 10px;
+          margin-bottom: 50px;
+        }
+        .password {
+          font-size: 0.8rem;
+          color: $c-cons;
+          cursor: pointer;
+          margin-bottom: 10px;
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+        .unsubscribe {
+          font-size: 0.8rem;
+          color: $c-cons;
+          cursor: pointer;
+          &:hover {
+            text-decoration: underline;
+          }
         }
       }
     }
