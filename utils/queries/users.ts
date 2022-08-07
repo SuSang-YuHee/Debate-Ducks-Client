@@ -41,6 +41,7 @@ export const usePatchUserImage = (
   return useMutation(() => patchUserImage(userId, formData), {
     onSuccess: () => {
       queryClient.invalidateQueries([queryStr.users]);
+      toast.success("프로필 이미지가 수정되었습니다!");
     },
     onError: (err: AxiosError<{ message: string }>) => {
       toast.error(
@@ -55,6 +56,7 @@ export const usePatchUserNickname = (userId: string, nickname: string) => {
   return useMutation(() => patchUserNickname(userId, nickname), {
     onSuccess: () => {
       queryClient.invalidateQueries([queryStr.users]);
+      toast.success("이름이 변경되었습니다!");
     },
     onError: (err: AxiosError<{ message: string }>) => {
       toast.error(
