@@ -2,6 +2,7 @@ import { useEffect } from "react";
 
 import { drawContents } from "../../../utils/debates/debateroom/draw";
 import { useSetInterval } from "../../../utils/debates/debateroom/useSetInterval";
+import styles from "./Canvas.module.scss";
 
 import { IDebateroom } from "../../../types";
 
@@ -58,5 +59,12 @@ export default function Canvas({
     isPeerScreenOn,
   ]);
 
-  return <canvas ref={canvasRef} width="1280px" height="720px"></canvas>;
+  return (
+    <canvas
+      className={styles.canvas}
+      ref={canvasRef}
+      width="1280px"
+      height="720px"
+    ></canvas>
+  );
 }

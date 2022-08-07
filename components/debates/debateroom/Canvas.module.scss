@@ -1,0 +1,8 @@
+@import "../../../styles/variable.scss";
+
+.canvas {
+  width: 100%;
+  border: 1px solid $c-gray-dark;
+  border-top: 0;
+  min-width: 22rem;
+}
