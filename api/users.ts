@@ -50,12 +50,26 @@ export const patchUserImage = async (
   return data;
 };
 
-export const patchUser = async (id: string) => {
+export const patchUserNickname = async (id: string, nickname: string) => {
   const { data } = await axios.patch(
-    `${process.env.NEXT_PUBLIC_API_URL}/users/${id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/users/${id}/nickname`,
+    { nickname },
     {
       withCredentials: true,
     },
+  );
+  return data;
+};
+
+export const patchUserPassword = async (
+  id: string,
+  prevPassword: string,
+  nextPassword: string,
+) => {
+  const { data } = await axios.patch(
+    `${process.env.NEXT_PUBLIC_API_URL}/users/${id}/password`,
+    { prevPassword, nextPassword },
+    { withCredentials: true },
   );
   return data;
 };
