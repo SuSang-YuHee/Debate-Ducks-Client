@@ -91,7 +91,9 @@ export default function Debate({ debateId }: { debateId: number }) {
               : DMYHM(debate.data?.created_date || "")}
           </div>
         </div>
-        {user.data && user.data.id === debate.data?.author?.id ? (
+        {user.data &&
+        user.data.id === debate.data?.author?.id &&
+        !debate.data.participant ? (
           <EditAndDelete debateId={debateId} />
         ) : null}
         <div className={styles.debaterInfo}>
