@@ -108,6 +108,18 @@ export default function Debateroom({
 
   return (
     <div className="inner">
+      <Canvas
+        debate={debate}
+        isPros={isPros}
+        canvasRef={canvasRef}
+        peerStream={peerStream}
+        videoRef={videoRef}
+        peerVideoRef={peerVideoRef}
+        isVideoOn={isVideoOn}
+        isPeerVideoOn={isPeerVideoOn}
+        isScreenOn={isScreenOn}
+        isPeerScreenOn={isPeerScreenOn}
+      />
       <video
         ref={videoRef}
         muted
@@ -125,18 +137,6 @@ export default function Debateroom({
         height={0}
         style={{ position: "sticky", top: 0 }}
       ></video>
-      <Canvas
-        debate={debate}
-        isPros={isPros}
-        canvasRef={canvasRef}
-        peerStream={peerStream}
-        videoRef={videoRef}
-        peerVideoRef={peerVideoRef}
-        isVideoOn={isVideoOn}
-        isPeerVideoOn={isPeerVideoOn}
-        isScreenOn={isScreenOn}
-        isPeerScreenOn={isPeerScreenOn}
-      />
       <Buttons
         debateId={debateId}
         socketRef={socketRef}
@@ -159,6 +159,7 @@ export default function Debateroom({
         timeRef={timeRef}
         recorderRef={recorderRef}
       />
+
       <a ref={testARef} download={debate.title} />
       <button
         onClick={() => {
