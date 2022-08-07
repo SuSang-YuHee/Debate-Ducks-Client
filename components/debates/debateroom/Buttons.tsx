@@ -14,6 +14,7 @@ export default function Buttons({
   isPros,
   peerRef,
   streamRef,
+  peerStream,
   videoRef,
   screenStreamRef,
   isMicOn,
@@ -34,6 +35,7 @@ export default function Buttons({
   | "isPros"
   | "peerRef"
   | "streamRef"
+  | "peerStream"
   | "videoRef"
   | "screenStreamRef"
   | "isMicOn"
@@ -93,7 +95,7 @@ export default function Buttons({
         >
           Skip Turn
         </button>
-      ) : (
+      ) : peerStream ? (
         <button
           onClick={() => {
             toggleReady({ isReady: !isReady, setIsReady });
@@ -101,6 +103,8 @@ export default function Buttons({
         >
           {isReady ? "Cancel" : "Ready"}
         </button>
+      ) : (
+        "사용못함"
       )}
     </div>
   );
@@ -114,6 +118,7 @@ export default function Buttons({
   }
 
   function checkScreenShareDisable() {
+    if (!peerStream) return true;
     if (isScreenOn) return true;
     if (!isStart && isReady) return true;
     if (turn === "notice") return true;

@@ -151,6 +151,7 @@ export default function Debateroom({
         isPros={isPros}
         peerRef={peerRef}
         streamRef={streamRef}
+        peerStream={peerStream}
         videoRef={videoRef}
         screenStreamRef={screenStreamRef}
         isMicOn={isMicOn}
