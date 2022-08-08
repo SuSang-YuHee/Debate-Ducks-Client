@@ -248,7 +248,6 @@ export default function Buttons({
       track.stop();
     });
     peerRef.current?.destroy();
-    peerRef.current = undefined;
     socketRef.current.disconnect();
     router.push(`/${debateId}`);
   }
