@@ -15,6 +15,9 @@
   &:focus {
     outline: none;
   }
+  &::placeholder {
+    color: $c-pros;
+  }
   @content;
 }
 
@@ -31,7 +34,7 @@
   z-index: -1;
   .container {
     background-color: #fff;
-    padding: 3rem;
+    padding: 2rem;
     border: 1px solid #ececec;
     border-radius: 1.2rem;
     box-shadow: 0px 0px 15px #ececec;
@@ -79,6 +82,12 @@
       padding: 10px 0;
       color: #fff;
       cursor: pointer;
+      &.invalid {
+        color: #ccc;
+        background-color: #eee;
+        border: 1px solid #ccc;
+        cursor: not-allowed;
+      }
     }
     .signup {
       text-align: center;
