@@ -16,6 +16,8 @@ export const useWebSocket = ({
   socketRef,
   debate,
   isPros,
+  setIsDoneModalOn,
+  setIsUploadModalOn,
   peerRef,
   canvasRef,
   streamRef,
@@ -43,6 +45,8 @@ export const useWebSocket = ({
   | "socketRef"
   | "debate"
   | "isPros"
+  | "setIsDoneModalOn"
+  | "setIsUploadModalOn"
   | "peerRef"
   | "canvasRef"
   | "streamRef"
@@ -85,10 +89,12 @@ export const useWebSocket = ({
         socketRef.current.emit("join", { debateId });
 
         socketRef.current.on("overcapacity", () => {
+          toast.error("정원 초과입니다.");
           streamRef.current?.getTracks().forEach((track) => {
             track.stop();
           });
-          toast.error("정원 초과입니다.");
+          peerRef.current?.destroy();
+          socketRef.current.disconnect();
           router.push(`/${debateId}`);
         });
 
@@ -162,24 +168,30 @@ export const useWebSocket = ({
       }
     });
 
-    socketRef.current.on("debateDone", () => {
-      //Todo: 토론 종료 모달
-      console.log("토론 종료 모달");
+    //* 토론 종료
+    socketRef.current.on("debateDone", (isUploader: boolean) => {
+      if (isUploader) {
+        setIsUploadModalOn(true);
+        setTimeout(() => {
+          setIsUploadModalOn(false);
+          setIsDoneModalOn(true);
+        }, 3000);
+      } else {
+        setIsDoneModalOn(true);
+      }
     });
   }, [
     canvasRef,
     debate.title,
     debateId,
     isDoneRef,
-    mergedAudioRef,
     peerRef,
     peerVideoRef,
     recorderRef,
-    screenStreamRef,
+    router,
+    setIsDoneModalOn,
     setIsPeerScreenOn,
     setIsPeerVideoOn,
-    setIsReady,
-    setIsScreenOn,
     setIsStart,
     setPeerStream,
     setTurn,
@@ -188,9 +200,10 @@ export const useWebSocket = ({
     timeRef,
     videoRef,
     reConnect,
-    router,
+    setIsUploadModalOn,
   ]); // dependency에 reConnect 필요
 
+  //* 연결 해제
   useEffect(() => {
     socketRef.current.on("peerDisconnect", () => {
       if (recorderRef.current?.state === "recording") {
