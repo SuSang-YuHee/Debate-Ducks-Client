@@ -8,6 +8,12 @@ export interface User {
   profile_image?: string | null;
 }
 
+export interface UserInfo {
+  name: string | undefined;
+  email: string | undefined;
+  password: string | undefined;
+}
+
 //*- debates
 export interface Debate {
   id: number;

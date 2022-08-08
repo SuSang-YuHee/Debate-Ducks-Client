@@ -2,18 +2,14 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { BaseSyntheticEvent, useRef, useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { postUser } from "../../api/users";
+import { UserInfo } from "../../types";
 import styles from "./Signup.module.scss";
 
 axios.defaults.withCredentials = true;
 
-interface IUserInfo {
-  name: string | undefined;
-  email: string | undefined;
-  password: string | undefined;
-}
-
 export default function Signup() {
-  const [userInfo, setUserInfo] = useState<IUserInfo>({
+  const [userInfo, setUserInfo] = useState<UserInfo>({
     name: "",
     email: "",
     password: "",
@@ -21,11 +17,16 @@ export default function Signup() {
   const [isValidName, setIsValidName] = useState<boolean>(true);
   const [isValidEmail, setIsValidEmail] = useState<boolean>(true);
   const [isValidPassword, setIsValidPassword] = useState<boolean>(true);
+  const [isValidPasswordCheck, setIsValidPasswordCheck] =
+    useState<boolean>(true);
   const [isPwIncludesName, setIsPwIncludesName] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordCheck, setShowPasswordCheck] = useState(false);
+  const [checkPassword, setCheckPassword] = useState("");
   const nameRef = useRef<HTMLInputElement | null>(null);
   const emailRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
+  const passwordCheckRef = useRef<HTMLInputElement | null>(null);
 
   const router = useRouter();
 
@@ -38,7 +39,7 @@ export default function Signup() {
     const value = e.target.value;
     const valueType = e.target.name;
     if (valueType === "name") {
-      if (value.length >= 3 && value.length <= 30) {
+      if (value.length >= 2 && value.length <= 15) {
         setIsValidName(true);
         setUserInfo({ ...userInfo, [valueType]: value });
       } else {
@@ -69,20 +70,35 @@ export default function Signup() {
         setIsPwIncludesName(false);
         setUserInfo({ ...userInfo, [valueType]: "" });
       }
+      if (value === checkPassword) {
+        setIsValidPasswordCheck(true);
+      } else {
+        setIsValidPasswordCheck(false);
+      }
+    } else if (valueType === "checkPassword") {
+      if (value === userInfo.password) {
+        setIsValidPasswordCheck(true);
+      } else {
+        setIsValidPasswordCheck(false);
+      }
+      setCheckPassword(value);
     }
   }
+
   function handleSignup() {
-    console.log(userInfo);
-    axios.post("http://localhost:80/users", userInfo).then((res) => {
-      if (res.statusText === "Created") {
-        router.push("/");
-      }
+    postUser(userInfo, () => {
+      router.push("/");
     });
   }
 
   function togglePassword() {
     setShowPassword(!showPassword);
   }
+
+  function togglePasswordCheck() {
+    setShowPasswordCheck(!showPasswordCheck);
+  }
+
   return (
     <div className={styles.outer}>
       <div className={styles.container}>
@@ -100,7 +116,7 @@ export default function Signup() {
             />
             {isValidName ? null : (
               <div className={styles.vm}>
-                이름은 3글자 이상 30자 이하입니다.
+                이름은 2글자 이상 15자 이하입니다.
               </div>
             )}
           </div>
@@ -162,7 +178,46 @@ export default function Signup() {
               </div>
             ) : null}
           </div>
-          {userInfo.name && userInfo.email && userInfo.password ? (
+          <div className={styles.input}>
+            <label htmlFor="checkPassword">비밀번호 확인</label>
+            {showPasswordCheck ? (
+              <div className={styles.wrapper}>
+                <input
+                  id="checkPassword"
+                  name="checkPassword"
+                  type="text"
+                  placeholder="비밀번호를 재입력하세요"
+                  onChange={handleChange}
+                  ref={passwordCheckRef}
+                />
+                <span onClick={togglePasswordCheck} className={styles.show}>
+                  {showPasswordCheck ? <FiEyeOff /> : <FiEye />}
+                </span>
+              </div>
+            ) : (
+              <div className={styles.wrapper}>
+                <input
+                  id="checkPassword"
+                  name="checkPassword"
+                  type="password"
+                  placeholder="비밀번호를 재입력하세요"
+                  onChange={handleChange}
+                  ref={passwordCheckRef}
+                />
+                <span onClick={togglePasswordCheck} className={styles.show}>
+                  {showPasswordCheck ? <FiEyeOff /> : <FiEye />}
+                </span>
+              </div>
+            )}
+            {isValidPasswordCheck ? null : (
+              <div className={styles.vm}>비밀번호가 일치하지 않습니다.</div>
+            )}
+          </div>
+          {userInfo.name &&
+          userInfo.email &&
+          userInfo.password &&
+          isValidPasswordCheck &&
+          passwordCheckRef.current?.value.length !== 0 ? (
             <button className={styles.btn} onClick={handleSignup}>
               회원가입
             </button>
