@@ -9,6 +9,10 @@ export interface IDebateroom {
   socketRef: MutableRefObject<Socket>;
   debate: Debate;
   isPros: boolean;
+  //* 모달 타입
+  setIsDoneModalOn: Dispatch<SetStateAction<boolean>>;
+  setIsPauseModalOn: Dispatch<SetStateAction<boolean>>;
+  setIsUploadModalOn: Dispatch<SetStateAction<boolean>>;
   //* WebRTC 타입
   peerRef: MutableRefObject<Peer.Instance | undefined>;
   //* 캔버스 타입
@@ -45,9 +49,7 @@ export interface IDebateroom {
   recorderRef: MutableRefObject<MediaRecorder | undefined>;
   blobsRef: MutableRefObject<Blob[]>;
   blobRef: MutableRefObject<Blob | undefined>;
-
-  //! 임시
-  testARef: MutableRefObject<HTMLAnchorElement | null>;
+  aRef: MutableRefObject<HTMLAnchorElement | null>;
 }
 
 export type TTurn =
