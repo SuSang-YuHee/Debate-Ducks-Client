@@ -85,6 +85,9 @@ export const useWebSocket = ({
         socketRef.current.emit("join", { debateId });
 
         socketRef.current.on("overcapacity", () => {
+          streamRef.current?.getTracks().forEach((track) => {
+            track.stop();
+          });
           toast.error("정원 초과입니다.");
           router.push(`/${debateId}`);
         });
