@@ -1,12 +1,11 @@
 import { useEffect } from "react";
 
-import { upload } from "./upload";
-
 import { IDebateroom } from "../../../types";
 
 export const useSetRecorder = ({
   socketRef,
   debateId,
+  setIsPauseModalOn,
   canvasRef,
   streamRef,
   peerStream,
@@ -20,6 +19,7 @@ export const useSetRecorder = ({
   IDebateroom,
   | "socketRef"
   | "debateId"
+  | "setIsPauseModalOn"
   | "canvasRef"
   | "streamRef"
   | "peerStream"
@@ -36,6 +36,7 @@ export const useSetRecorder = ({
     setRecorder({
       socketRef,
       debateId,
+      setIsPauseModalOn,
       canvasRef,
       isDoneRef,
       mergedAudioRef,
@@ -56,6 +57,7 @@ export const useSetRecorder = ({
     mergedAudioRef,
     peerStream,
     recorderRef,
+    setIsPauseModalOn,
     socketRef,
     streamRef,
   ]);
@@ -93,6 +95,7 @@ function mergeAudio({
 function setRecorder({
   socketRef,
   debateId,
+  setIsPauseModalOn,
   canvasRef,
   isDoneRef,
   mergedAudioRef,
@@ -103,6 +106,7 @@ function setRecorder({
   IDebateroom,
   | "socketRef"
   | "debateId"
+  | "setIsPauseModalOn"
   | "canvasRef"
   | "isDoneRef"
   | "mergedAudioRef"
@@ -135,13 +139,11 @@ function setRecorder({
       type: "video/webm",
     });
     blobRef.current = blob;
-    console.log("녹화 중지", blobRef.current);
 
     if (isDoneRef.current) {
-      upload({ socketRef, debateId, blobRef });
+      socketRef.current.emit("debateDone", { debateId });
     } else {
-      //Todo: 재시작 모달
-      console.log("재시작 모달");
+      setIsPauseModalOn(true);
     }
   };
 }
