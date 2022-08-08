@@ -38,6 +38,8 @@
   color: $c-black;
   margin-bottom: 2.5rem;
   line-height: 130%;
+  word-break: break-all;
+  white-space: pre-line;
 }
 
 .container {

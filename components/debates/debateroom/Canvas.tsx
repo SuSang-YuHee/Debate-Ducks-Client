@@ -1,47 +1,48 @@
 import { useEffect } from "react";
 
-import { drawContents } from "./utils/draw";
-import { useSetInterval } from "./utils/useSetInterval";
+import { drawContents } from "../../../utils/debates/debateroom/draw";
+import { useSetInterval } from "../../../utils/debates/debateroom/useSetInterval";
+import styles from "./Canvas.module.scss";
 
-import { IDebateroom } from "./types";
+import { IDebateroom } from "../../../types";
 
 export default function Canvas({
+  debate,
   isPros,
-  peerRef,
   canvasRef,
+  peerStream,
   videoRef,
   peerVideoRef,
   isVideoOn,
   isPeerVideoOn,
   isScreenOn,
   isPeerScreenOn,
-  dummy,
 }: Pick<
   IDebateroom,
+  | "debate"
   | "isPros"
-  | "peerRef"
   | "canvasRef"
+  | "peerStream"
   | "videoRef"
   | "peerVideoRef"
   | "isVideoOn"
   | "isPeerVideoOn"
   | "isScreenOn"
   | "isPeerScreenOn"
-  | "dummy"
 >) {
   const [drawStart, drawStop] = useSetInterval(
     () =>
       drawContents({
+        debate,
         isPros,
         canvasRef,
-        peerRef,
+        peerStream,
         videoRef,
         peerVideoRef,
         isVideoOn,
         isPeerVideoOn,
         isScreenOn,
         isPeerScreenOn,
-        dummy,
       }),
     1000 / 30,
   );
@@ -59,14 +60,11 @@ export default function Canvas({
   ]);
 
   return (
-    <div>
-      <h1>Canvas</h1>
-      <canvas
-        ref={canvasRef}
-        width="1280px"
-        height="720px"
-        style={{ border: "2px solid red", width: "100vw" }} //! 임시
-      ></canvas>
-    </div>
+    <canvas
+      className={styles.canvas}
+      ref={canvasRef}
+      width="1280px"
+      height="720px"
+    ></canvas>
   );
 }

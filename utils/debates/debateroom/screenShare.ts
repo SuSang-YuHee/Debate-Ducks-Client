@@ -1,14 +1,14 @@
-import { IDebateroom } from "../types";
+import { IDebateroom } from "../../../types";
 
 export const screenShare = async ({
   peerRef,
-  stream,
+  streamRef,
   videoRef,
   screenStreamRef,
   setIsScreenOn,
 }: Pick<
   IDebateroom,
-  "peerRef" | "stream" | "videoRef" | "screenStreamRef" | "setIsScreenOn"
+  "peerRef" | "streamRef" | "videoRef" | "screenStreamRef" | "setIsScreenOn"
 >) => {
   try {
     const screenStream = await navigator.mediaDevices.getDisplayMedia({
@@ -17,12 +17,12 @@ export const screenShare = async ({
     });
 
     //* 화면 공유 켜졌을 때
-    if (!stream || !videoRef.current) return;
+    if (!streamRef.current || !videoRef.current) return;
 
     peerRef.current?.replaceTrack(
-      stream.getVideoTracks()[0],
+      streamRef.current.getVideoTracks()[0],
       screenStream.getVideoTracks()[0],
-      stream,
+      streamRef.current,
     );
 
     videoRef.current.srcObject = screenStream;
@@ -31,15 +31,15 @@ export const screenShare = async ({
 
     //* 화면 공유 꺼졌을 때
     screenStream.getTracks()[0].onended = () => {
-      if (!stream || !videoRef.current) return;
+      if (!streamRef.current || !videoRef.current) return;
 
       peerRef.current?.replaceTrack(
         screenStream.getVideoTracks()[0],
-        stream.getVideoTracks()[0],
-        stream,
+        streamRef.current.getVideoTracks()[0],
+        streamRef.current,
       );
 
-      videoRef.current.srcObject = stream;
+      videoRef.current.srcObject = streamRef.current;
       setIsScreenOn(false);
       screenStreamRef.current = undefined;
     };
@@ -50,24 +50,25 @@ export const screenShare = async ({
 
 export const offScreenShare = ({
   peerRef,
-  stream,
+  streamRef,
   videoRef,
   screenStreamRef,
   setIsScreenOn,
 }: Pick<
   IDebateroom,
-  "peerRef" | "stream" | "videoRef" | "screenStreamRef" | "setIsScreenOn"
+  "peerRef" | "streamRef" | "videoRef" | "screenStreamRef" | "setIsScreenOn"
 >) => {
-  if (!stream || !videoRef.current || !screenStreamRef.current) return;
+  if (!streamRef.current || !videoRef.current || !screenStreamRef.current)
+    return;
 
   peerRef.current?.replaceTrack(
     screenStreamRef.current.getVideoTracks()[0],
-    stream.getVideoTracks()[0],
-    stream,
+    streamRef.current.getVideoTracks()[0],
+    streamRef.current,
   );
 
   screenStreamRef.current.getTracks()[0].stop();
-  videoRef.current.srcObject = stream;
+  videoRef.current.srcObject = streamRef.current;
   setIsScreenOn(false);
   screenStreamRef.current = undefined;
 };

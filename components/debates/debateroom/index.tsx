@@ -1,30 +1,35 @@
-import { MutableRefObject, useRef, useState } from "react";
-import { Socket } from "socket.io-client";
+import { useRef, useState } from "react";
+import { useRouter } from "next/router";
 import Peer from "simple-peer";
 
-import { useWebSocket } from "./utils/webSocket";
-import { useAutoOff } from "./utils/useAutoOff";
-import { useSetRecorder } from "./utils/useSetRecorder";
+import { useWebSocket } from "../../../utils/debates/debateroom/webSocket";
+import { useAutoOff } from "../../../utils/debates/debateroom/useAutoOff";
+import { useSetRecorder } from "../../../utils/debates/debateroom/useSetRecorder";
+import { usePreventBack } from "../../../utils/debates/debateroom/usePreventBack";
 
+import ConfirmModal from "../../common/modal/ConfirmModal";
 import Canvas from "./Canvas";
 import Buttons from "./Buttons";
 
-import { IDummy, TTurn } from "./types";
+import { IDebateroom, TTurn } from "../../../types";
 
-interface IRoomProps {
-  debateId: string | string[] | undefined;
-  socket: MutableRefObject<Socket | undefined>;
-  isPros: boolean;
-}
-
-export default function DebateRoom({ debateId, socket, isPros }: IRoomProps) {
+export default function Debateroom({
+  debateId,
+  socketRef,
+  debate,
+  isPros,
+}: Pick<IDebateroom, "debateId" | "socketRef" | "debate" | "isPros">) {
+  const router = useRouter();
+  //* 모달 변수
+  const [isDoneModalOn, setIsDoneModalOn] = useState<boolean>(false);
+  const [isPauseModalOn, setIsPauseModalOn] = useState<boolean>(false);
+  const [isUploadModalOn, setIsUploadModalOn] = useState<boolean>(false);
   //* WebRTC 변수
   const peerRef = useRef<Peer.Instance | undefined>();
-  const isHostRef = useRef<boolean>(false);
   //* 캔버스 변수
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   //* 스트림 변수
-  const [stream, setStream] = useState<MediaStream | undefined>();
+  const streamRef = useRef<MediaStream | undefined>();
   const [peerStream, setPeerStream] = useState<MediaStream | undefined>();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const peerVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -46,24 +51,20 @@ export default function DebateRoom({ debateId, socket, isPros }: IRoomProps) {
   const recorderRef = useRef<MediaRecorder | undefined>();
   const blobsRef = useRef<Blob[]>([]); //Todo: 재시작 시 비우기
   const blobRef = useRef<Blob | undefined>();
+  const aRef = useRef<HTMLAnchorElement | null>(null);
 
-  //! 임시
-  const [dummy] = useState<IDummy>({
-    topic: "Is Alien Exist?",
-    prosName: "이찬성",
-    consName: "반대중",
-  });
-  const testARef = useRef<HTMLAnchorElement | null>(null);
+  usePreventBack();
 
   useWebSocket({
     debateId,
-    socket,
+    socketRef,
+    debate,
     isPros,
+    setIsDoneModalOn,
+    setIsUploadModalOn,
     peerRef,
-    isHostRef,
     canvasRef,
-    stream,
-    setStream,
+    streamRef,
     peerStream,
     setPeerStream,
     videoRef,
@@ -82,15 +83,12 @@ export default function DebateRoom({ debateId, socket, isPros }: IRoomProps) {
     timeRef,
     mergedAudioRef,
     recorderRef,
-    blobsRef,
-    dummy,
   });
 
   useAutoOff({
     isPros,
     peerRef,
-    stream,
-    peerStream,
+    streamRef,
     videoRef,
     screenStreamRef,
     setIsMicOn,
@@ -101,11 +99,11 @@ export default function DebateRoom({ debateId, socket, isPros }: IRoomProps) {
   });
 
   useSetRecorder({
-    socket,
+    socketRef,
     debateId,
-    isHostRef,
+    setIsPauseModalOn,
     canvasRef,
-    stream,
+    streamRef,
     peerStream,
     isStart,
     isDoneRef,
@@ -116,70 +114,114 @@ export default function DebateRoom({ debateId, socket, isPros }: IRoomProps) {
   });
 
   return (
-    <div>
-      <h1>Room</h1>
-      <video
-        ref={videoRef}
-        muted
-        autoPlay
-        playsInline
-        width={0}
-        height={0}
-        style={{ position: "sticky", top: 0 }}
-      ></video>
-      <video
-        ref={peerVideoRef}
-        autoPlay
-        playsInline
-        width={0}
-        height={0}
-        style={{ position: "sticky", top: 0 }}
-      ></video>
-      <Canvas
-        isPros={isPros}
-        peerRef={peerRef}
-        canvasRef={canvasRef}
-        videoRef={videoRef}
-        peerVideoRef={peerVideoRef}
-        isVideoOn={isVideoOn}
-        isPeerVideoOn={isPeerVideoOn}
-        isScreenOn={isScreenOn}
-        isPeerScreenOn={isPeerScreenOn}
-        dummy={dummy}
-      />
-      <Buttons
-        debateId={debateId}
-        socket={socket}
-        isPros={isPros}
-        peerRef={peerRef}
-        stream={stream}
-        videoRef={videoRef}
-        screenStreamRef={screenStreamRef}
-        isMicOn={isMicOn}
-        setIsMicOn={setIsMicOn}
-        isVideoOn={isVideoOn}
-        setIsVideoOn={setIsVideoOn}
-        isScreenOn={isScreenOn}
-        setIsScreenOn={setIsScreenOn}
-        isReady={isReady}
-        setIsReady={setIsReady}
-        isStart={isStart}
-        turn={turn}
-        timeRef={timeRef}
-      />
-      <a ref={testARef} download={dummy.topic} />
-      <button
-        onClick={() => {
-          if (!blobRef.current) return;
-          const url = window.URL.createObjectURL(blobRef.current);
-          if (!testARef.current) return;
-          testARef.current.href = url;
-          testARef.current?.click();
-          window.URL.revokeObjectURL(url);
-        }}
-      >
-        TempDown
-      </button>
-    </div>
+    <>
+      {isDoneModalOn ? (
+        <ConfirmModal
+          title={"토론 종료"}
+          content={"토론이 종료되었습니다.\n녹화 영상을 다운받으시겠습니까?"}
+          firstBtn={"아니요"}
+          firstFunc={() => {
+            streamRef.current?.getTracks().forEach((track) => {
+              track.stop();
+            });
+            peerRef.current?.destroy();
+            socketRef.current.disconnect();
+            router.push(`/${debateId}`);
+          }}
+          secondBtn={"네"}
+          secondFunc={() => {
+            streamRef.current?.getTracks().forEach((track) => {
+              track.stop();
+            });
+            if (!blobRef.current) return;
+            const url = window.URL.createObjectURL(blobRef.current);
+            if (!aRef.current) return;
+            aRef.current.href = url;
+            aRef.current?.click();
+            window.URL.revokeObjectURL(url);
+            peerRef.current?.destroy();
+            socketRef.current.disconnect();
+            router.push(`/${debateId}`);
+          }}
+        />
+      ) : null}
+      {isPauseModalOn ? (
+        <ConfirmModal
+          title={"토론 중단"}
+          content={
+            "토론이 중단되었습니다. 진행된 부분까지 녹화 영상을 업로드하고 토론을 끝내시겠습니까? 아니면 토론을 처음부터 다시 시작하시겠습니까?"
+          }
+          firstBtn={"다시하기"}
+          firstFunc={() => {
+            setIsPauseModalOn(false);
+          }}
+          secondBtn={"끝내기"}
+          secondFunc={() => {
+            socketRef.current.emit("debateDone", { debateId });
+            setIsPauseModalOn(false);
+          }}
+        />
+      ) : null}
+      {isUploadModalOn ? (
+        <ConfirmModal
+          title={"토론 업로드"}
+          content={"토론이 업로드 중입니다. 잠시만 기다려 주십시오."}
+        />
+      ) : null}
+      <div className="inner">
+        <Canvas
+          debate={debate}
+          isPros={isPros}
+          canvasRef={canvasRef}
+          peerStream={peerStream}
+          videoRef={videoRef}
+          peerVideoRef={peerVideoRef}
+          isVideoOn={isVideoOn}
+          isPeerVideoOn={isPeerVideoOn}
+          isScreenOn={isScreenOn}
+          isPeerScreenOn={isPeerScreenOn}
+        />
+        <video
+          ref={videoRef}
+          muted
+          autoPlay
+          playsInline
+          width={0}
+          height={0}
+          style={{ position: "sticky", top: 0 }}
+        ></video>
+        <video
+          ref={peerVideoRef}
+          autoPlay
+          playsInline
+          width={0}
+          height={0}
+          style={{ position: "sticky", top: 0 }}
+        ></video>
+        <Buttons
+          debateId={debateId}
+          socketRef={socketRef}
+          isPros={isPros}
+          peerRef={peerRef}
+          streamRef={streamRef}
+          peerStream={peerStream}
+          videoRef={videoRef}
+          screenStreamRef={screenStreamRef}
+          isMicOn={isMicOn}
+          setIsMicOn={setIsMicOn}
+          isVideoOn={isVideoOn}
+          setIsVideoOn={setIsVideoOn}
+          isScreenOn={isScreenOn}
+          setIsScreenOn={setIsScreenOn}
+          isReady={isReady}
+          setIsReady={setIsReady}
+          isStart={isStart}
+          turn={turn}
+          timeRef={timeRef}
+          recorderRef={recorderRef}
+        />
+        <a ref={aRef} download={debate.title} />
+      </div>
+    </>
   );
 }
