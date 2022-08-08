@@ -43,7 +43,7 @@ export default function ConfirmModal({
               {secondBtn}
             </div>
           </div>
-        ) : (
+        ) : firstBtn ? (
           <div>
             <div
               className={`${styles.btn} ${styles.btn_pros}`}
@@ -52,7 +52,7 @@ export default function ConfirmModal({
               {firstBtn}
             </div>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );
