@@ -10,13 +10,13 @@ export default function ConfirmModal({
 }: {
   title: string;
   content: string;
-  firstBtn: string;
-  firstFunc: () => void;
+  firstBtn?: string;
+  firstFunc?: () => void;
   secondBtn?: string;
   secondFunc?: () => void;
 }) {
   const handleCancel = () => {
-    firstFunc();
+    if (firstFunc) firstFunc();
   };
 
   const handleConfirm = () => {
