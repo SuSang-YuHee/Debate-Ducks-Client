@@ -84,7 +84,11 @@ export default function Header() {
         ) : null}
         {user.data ? (
           <Image
-            src={`${process.env.NEXT_PUBLIC_API_URL}/uploads/${user.data.profile_image}`}
+            src={
+              user.data?.profile_image !== "temp default image"
+                ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${user.data?.profile_image}`
+                : "/images/profiles/default-green.png"
+            }
             alt="profile_image"
             width="30"
             height="30"
