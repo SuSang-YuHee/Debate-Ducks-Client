@@ -56,20 +56,25 @@ export default function DebatesCards({
   }, [debates, inView]);
 
   const checkEmpty = () => {
-    return (
-      debates.data?.pages
-        .map((page) =>
-          page.list.filter((debate: DebateOfDebates) => {
-            const status = debate.video_url
-              ? STATUSES[2]
-              : debate.participant?.id
-              ? STATUSES[1]
-              : STATUSES[0];
-            return checkFilters(statuses, status, categories, debate.category);
-          }),
-        )
-        .flat().length === 0
-    );
+    return debates.data
+      ? debates.data?.pages
+          .map((page) =>
+            page.list.filter((debate: DebateOfDebates) => {
+              const status = debate.video_url
+                ? STATUSES[2]
+                : debate.participant?.id
+                ? STATUSES[1]
+                : STATUSES[0];
+              return checkFilters(
+                statuses,
+                status,
+                categories,
+                debate.category,
+              );
+            }),
+          )
+          .flat().length === 0
+      : true;
   };
 
   return (

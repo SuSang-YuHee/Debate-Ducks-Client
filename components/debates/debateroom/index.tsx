@@ -1,11 +1,13 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Peer from "simple-peer";
+import { useQueryClient } from "react-query";
 
 import { useWebSocket } from "../../../utils/debates/debateroom/webSocket";
 import { useAutoOff } from "../../../utils/debates/debateroom/useAutoOff";
 import { useSetRecorder } from "../../../utils/debates/debateroom/useSetRecorder";
 import { usePreventBack } from "../../../utils/debates/debateroom/usePreventBack";
+import { queryStr } from "../../../utils/queries";
 
 import ConfirmModal from "../../common/modal/ConfirmModal";
 import Canvas from "./Canvas";
@@ -20,6 +22,7 @@ export default function Debateroom({
   isPros,
 }: Pick<IDebateroom, "debateId" | "socketRef" | "debate" | "isPros">) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   //* 모달 변수
   const [isDoneModalOn, setIsDoneModalOn] = useState<boolean>(false);
   const [isPauseModalOn, setIsPauseModalOn] = useState<boolean>(false);
@@ -83,6 +86,7 @@ export default function Debateroom({
     timeRef,
     mergedAudioRef,
     recorderRef,
+    blobRef,
   });
 
   useAutoOff({
@@ -126,6 +130,7 @@ export default function Debateroom({
             });
             peerRef.current?.destroy();
             socketRef.current.disconnect();
+            queryClient.invalidateQueries([queryStr.debates, `${debateId}`]);
             router.push(`/${debateId}`);
           }}
           secondBtn={"네"}
@@ -141,6 +146,7 @@ export default function Debateroom({
             window.URL.revokeObjectURL(url);
             peerRef.current?.destroy();
             socketRef.current.disconnect();
+            queryClient.invalidateQueries([queryStr.debates, `${debateId}`]);
             router.push(`/${debateId}`);
           }}
         />

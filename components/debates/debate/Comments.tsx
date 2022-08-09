@@ -155,7 +155,7 @@ export default function Comments({ debateId }: { debateId: number }) {
           생성
         </div>
       </div>
-      {comments.data?.pages[0].list.length !== 0 ? (
+      {comments.data && comments.data?.pages[0].list.length !== 0 ? (
         <>
           <div className={styles.order_box}>
             <select className={styles.select} {...orderSelect.attribute}>
@@ -196,11 +196,14 @@ export default function Comments({ debateId }: { debateId: number }) {
                               className={styles.image}
                               src={
                                 comment.target_user.profile_image
-                                  ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${comment.target_user.profile_image}`
+                                  ? comment.target_user.profile_image !==
+                                    "temp default image"
+                                    ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${comment.target_user.profile_image}`
+                                    : "/images/profiles/default-green.png"
                                   : "/images/profiles/default-gray.png"
                               }
                               alt={
-                                comment.target_user?.nickname || "기본 이미지"
+                                comment.target_user?.nickname || "탈퇴한 회원"
                               }
                               width="50"
                               height="50"
