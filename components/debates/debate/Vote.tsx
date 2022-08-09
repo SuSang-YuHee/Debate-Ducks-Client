@@ -47,6 +47,9 @@ export default function Vote({ debateId }: { debateId: number }) {
   };
 
   const calcPercent = (cnt: number) => {
+    if (!debate.data?.vote.prosCnt && !debate.data?.vote.consCnt) {
+      return 50;
+    }
     return (
       (cnt /
         ((debate.data?.vote.prosCnt || 0) + (debate.data?.vote.consCnt || 0))) *
