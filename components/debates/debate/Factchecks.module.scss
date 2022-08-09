@@ -169,6 +169,14 @@
   }
 }
 
+.empty_message {
+  margin-top: 2rem;
+  width: 100%;
+  text-align: center;
+  font-size: 120%;
+  color: darken($c-gray-dark, 20%);
+}
+
 @include media(750px) {
   .factchecks_outer {
     justify-content: flex-start;

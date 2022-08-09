@@ -102,93 +102,99 @@ export default function Factcheck({
               }개)`}
         </div>
         <div className={styles.factchecks_box}>
-          {debate.data?.factchecks
-            .filter((factcheck) => factcheck.pros === isPros)
-            .map((factcheck) => (
-              <div className={styles.factcheck} key={factcheck.id}>
-                {isEditOn && factcheckId === factcheck.id ? (
-                  <>
-                    <textarea
-                      className={`${styles.description} ${styles.input}`}
-                      {...descriptionEdithInput.attribute}
-                    />
-                    <div className={styles.under_box}>
-                      <input
-                        className={`${styles.a} ${styles.input}`}
-                        {...referenceEditInput.attribute}
+          {debate.data && debate.data?.factchecks.length !== 0 ? (
+            debate.data?.factchecks
+              .filter((factcheck) => factcheck.pros === isPros)
+              .map((factcheck) => (
+                <div className={styles.factcheck} key={factcheck.id}>
+                  {isEditOn && factcheckId === factcheck.id ? (
+                    <>
+                      <textarea
+                        className={`${styles.description} ${styles.input}`}
+                        {...descriptionEdithInput.attribute}
                       />
-                      <button
-                        className={`${styles.btn} ${styles.btn_pros}`}
-                        onClick={() => setIsEditOn(false)}
-                      >
-                        취소
-                      </button>
-                      <button
-                        className={`${styles.btn} ${styles.btn_cons}`}
-                        onClick={() =>
-                          handleEdit(
-                            factcheck.description,
-                            factcheck.reference_url,
-                          )
-                        }
-                      >
-                        수정
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <pre className={styles.description}>
-                      {factcheck.description}
-                    </pre>
-                    <div className={styles.under_box}>
-                      <div
-                        className={`${isPros ? styles.pros : styles.cons} ${
-                          styles.a
-                        }`}
-                      >
-                        <a
-                          href={factcheck.reference_url}
-                          target="_blank"
-                          rel="noreferrer"
+                      <div className={styles.under_box}>
+                        <input
+                          className={`${styles.a} ${styles.input}`}
+                          {...referenceEditInput.attribute}
+                        />
+                        <button
+                          className={`${styles.btn} ${styles.btn_pros}`}
+                          onClick={() => setIsEditOn(false)}
                         >
-                          {factcheck.reference_url}
-                        </a>
+                          취소
+                        </button>
+                        <button
+                          className={`${styles.btn} ${styles.btn_cons}`}
+                          onClick={() =>
+                            handleEdit(
+                              factcheck.description,
+                              factcheck.reference_url,
+                            )
+                          }
+                        >
+                          수정
+                        </button>
                       </div>
-                      {checkAuthor() ? (
-                        <>
-                          <div
-                            className={`${styles.btn} ${styles.btn_pros}`}
-                            onClick={() => {
-                              setFactcheckId(factcheck.id);
-                              descriptionEdithInput.setValue(
-                                factcheck.description,
-                              );
-                              referenceEditInput.setValue(
-                                factcheck.reference_url,
-                              );
-                              setIsEditOn(true);
-                            }}
+                    </>
+                  ) : (
+                    <>
+                      <pre className={styles.description}>
+                        {factcheck.description}
+                      </pre>
+                      <div className={styles.under_box}>
+                        <div
+                          className={`${isPros ? styles.pros : styles.cons} ${
+                            styles.a
+                          }`}
+                        >
+                          <a
+                            href={factcheck.reference_url}
+                            target="_blank"
+                            rel="noreferrer"
                           >
-                            수정
-                          </div>
-                          <div
-                            className={`${styles.btn} ${styles.btn_cons}`}
-                            onClick={() => {
-                              setFactcheckId(factcheck.id);
-                              setIsDeleteModalOn(true);
-                            }}
-                          >
-                            삭제
-                          </div>
-                        </>
-                      ) : null}
-                    </div>
-                  </>
-                )}
-                <div className={styles.line}></div>
-              </div>
-            ))}
+                            {factcheck.reference_url}
+                          </a>
+                        </div>
+                        {checkAuthor() ? (
+                          <>
+                            <div
+                              className={`${styles.btn} ${styles.btn_pros}`}
+                              onClick={() => {
+                                setFactcheckId(factcheck.id);
+                                descriptionEdithInput.setValue(
+                                  factcheck.description,
+                                );
+                                referenceEditInput.setValue(
+                                  factcheck.reference_url,
+                                );
+                                setIsEditOn(true);
+                              }}
+                            >
+                              수정
+                            </div>
+                            <div
+                              className={`${styles.btn} ${styles.btn_cons}`}
+                              onClick={() => {
+                                setFactcheckId(factcheck.id);
+                                setIsDeleteModalOn(true);
+                              }}
+                            >
+                              삭제
+                            </div>
+                          </>
+                        ) : null}
+                      </div>
+                    </>
+                  )}
+                  <div className={styles.line}></div>
+                </div>
+              ))
+          ) : (
+            <div className={styles.empty_message}>
+              작성된 팩트체크가 없습니다.
+            </div>
+          )}
         </div>
       </div>
     </>
