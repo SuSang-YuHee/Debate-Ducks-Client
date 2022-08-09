@@ -115,7 +115,9 @@ export default function MyPage() {
                     src={
                       previewImageUrl
                         ? previewImageUrl
-                        : `${process.env.NEXT_PUBLIC_API_URL}/uploads/${user.data?.profile_image}`
+                        : user.data?.profile_image !== "temp default image"
+                        ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${user.data?.profile_image}`
+                        : "/images/profiles/default-green.png"
                     }
                     width="300"
                     height="300"
