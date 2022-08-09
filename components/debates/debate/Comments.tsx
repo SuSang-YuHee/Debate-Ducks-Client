@@ -155,7 +155,7 @@ export default function Comments({ debateId }: { debateId: number }) {
           생성
         </div>
       </div>
-      {comments.data?.pages[0].list.length !== 0 ? (
+      {comments.data && comments.data?.pages[0].list.length !== 0 ? (
         <>
           <div className={styles.order_box}>
             <select className={styles.select} {...orderSelect.attribute}>
