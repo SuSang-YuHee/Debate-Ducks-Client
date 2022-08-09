@@ -88,8 +88,7 @@ export const usePatchDebate = (
   const queryClient = useQueryClient();
   return useMutation((debate) => patchDebate(debate), {
     ...options,
-    onMutate: () => {
-      if (!participant) return;
+    onMutate: (debate) => {
       const prevDebate: Debate | undefined = queryClient.getQueryData([
         queryStr.debates,
         `${debateId}`,
@@ -99,7 +98,8 @@ export const usePatchDebate = (
         queryClient.setQueryData([queryStr.debates, `${debateId}`], () => {
           return {
             ...prevDebate,
-            participant,
+            ...debate,
+            participant: participant || null,
           };
         });
         return () =>
@@ -110,8 +110,7 @@ export const usePatchDebate = (
       }
     },
     onSuccess: () => {
-      if (!participant) {
-        queryClient.invalidateQueries([queryStr.debates, `${debateId}`]);
+      if (/\/edit/.test(router.pathname)) {
         router.push(`/${debateId}`);
       }
     },
