@@ -1,3 +1,4 @@
+import axios from "axios";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
@@ -8,6 +9,7 @@ import { drawNotice } from "./draw";
 import { beep } from "./beep";
 import { offScreenShare } from "./screenShare";
 import { connectHostPeer, connectGuestPeer } from "./simple-peer";
+import uploadVideo from "./aws";
 
 import { IDebateroom, IDebateData, TTurn } from "../../../types";
 
@@ -39,6 +41,7 @@ export const useWebSocket = ({
   timeRef,
   mergedAudioRef,
   recorderRef,
+  blobRef,
 }: Pick<
   IDebateroom,
   | "debateId"
@@ -68,6 +71,7 @@ export const useWebSocket = ({
   | "timeRef"
   | "mergedAudioRef"
   | "recorderRef"
+  | "blobRef"
 >) => {
   const router = useRouter();
   const [reConnect, setReConnect] = useState<boolean>(false);
@@ -172,10 +176,25 @@ export const useWebSocket = ({
     socketRef.current.on("debateDone", (isUploader: boolean) => {
       if (isUploader) {
         setIsUploadModalOn(true);
-        setTimeout(() => {
-          setIsUploadModalOn(false);
-          setIsDoneModalOn(true);
-        }, 3000);
+        uploadVideo(blobRef.current, `${debateId}`)
+          .then((url: string | null) => {
+            axios.patch(
+              `${process.env.NEXT_PUBLIC_API_URL}/debates`,
+              {
+                id: parseInt(debateId),
+                video_url: url,
+              },
+              {
+                withCredentials: true,
+              },
+            );
+            setIsUploadModalOn(false);
+            setIsDoneModalOn(true);
+          })
+          .catch(() => {
+            setIsUploadModalOn(false);
+            setIsDoneModalOn(true);
+          });
       } else {
         setIsDoneModalOn(true);
       }
@@ -201,6 +220,7 @@ export const useWebSocket = ({
     videoRef,
     reConnect,
     setIsUploadModalOn,
+    blobRef,
   ]); // dependency에 reConnect 필요
 
   //* 연결 해제
