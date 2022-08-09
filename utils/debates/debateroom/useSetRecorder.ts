@@ -1,15 +1,13 @@
 import { useEffect } from "react";
 
-import { upload } from "./upload";
-
-import { IDebateroom } from "../types";
+import { IDebateroom } from "../../../types";
 
 export const useSetRecorder = ({
-  socket,
+  socketRef,
   debateId,
-  isHostRef,
+  setIsPauseModalOn,
   canvasRef,
-  stream,
+  streamRef,
   peerStream,
   isStart,
   isDoneRef,
@@ -19,11 +17,11 @@ export const useSetRecorder = ({
   blobRef,
 }: Pick<
   IDebateroom,
-  | "socket"
+  | "socketRef"
   | "debateId"
-  | "isHostRef"
+  | "setIsPauseModalOn"
   | "canvasRef"
-  | "stream"
+  | "streamRef"
   | "peerStream"
   | "isStart"
   | "isDoneRef"
@@ -34,11 +32,11 @@ export const useSetRecorder = ({
 >) => {
   useEffect(() => {
     if (!isStart) return;
-    mergeAudio({ stream, peerStream, mergedAudioRef });
+    mergeAudio({ streamRef, peerStream, mergedAudioRef });
     setRecorder({
-      socket,
+      socketRef,
       debateId,
-      isHostRef,
+      setIsPauseModalOn,
       canvasRef,
       isDoneRef,
       mergedAudioRef,
@@ -55,32 +53,32 @@ export const useSetRecorder = ({
     canvasRef,
     debateId,
     isDoneRef,
-    isHostRef,
     isStart,
     mergedAudioRef,
     peerStream,
     recorderRef,
-    socket,
-    stream,
+    setIsPauseModalOn,
+    socketRef,
+    streamRef,
   ]);
 };
 
 //*- utils
 function mergeAudio({
-  stream,
+  streamRef,
   peerStream,
   mergedAudioRef,
-}: Pick<IDebateroom, "stream" | "peerStream" | "mergedAudioRef">) {
+}: Pick<IDebateroom, "streamRef" | "peerStream" | "mergedAudioRef">) {
   const merge = ({
-    stream,
+    streamRef,
     peerStream,
-  }: Pick<IDebateroom, "stream" | "peerStream">) => {
-    if (!stream || !peerStream) return;
+  }: Pick<IDebateroom, "streamRef" | "peerStream">) => {
+    if (!streamRef.current || !peerStream) return;
 
     const ctx = new AudioContext();
     const destination = ctx.createMediaStreamDestination();
 
-    const source1 = ctx.createMediaStreamSource(stream);
+    const source1 = ctx.createMediaStreamSource(streamRef.current);
     const source1Gain = ctx.createGain();
     source1.connect(source1Gain).connect(destination);
 
@@ -91,13 +89,13 @@ function mergeAudio({
     return destination.stream.getAudioTracks();
   };
 
-  mergedAudioRef.current = merge({ stream, peerStream });
+  mergedAudioRef.current = merge({ streamRef, peerStream });
 }
 
 function setRecorder({
-  socket,
+  socketRef,
   debateId,
-  isHostRef,
+  setIsPauseModalOn,
   canvasRef,
   isDoneRef,
   mergedAudioRef,
@@ -106,9 +104,9 @@ function setRecorder({
   blobRef,
 }: Pick<
   IDebateroom,
-  | "socket"
+  | "socketRef"
   | "debateId"
-  | "isHostRef"
+  | "setIsPauseModalOn"
   | "canvasRef"
   | "isDoneRef"
   | "mergedAudioRef"
@@ -141,13 +139,11 @@ function setRecorder({
       type: "video/webm",
     });
     blobRef.current = blob;
-    console.log("녹화 중지", blobRef.current);
 
     if (isDoneRef.current) {
-      upload(isHostRef.current, { socket, debateId, blobRef });
+      socketRef.current.emit("debateDone", { debateId });
     } else {
-      //Todo: 재시작 모달
-      console.log("재시작 모달");
+      setIsPauseModalOn(true);
     }
   };
 }

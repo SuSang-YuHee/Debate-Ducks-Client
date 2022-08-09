@@ -33,6 +33,6 @@ export const COMMENT_ORDER = [
 
 export const OPINIONS = [
   ["찬성", "true"],
-  ["중립", ""],
+  ["중립", "null"],
   ["반대", "false"],
 ];

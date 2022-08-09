@@ -80,7 +80,7 @@ export default function DebatesCards({
           className={styles.btn_edit}
           onClick={() => {
             if (user.data) {
-              router.push("/debates/create");
+              router.push("/create");
             } else {
               setIsModalOn(true);
             }
@@ -147,33 +147,31 @@ export default function DebatesCards({
             </div>
           )}
         </div>
-        <div className={styles.cards}>
-          {debates.data?.pages.map((page) => (
-            <>
-              {page.list.map((debate: DebateOfDebates) => {
-                const status = debate.video_url
-                  ? STATUSES[2]
-                  : debate.participant?.id
-                  ? STATUSES[1]
-                  : STATUSES[0];
-                return checkFilters(
-                  statuses,
-                  status,
-                  categories,
-                  debate.category,
-                ) ? (
-                  <div key={debate.id}>
-                    <DebateCard debateId={debate.id} status={status} />
-                  </div>
-                ) : null;
-              })}
-            </>
-          ))}
-          <div className={styles.empty_message}>
-            {checkEmpty() ? "해당하는 토론이 없습니다." : null}
+        {debates.data?.pages.map((page, idx) => (
+          <div className={styles.cards} key={idx}>
+            {page.list.map((debate: DebateOfDebates) => {
+              const status = debate.video_url
+                ? STATUSES[2]
+                : debate.participant?.id
+                ? STATUSES[1]
+                : STATUSES[0];
+              return checkFilters(
+                statuses,
+                status,
+                categories,
+                debate.category,
+              ) ? (
+                <div key={debate.id}>
+                  <DebateCard debateId={debate.id} status={status} />
+                </div>
+              ) : null;
+            })}
           </div>
-          <div ref={ref}></div>
+        ))}
+        <div className={styles.empty_message}>
+          {checkEmpty() ? "해당하는 토론이 없습니다." : null}
         </div>
+        <div ref={ref}></div>
       </div>
     </>
   );

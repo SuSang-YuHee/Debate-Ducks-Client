@@ -50,7 +50,7 @@ export default function CreateOrEdit({
   useEffect(() => {
     const title = removeSpace(titleInput.value);
     setTitleCnt(title.length);
-    if (title.length < 5 || title.length > 50) {
+    if (title.length < 5 || title.length > 40) {
       setIsTitleFail(true);
     } else {
       setIsTitleFail(false);
@@ -132,7 +132,7 @@ export default function CreateOrEdit({
                   isTitleFail ? styles.count_fail : ""
                 }`}
               >
-                {titleCnt} / 50
+                {titleCnt} / 40
               </div>
             </div>
             <div className={styles.name}>분류</div>

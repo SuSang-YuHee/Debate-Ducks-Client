@@ -1,6 +1,6 @@
 import type { AppProps } from "next/app";
 import { useEffect, useState } from "react";
-import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { Toaster } from "react-hot-toast";
 import Head from "next/head";
@@ -30,21 +30,19 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Hydrate state={pageProps.dehydratedState}>
-        <Head>
-          <title>Debate Ducks</title>
-        </Head>
-        {isToaster ? (
-          <Toaster
-            toastOptions={{
-              position: "top-center",
-              duration: 2000,
-            }}
-          />
-        ) : null}
-        <Header />
-        <Component {...pageProps} />
-      </Hydrate>
+      <Head>
+        <title>Debate Ducks</title>
+      </Head>
+      {isToaster ? (
+        <Toaster
+          toastOptions={{
+            position: "top-center",
+            duration: 2000,
+          }}
+        />
+      ) : null}
+      <Header />
+      <Component {...pageProps} />
       <ReactQueryDevtools />
     </QueryClientProvider>
   );

@@ -30,7 +30,7 @@ export default function EditAndDelete({ debateId }: { debateId: number }) {
       ) : null}
       <div
         className={styles.edit}
-        onClick={() => router.push(`/debates/edit/${debateId}`)}
+        onClick={() => router.push(`/edit/${debateId}`)}
       >
         수정
       </div>

@@ -69,7 +69,7 @@ export const usePostDebate = (
     ...options,
     onSuccess: () => {
       queryClient.invalidateQueries([queryStr.debates], { exact: true });
-      router.push(`/debates`);
+      router.push(`/`);
     },
     onError: (err: AxiosError<{ message: string }>) => {
       toast.error(
@@ -112,7 +112,7 @@ export const usePatchDebate = (
     onSuccess: () => {
       if (!participant) {
         queryClient.invalidateQueries([queryStr.debates, `${debateId}`]);
-        router.push(`/debates/${debateId}`);
+        router.push(`/${debateId}`);
       }
     },
     onError: (
@@ -137,7 +137,7 @@ export const useDeleteDebate = (
     ...options,
     onSuccess: () => {
       queryClient.invalidateQueries([queryStr.debates], { exact: true });
-      router.push(`/debates`);
+      router.push(`/`);
     },
     onError: (err: AxiosError<{ message: string }>) => {
       toast.error(

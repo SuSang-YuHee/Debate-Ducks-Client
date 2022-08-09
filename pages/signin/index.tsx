@@ -1,12 +1,17 @@
-import axios from "axios";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { ChangeEvent, useState } from "react";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+import { login } from "../../api/users";
+import { useGetUser } from "../../utils/queries/users";
+import styles from "./Signin.module.scss";
 
 export default function Signin() {
   const [userInfo, setUserInfo] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
+  const user = useGetUser();
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const valueType = e.target.name;
@@ -16,57 +21,71 @@ export default function Signin() {
 
   function handleSignin() {
     console.log(userInfo);
-    axios
-      .post("http://localhost:80/users/login", userInfo, {
-        validateStatus: (status) => status < 500,
-      })
-      .then((res) => {
-        if (res.data.statusCode === 404) {
-          alert(
-            "이메일 혹은 비밀번호가 일치하지 않습니다. 입력한 내용을 확인해주세요.",
-          );
-        } else {
-          console.log(res);
-          localStorage.setItem("debate-ducks-token", res.data);
-          router.push("/");
-        }
-      });
+    login(userInfo.email, userInfo.password, () => {
+      router.push("/");
+      user.refetch();
+    });
   }
 
   function togglePassword() {
     setShowPassword(!showPassword);
   }
   return (
-    <div>
-      <h1>Signin</h1>
-      <div>
-        <div>
+    <div className={styles.outer}>
+      <div className={styles.container}>
+        <h1 className={styles.title}>로그인</h1>
+        <div className={styles.email}>
           <label htmlFor="email">이메일</label>
-          <input id="email" name="email" type="text" onChange={handleChange} />
+          <input
+            id="email"
+            name="email"
+            type="text"
+            placeholder="이메일을 입력하세요"
+            onChange={handleChange}
+          />
         </div>
-        <div>
+        <div className={styles.password}>
           <label htmlFor="password">비밀번호</label>
           {showPassword ? (
-            <input
-              id="password"
-              name="password"
-              type="text"
-              onChange={handleChange}
-            />
+            <div className={styles.wrapper}>
+              <input
+                id="password"
+                name="password"
+                type="text"
+                placeholder="비밀번호를 입력하세요"
+                onChange={handleChange}
+              />
+              <span onClick={togglePassword} className={styles.show}>
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </span>
+            </div>
           ) : (
-            <input
-              id="password"
-              name="password"
-              type="password"
-              onChange={handleChange}
-            />
+            <div className={styles.wrapper}>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="비밀번호를 입력하세요"
+                onChange={handleChange}
+              />
+              <span onClick={togglePassword} className={styles.show}>
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </span>
+            </div>
           )}
-          <span onClick={togglePassword}>
-            {showPassword ? "비밀번호 숨기기" : "비밀번호 보이기"}
-          </span>
         </div>
-        <div>
-          <button onClick={handleSignin}>로그인</button>
+        {userInfo.email.length === 0 || userInfo.password.length === 0 ? (
+          <button className={`${styles.btn} ${styles.invalid}`}>로그인</button>
+        ) : (
+          <button onClick={handleSignin} className={styles.btn}>
+            로그인
+          </button>
+        )}
+        <div className={styles.signup}>
+          <div>아직 회원이 아니신가요?</div>
+          <Link href="/signup">
+            <div>회원 가입하기</div>
+          </Link>
         </div>
       </div>
     </div>

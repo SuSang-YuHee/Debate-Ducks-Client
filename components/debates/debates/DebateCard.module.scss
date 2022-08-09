@@ -29,7 +29,7 @@
   &:hover {
     box-shadow: 10px 5px 5px $c-gray-dark;
     transform: scale(1.05);
-    z-index: 999;
+    z-index: 1;
   }
   cursor: pointer;
 
@@ -160,23 +160,24 @@
   .status {
     text-align: center;
     position: absolute;
-    z-index: 1;
+    z-index: 2;
     font-weight: 700;
     text-shadow: -1px 0 $c-black, 0 1px $c-black, 1px 0 $c-black,
       0 -1px $c-black;
   }
-  .status_name {
+  .status_category {
     margin-top: 0.7rem;
     margin-left: 3%;
     font-size: 110%;
     color: $c-white;
   }
-  .status_emoji {
+  .status_vote {
     margin-top: 0.5rem;
-    margin-left: 90%;
-    font-size: 150%;
-
+    margin-left: 77%;
+    font-size: 110%;
     color: $c-pros;
+    text-shadow: -1px 0 $c-white, 0 1px $c-white, 1px 0 $c-white,
+      0 -1px $c-white;
   }
 }
 

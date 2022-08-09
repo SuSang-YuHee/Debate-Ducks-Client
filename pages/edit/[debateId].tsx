@@ -2,18 +2,18 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-import { CATEGORIES } from "../../../utils/common/constant";
+import { CATEGORIES } from "../../utils/common/constant";
 import {
   useInput,
   useRadio,
   useSelect,
-} from "../../../utils/common/useInputSelect";
-import { useGetUser } from "../../../utils/queries/users";
-import { useGetDebate, usePatchDebate } from "../../../utils/queries/debates";
-import { removeSpace } from "../../../utils/common/removeSpace";
+} from "../../utils/common/useInputSelect";
+import { useGetUser } from "../../utils/queries/users";
+import { useGetDebate, usePatchDebate } from "../../utils/queries/debates";
+import { removeSpace } from "../../utils/common/removeSpace";
 
-import CreateOrEdit from "../../../components/debates/CreateOrEdit";
-import CheckSignInModal from "../../../components/common/modal/CheckSignInModal";
+import CreateOrEdit from "../../components/debates/CreateOrEdit";
+import CheckSignInModal from "../../components/common/modal/CheckSignInModal";
 
 export default function Edit() {
   const router = useRouter();
@@ -41,13 +41,13 @@ export default function Edit() {
     if (!user.data) {
       setIsCheckModalOn(true);
     } else if (user.data?.id !== debate.data?.author?.id) {
-      router.push(`/debates/${debate.data?.id}`);
+      router.push(`/${debate.data?.id}`);
       toast.error("해당 토론의 작성자만 토론을 수정할 수 있습니다.");
     } else if (debate.data?.video_url) {
-      router.push(`/debates/${debate.data?.id}`);
+      router.push(`/${debate.data?.id}`);
       toast.error("이미 진행된 토론은 수정할 수 없습니다.");
     } else if (debate.data?.participant) {
-      router.push(`/debates/${debate.data?.id}`);
+      router.push(`/${debate.data?.id}`);
       toast.error("참여자가 있어 토론을 수정할 수 없습니다.");
     } else if (
       debate.data?.title === titleInput.value &&
@@ -84,7 +84,7 @@ export default function Edit() {
         handler={handleEdit}
         createOrEdit="수정"
         routerPush={() => {
-          router.push(`/debates/${debateId}`);
+          router.push(`/${debateId}`);
         }}
       />
     </div>

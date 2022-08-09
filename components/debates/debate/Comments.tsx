@@ -50,7 +50,6 @@ export default function Comments({ debateId }: { debateId: number }) {
 
   const handleCreate = () => {
     const comment = removeSpace(commentCreateInput.value);
-    console.log(comment);
     if (!user.data) {
       setIsCheckModalOn(true);
     } else if (comment.length < 1 || comment.length > 500) {
@@ -73,16 +72,23 @@ export default function Comments({ debateId }: { debateId: number }) {
         {
           onSuccess: () => {
             commentCreateInput.setValue("");
-            commentCreateSelect.setValue("");
+            commentCreateSelect.setValue("null");
           },
         },
       );
     }
   };
 
-  const handleEdit = (commentId: number, contents: string) => {
+  const handleEdit = (
+    commentId: number,
+    contents: string,
+    pros: boolean | null,
+  ) => {
     const comment = removeSpace(commentEditInput.value);
-    if (comment === removeSpace(contents)) {
+    if (
+      comment === removeSpace(contents) &&
+      commentEditSelect.value === String(pros)
+    ) {
       toast.error("변경된 내용이 없습니다.");
     } else if (comment.length < 1 || comment.length > 500) {
       toast.error(
@@ -177,12 +183,20 @@ export default function Comments({ debateId }: { debateId: number }) {
                     >
                       <div className={styles.info_box}>
                         <div className={styles.imageAndName_box}>
-                          <div className={styles.image_box}>
+                          <div
+                            className={`${styles.image_box} ${
+                              comment.pros
+                                ? styles.image_box_pros
+                                : comment.pros !== null
+                                ? styles.image_box_cons
+                                : ""
+                            }`}
+                          >
                             <Image
                               className={styles.image}
                               src={
                                 comment.target_user.profile_image
-                                  ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${comment.target_user.profile_image}.jpg`
+                                  ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${comment.target_user.profile_image}`
                                   : "/images/profiles/default-gray.png"
                               }
                               alt={
@@ -192,6 +206,7 @@ export default function Comments({ debateId }: { debateId: number }) {
                               height="50"
                               objectFit="cover"
                               objectPosition="center"
+                              unoptimized={true}
                             />
                           </div>
                           <div className={styles.name}>
@@ -230,7 +245,11 @@ export default function Comments({ debateId }: { debateId: number }) {
                             <button
                               className={`${styles.btn} ${styles.btn_pros}`}
                               onClick={() =>
-                                handleEdit(comment.id, comment.contents)
+                                handleEdit(
+                                  comment.id,
+                                  comment.contents,
+                                  comment.pros,
+                                )
                               }
                             >
                               수정

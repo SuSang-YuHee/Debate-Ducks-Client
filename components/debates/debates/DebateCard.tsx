@@ -22,14 +22,16 @@ export default function DebateCard({
   return (
     <div
       className={styles.card}
-      onClick={() => router.push(`/debates/${debate.data?.id}`)}
+      onClick={() => router.push(`/${debate.data?.id}`)}
     >
       <div className={styles.category}>
-        <div className={`${styles.status} ${styles.status_name}`}>
+        <div className={`${styles.status} ${styles.status_category}`}>
           {debate.data?.category}
         </div>
         {status === STATUSES[2] ? (
-          <div className={`${styles.status} ${styles.status_emoji}`}>◉</div>
+          <div className={`${styles.status} ${styles.status_vote}`}>
+            투표 가능
+          </div>
         ) : null}
         <Image
           className={styles.image}
