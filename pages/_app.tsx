@@ -37,7 +37,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     const prevPath = storage.getItem("currentPath");
     storage.setItem("prevPath", prevPath || "");
     storage.setItem("currentPath", globalThis.location.pathname);
-    console.log(storage.getItem("prevPath"), storage.getItem("currentPath"));
   }
 
   return (
