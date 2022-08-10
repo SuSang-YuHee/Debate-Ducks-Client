@@ -2,15 +2,21 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useQueryClient } from "react-query";
+
 import { useGetUser } from "../utils/queries/users";
-import ConfirmModal from "./common/modal/ConfirmModal";
+import { queryStr } from "../utils/queries";
 import styles from "./Header.module.scss";
 
+import ConfirmModal from "./common/modal/ConfirmModal";
+
 export default function Header() {
-  const user = useGetUser();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [isSigninModalOpen, setIsSigninModalOpen] = useState(false);
   const [isSignoutModalOpen, setIsSignoutModalOpen] = useState(false);
+
+  const user = useGetUser();
 
   const handleLogoClick = () => {
     router.push("/");
@@ -43,7 +49,7 @@ export default function Header() {
           secondFunc={() => {
             setIsSignoutModalOpen(false);
             window.localStorage.removeItem("debate-ducks-token");
-            router.push("/");
+            queryClient.setQueryData([queryStr.users], () => null);
             toast.success("로그아웃 되었습니다!");
           }}
         />
