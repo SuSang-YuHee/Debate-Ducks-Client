@@ -1,9 +1,21 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
-import example from "./modules/example";
+import statuses from "./modules/statuses";
+import categories from "./modules/categories";
+import order from "./modules/order";
+import heartOrder from "./modules/heartOrder";
+import isHeartListOn from "./modules/isHeartListOn";
+import isSearchListOn from "./modules/isSearchListOn";
+import searchValue from "./modules/searchValue";
 
 const store = configureStore({
   reducer: {
-    example,
+    statuses,
+    categories,
+    order,
+    heartOrder,
+    isHeartListOn,
+    isSearchListOn,
+    searchValue,
   },
 });
 

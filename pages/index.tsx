@@ -1,8 +1,34 @@
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 
 import { useGetUser } from "../utils/queries/users";
 import { useInput } from "../utils/common/useInputSelect";
+import {
+  useAppSelector,
+  useAppDispatch,
+} from "../utils/common/useReduxToolkit";
+import { statusesSelector, statusesAction } from "../redux/modules/statuses";
+import {
+  categoriesSelector,
+  categoriesAction,
+} from "../redux/modules/categories";
+import { orderSelector, orderAction } from "../redux/modules/order";
+import {
+  heartOrderSelector,
+  heartOrderAction,
+} from "../redux/modules/heartOrder";
+import {
+  isHeartListOnSelector,
+  isHeartListOnAction,
+} from "../redux/modules/isHeartListOn";
+import {
+  isSearchListOnSelector,
+  isSearchListOnAction,
+} from "../redux/modules/isSearchListOn";
+import {
+  searchValueSelector,
+  searchValueAction,
+} from "../redux/modules/searchValue";
 
 import HomeAndTopBtn from "../components/common/btn/HomeAndTopBtn";
 import Filters from "../components/debates/debates/Filters";
@@ -11,24 +37,59 @@ import DebatesHeartList from "../components/debates/debates/DebatesHeartList";
 import DebatesList from "../components/debates/debates/DebatesList";
 
 const Home: NextPage = () => {
-  const [statuses, setStatuses] = useState<string[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
-  const [order, setOrder] = useState<string>("DESC");
-  const [heartOrder, setHeartOrder] = useState<string>("DESC");
-  const [isHeartListOn, setIsHeartListOn] = useState<boolean>(false);
-  const [isSearchListOn, setIsSearchListOn] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const statuses = useAppSelector<string[]>(statusesSelector);
+  const setStatuses = (params: string[]) => {
+    dispatch(statusesAction(params));
+  };
+  const categories = useAppSelector<string[]>(categoriesSelector);
+  const setCategories = (params: string[]) => {
+    dispatch(categoriesAction(params));
+  };
+  const order = useAppSelector<string>(orderSelector);
+  const setOrder = (params: string) => {
+    dispatch(orderAction(params));
+  };
+  const heartOrder = useAppSelector<string>(heartOrderSelector);
+  const setHeartOrder = useCallback(
+    (params: string) => {
+      dispatch(heartOrderAction(params));
+    },
+    [dispatch],
+  );
+  const isHeartListOn = useAppSelector<boolean>(isHeartListOnSelector);
+  const setIsHeartListOn = useCallback(
+    (params: boolean) => {
+      dispatch(isHeartListOnAction(params));
+    },
+    [dispatch],
+  );
+  const isSearchListOn = useAppSelector<boolean>(isSearchListOnSelector);
+  const setIsSearchListOn = (params: boolean) => {
+    dispatch(isSearchListOnAction(params));
+  };
+  const searchValue = useAppSelector<string>(searchValueSelector);
+  const setSearchValue = useCallback(
+    (params: string) => {
+      dispatch(searchValueAction(params));
+    },
+    [dispatch],
+  );
 
-  const search = useInput("", "");
+  const search = useInput(searchValue, "");
 
   const user = useGetUser();
 
-  // Todo: 로그아웃 기능 추가 우 확인 필요
+  useEffect(() => {
+    setSearchValue(search.value);
+  }, [search.value, setSearchValue]);
+
   useEffect(() => {
     if (!user.data) {
       setHeartOrder("DESC");
       setIsHeartListOn(false);
     }
-  }, [user.data]);
+  }, [setHeartOrder, setIsHeartListOn, user.data]);
 
   return (
     <div className="inner">
