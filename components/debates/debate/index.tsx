@@ -94,6 +94,7 @@ export default function Debate({ debateId }: { debateId: number }) {
               layout="fill"
               objectFit="cover"
               objectPosition="center"
+              priority={true}
             />
           </div>
           <div className={styles.title_name}>{debate.data?.title}</div>
