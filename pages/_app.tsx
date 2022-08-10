@@ -5,7 +5,9 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { Toaster } from "react-hot-toast";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { Provider } from "react-redux";
 
+import store from "../redux/store";
 import "../styles/globals.scss";
 
 import Header from "../components/Header";
@@ -40,22 +42,24 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <Head>
-        <title>Debate Ducks</title>
-      </Head>
-      {isToaster ? (
-        <Toaster
-          toastOptions={{
-            position: "top-center",
-            duration: 2000,
-          }}
-        />
-      ) : null}
-      <Header />
-      <Component {...pageProps} />
-      <ReactQueryDevtools />
-    </QueryClientProvider>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <Head>
+          <title>Debate Ducks</title>
+        </Head>
+        {isToaster ? (
+          <Toaster
+            toastOptions={{
+              position: "top-center",
+              duration: 2000,
+            }}
+          />
+        ) : null}
+        <Header />
+        <Component {...pageProps} />
+        <ReactQueryDevtools />
+      </QueryClientProvider>
+    </Provider>
   );
 }
 
