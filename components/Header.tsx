@@ -35,7 +35,7 @@ export default function Header() {
     setIsSigninModalOpen(false);
   };
 
-  return (
+  return /\/debateroom/.test(router.pathname) ? null : (
     <div className={styles.container}>
       {isSignoutModalOpen ? (
         <ConfirmModal
@@ -89,22 +89,44 @@ export default function Header() {
           </ul>
         ) : null}
         {user.data ? (
-          <Image
-            src={
-              user.data?.profile_image !== "temp default image"
-                ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${user.data?.profile_image}`
-                : "/images/profiles/default-green.png"
-            }
-            alt="profile_image"
-            width="30"
-            height="30"
-            unoptimized={true}
-            onClick={handleProfileClick}
-          />
+          <>
+            <div
+              className={styles.sign_btn_cut}
+              onClick={() => {
+                router.push("/q&a");
+              }}
+            >
+              ?
+            </div>
+            <div className={styles.image_box}>
+              <Image
+                src={
+                  user.data?.profile_image !== "temp default image"
+                    ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${user.data?.profile_image}`
+                    : "/images/profiles/default-green.png"
+                }
+                alt="profile_image"
+                width="30"
+                height="30"
+                unoptimized={true}
+                onClick={handleProfileClick}
+              />
+            </div>
+          </>
         ) : (
-          <button className={styles.sign_btn} onClick={handleSigninBtnClick}>
-            로그인
-          </button>
+          <>
+            <div
+              className={styles.sign_btn}
+              onClick={() => {
+                router.push("/q&a");
+              }}
+            >
+              {"Q & A"}
+            </div>
+            <div className={styles.sign_btn} onClick={handleSigninBtnClick}>
+              로그인
+            </div>
+          </>
         )}
       </div>
     </div>
