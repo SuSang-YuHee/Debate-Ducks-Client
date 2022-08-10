@@ -1,7 +1,7 @@
 @import "../../styles/variable.scss";
 
 .outer {
-  min-width: 20rem;
+  min-width: 22rem;
   @include center {
     flex-direction: column;
   }
