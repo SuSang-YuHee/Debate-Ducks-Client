@@ -2,11 +2,10 @@
 
 .outer {
   font-size: 0.8rem;
-  margin: 1rem;
   @include center {
     flex-direction: column;
   }
-  min-width: 20rem;
+  min-width: 22rem;
   margin-bottom: 5rem;
 }
 
