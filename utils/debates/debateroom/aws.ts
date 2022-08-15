@@ -27,12 +27,10 @@ export default async function uploadVideo(
   try {
     const result = await s3.upload(params).promise();
     if (result.Location) {
-      console.log(result.Location);
       return result.Location;
     }
   } catch (_) {
     toast.error("에러가 발생해서 녹화 영상 업로드에 실패했습니다.");
-    console.log(_);
   }
 
   return null;

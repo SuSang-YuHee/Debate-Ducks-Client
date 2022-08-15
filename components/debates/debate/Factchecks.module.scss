@@ -10,7 +10,7 @@
 }
 
 .factchecks_inner {
-  min-width: 20rem;
+  min-width: 22rem;
   width: 45%;
   @include center {
     flex-direction: column;
@@ -167,6 +167,14 @@
       @include btn-c($c-white, $c-cons, $c-cons);
     }
   }
+}
+
+.empty_message {
+  margin-top: 2rem;
+  width: 100%;
+  text-align: center;
+  font-size: 120%;
+  color: darken($c-gray-dark, 20%);
 }
 
 @include media(750px) {

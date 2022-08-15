@@ -4,12 +4,16 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { Toaster } from "react-hot-toast";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { Provider } from "react-redux";
 
+import store from "../redux/store";
 import "../styles/globals.scss";
 
 import Header from "../components/Header";
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const router = useRouter();
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -21,30 +25,41 @@ function MyApp({ Component, pageProps }: AppProps) {
         },
       }),
   );
-
   const [isToaster, setIsToaster] = useState<boolean>(false);
 
   useEffect(() => {
     setIsToaster(true);
   }, []);
 
+  useEffect(() => storePathValues, [router.asPath]);
+
+  function storePathValues() {
+    const storage = globalThis?.sessionStorage;
+    if (!storage) return;
+    const prevPath = storage.getItem("currentPath");
+    storage.setItem("prevPath", prevPath || "");
+    storage.setItem("currentPath", globalThis.location.pathname);
+  }
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <Head>
-        <title>Debate Ducks</title>
-      </Head>
-      {isToaster ? (
-        <Toaster
-          toastOptions={{
-            position: "top-center",
-            duration: 2000,
-          }}
-        />
-      ) : null}
-      <Header />
-      <Component {...pageProps} />
-      <ReactQueryDevtools />
-    </QueryClientProvider>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <Head>
+          <title>Debate Ducks</title>
+        </Head>
+        {isToaster ? (
+          <Toaster
+            toastOptions={{
+              position: "top-center",
+              duration: 2000,
+            }}
+          />
+        ) : null}
+        <Header />
+        <Component {...pageProps} />
+        <ReactQueryDevtools />
+      </QueryClientProvider>
+    </Provider>
   );
 }
 

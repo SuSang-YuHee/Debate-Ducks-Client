@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { UseInfiniteQueryResult } from "react-query";
 import { useRouter } from "next/router";
 import { useInView } from "react-intersection-observer";
@@ -43,7 +43,7 @@ export default function DebatesCards({
   search: UseInputResult;
   orderSelect: UseSelectResult;
   isSearchListOn: boolean;
-  setIsSearchListOn: Dispatch<SetStateAction<boolean>>;
+  setIsSearchListOn: (params: boolean) => void;
 }) {
   const router = useRouter();
   const { ref, inView } = useInView();

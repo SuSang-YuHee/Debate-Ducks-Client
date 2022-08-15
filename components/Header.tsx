@@ -2,15 +2,21 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useQueryClient } from "react-query";
+
 import { useGetUser } from "../utils/queries/users";
-import ConfirmModal from "./common/modal/ConfirmModal";
+import { queryStr } from "../utils/queries";
 import styles from "./Header.module.scss";
 
+import ConfirmModal from "./common/modal/ConfirmModal";
+
 export default function Header() {
-  const user = useGetUser();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [isSigninModalOpen, setIsSigninModalOpen] = useState(false);
   const [isSignoutModalOpen, setIsSignoutModalOpen] = useState(false);
+
+  const user = useGetUser();
 
   const handleLogoClick = () => {
     router.push("/");
@@ -29,7 +35,7 @@ export default function Header() {
     setIsSigninModalOpen(false);
   };
 
-  return (
+  return /\/debateroom/.test(router.pathname) ? null : (
     <div className={styles.container}>
       {isSignoutModalOpen ? (
         <ConfirmModal
@@ -43,7 +49,7 @@ export default function Header() {
           secondFunc={() => {
             setIsSignoutModalOpen(false);
             window.localStorage.removeItem("debate-ducks-token");
-            router.push("/");
+            queryClient.setQueryData([queryStr.users], () => null);
             toast.success("로그아웃 되었습니다!");
           }}
         />
@@ -57,12 +63,14 @@ export default function Header() {
         ></div>
       ) : null}
       <div className={styles.logo_container} onClick={handleLogoClick}>
-        <Image
-          src="/images/logo/debate-ducks-symbol.svg"
-          alt="logo_image"
-          width="40"
-          height="40"
-        />
+        <div className={styles.image}>
+          <Image
+            src="/images/logo/debate-ducks-symbol.svg"
+            alt="logo_image"
+            width="40"
+            height="40"
+          />
+        </div>
         <h1 className={styles.title}>DEBATE DUCKS</h1>
       </div>
       <div className={styles.profile_container}>
@@ -83,22 +91,44 @@ export default function Header() {
           </ul>
         ) : null}
         {user.data ? (
-          <Image
-            src={
-              user.data?.profile_image !== "temp default image"
-                ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${user.data?.profile_image}`
-                : "/images/profiles/default-green.png"
-            }
-            alt="profile_image"
-            width="30"
-            height="30"
-            unoptimized={true}
-            onClick={handleProfileClick}
-          />
+          <>
+            <div
+              className={styles.sign_btn_cut}
+              onClick={() => {
+                router.push("/q&a");
+              }}
+            >
+              ?
+            </div>
+            <div className={styles.image_box}>
+              <Image
+                src={
+                  user.data?.profile_image !== "temp default image"
+                    ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${user.data?.profile_image}`
+                    : "/images/profiles/default-green.png"
+                }
+                alt="profile_image"
+                width="30"
+                height="30"
+                unoptimized={true}
+                onClick={handleProfileClick}
+              />
+            </div>
+          </>
         ) : (
-          <button className={styles.sign_btn} onClick={handleSigninBtnClick}>
-            로그인
-          </button>
+          <>
+            <div
+              className={styles.sign_btn}
+              onClick={() => {
+                router.push("/q&a");
+              }}
+            >
+              {"Q & A"}
+            </div>
+            <div className={styles.sign_btn} onClick={handleSigninBtnClick}>
+              로그인
+            </div>
+          </>
         )}
       </div>
     </div>

@@ -1,5 +1,6 @@
+import { useQueryClient } from "react-query";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 import { useGetUser } from "../../../utils/queries/users";
@@ -12,6 +13,7 @@ import {
 import { CATEGORIES } from "../../../utils/common/constant";
 import { DMYHM } from "../../../utils/common/formatStrDate";
 import { thousandDigit } from "../../../utils/common/thousandDigit";
+import { queryStr } from "../../../utils/queries";
 import styles from "./index.module.scss";
 
 import CheckSignInModal from "../../common/modal/CheckSignInModal";
@@ -23,6 +25,7 @@ import Comments from "./Comments";
 
 export default function Debate({ debateId }: { debateId: number }) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [isCheckModalOn, setIsCheckModalOn] = useState<boolean>(false);
 
   const user = useGetUser();
@@ -39,6 +42,13 @@ export default function Debate({ debateId }: { debateId: number }) {
   const patchDebate = usePatchDebate(debateId, user.data);
   const postHeart = usePostHeart();
   const deleteHeart = useDeleteHeart();
+
+  useEffect(() => {
+    if (!user.data) {
+      queryClient.setQueryData([queryStr.hearts, `${debateId}`], () => null);
+      queryClient.setQueryData([queryStr.votes, `${debateId}`], () => null);
+    }
+  }, [debateId, queryClient, user.data]);
 
   const handleParticipant = () => {
     if (!user.data) {
@@ -84,6 +94,7 @@ export default function Debate({ debateId }: { debateId: number }) {
               layout="fill"
               objectFit="cover"
               objectPosition="center"
+              priority={true}
             />
           </div>
           <div className={styles.title_name}>{debate.data?.title}</div>

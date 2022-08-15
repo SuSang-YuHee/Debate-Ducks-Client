@@ -1,14 +1,15 @@
-import axios from "axios";
 import { useRouter } from "next/router";
 import { BaseSyntheticEvent, useRef, useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { postUser } from "../../api/users";
-import { UserInfo } from "../../types";
 import styles from "./Signup.module.scss";
 
-axios.defaults.withCredentials = true;
+import ConfirmModal from "../../components/common/modal/ConfirmModal";
+
+import { UserInfo } from "../../types";
 
 export default function Signup() {
+  const [isWaitingModalOn, SetIsWaitingModalOn] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<UserInfo>({
     name: "",
     email: "",
@@ -86,8 +87,10 @@ export default function Signup() {
   }
 
   function handleSignup() {
+    SetIsWaitingModalOn(true);
     postUser(userInfo, () => {
-      router.push("/");
+      SetIsWaitingModalOn(false);
+      router.push("/signin");
     });
   }
 
@@ -100,134 +103,142 @@ export default function Signup() {
   }
 
   return (
-    <div className={styles.outer}>
-      <div className={styles.container}>
-        <h1 className={styles.title}>회원가입</h1>
-        <div className={styles.form}>
-          <div className={`${styles.input} ${styles.name}`}>
-            <label htmlFor="name">이름</label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              placeholder="이름을 입력하세요"
-              ref={nameRef}
-              onChange={handleChange}
-            />
-            {isValidName ? null : (
-              <div className={styles.vm}>
-                이름은 2글자 이상 15자 이하입니다.
-              </div>
-            )}
-          </div>
-          <div className={styles.input}>
-            <label htmlFor="email">이메일</label>
-            <input
-              id="email"
-              name="email"
-              type="text"
-              placeholder="이메일을 입력하세요"
-              ref={emailRef}
-              onChange={handleChange}
-            />
-            {isValidEmail ? null : (
-              <div className={styles.vm}>올바른 이메일 형식이 아닙니다.</div>
-            )}
-          </div>
-          <div className={styles.input}>
-            <label htmlFor="password">비밀번호</label>
-            {showPassword ? (
-              <div className={styles.wrapper}>
-                <input
-                  id="password"
-                  name="password"
-                  type="text"
-                  placeholder="비밀번호를 입력하세요"
-                  ref={passwordRef}
-                  onChange={handleChange}
-                />
-                <span onClick={togglePassword} className={styles.show}>
-                  {showPassword ? <FiEyeOff /> : <FiEye />}
-                </span>
-              </div>
-            ) : (
-              <div className={styles.wrapper}>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="비밀번호를 입력하세요"
-                  ref={passwordRef}
-                  onChange={handleChange}
-                />
-                <span onClick={togglePassword} className={styles.show}>
-                  {showPassword ? <FiEyeOff /> : <FiEye />}
-                </span>
-              </div>
-            )}
+    <>
+      {isWaitingModalOn ? (
+        <ConfirmModal
+          title={"회원가입"}
+          content={"회원가입 중입니다. 잠시만 기다려 주십시오."}
+        />
+      ) : null}
+      <div className={styles.outer}>
+        <div className={styles.container}>
+          <h1 className={styles.title}>회원가입</h1>
+          <div className={styles.form}>
+            <div className={`${styles.input} ${styles.name}`}>
+              <label htmlFor="name">이름</label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                placeholder="이름을 입력하세요"
+                ref={nameRef}
+                onChange={handleChange}
+              />
+              {isValidName ? null : (
+                <div className={styles.vm}>
+                  이름은 2자 이상, 15자 이하여야 합니다.
+                </div>
+              )}
+            </div>
+            <div className={styles.input}>
+              <label htmlFor="email">이메일</label>
+              <input
+                id="email"
+                name="email"
+                type="text"
+                placeholder="이메일을 입력하세요"
+                ref={emailRef}
+                onChange={handleChange}
+              />
+              {isValidEmail ? null : (
+                <div className={styles.vm}>올바른 이메일 형식이 아닙니다.</div>
+              )}
+            </div>
+            <div className={styles.input}>
+              <label htmlFor="password">비밀번호</label>
+              {showPassword ? (
+                <div className={styles.wrapper}>
+                  <input
+                    id="password"
+                    name="password"
+                    type="text"
+                    placeholder="비밀번호를 입력하세요"
+                    ref={passwordRef}
+                    onChange={handleChange}
+                  />
+                  <span onClick={togglePassword} className={styles.show}>
+                    {showPassword ? <FiEyeOff /> : <FiEye />}
+                  </span>
+                </div>
+              ) : (
+                <div className={styles.wrapper}>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="비밀번호를 입력하세요"
+                    ref={passwordRef}
+                    onChange={handleChange}
+                  />
+                  <span onClick={togglePassword} className={styles.show}>
+                    {showPassword ? <FiEyeOff /> : <FiEye />}
+                  </span>
+                </div>
+              )}
 
-            {isValidPassword ? null : (
-              <div className={styles.vm}>
-                최소 하나 이상의 영문 대소문자와 숫자, 특수문자(@!%*#?&)를
-                포함해야 합니다.
-              </div>
-            )}
-            {isPwIncludesName ? (
-              <div className={styles.vm}>
-                이름은 비밀번호에 포함할 수 없습니다.
-              </div>
-            ) : null}
-          </div>
-          <div className={styles.input}>
-            <label htmlFor="checkPassword">비밀번호 확인</label>
-            {showPasswordCheck ? (
-              <div className={styles.wrapper}>
-                <input
-                  id="checkPassword"
-                  name="checkPassword"
-                  type="text"
-                  placeholder="비밀번호를 재입력하세요"
-                  onChange={handleChange}
-                  ref={passwordCheckRef}
-                />
-                <span onClick={togglePasswordCheck} className={styles.show}>
-                  {showPasswordCheck ? <FiEyeOff /> : <FiEye />}
-                </span>
-              </div>
+              {isValidPassword ? null : (
+                <div className={styles.vm}>
+                  최소 하나 이상의 영문 대소문자와 숫자, 특수문자(@!%*#?&)를
+                  포함해야 합니다.
+                </div>
+              )}
+              {isPwIncludesName ? (
+                <div className={styles.vm}>
+                  이름은 비밀번호에 포함할 수 없습니다.
+                </div>
+              ) : null}
+            </div>
+            <div className={styles.input}>
+              <label htmlFor="checkPassword">비밀번호 확인</label>
+              {showPasswordCheck ? (
+                <div className={styles.wrapper}>
+                  <input
+                    id="checkPassword"
+                    name="checkPassword"
+                    type="text"
+                    placeholder="비밀번호를 재입력하세요"
+                    onChange={handleChange}
+                    ref={passwordCheckRef}
+                  />
+                  <span onClick={togglePasswordCheck} className={styles.show}>
+                    {showPasswordCheck ? <FiEyeOff /> : <FiEye />}
+                  </span>
+                </div>
+              ) : (
+                <div className={styles.wrapper}>
+                  <input
+                    id="checkPassword"
+                    name="checkPassword"
+                    type="password"
+                    placeholder="비밀번호를 재입력하세요"
+                    onChange={handleChange}
+                    ref={passwordCheckRef}
+                  />
+                  <span onClick={togglePasswordCheck} className={styles.show}>
+                    {showPasswordCheck ? <FiEyeOff /> : <FiEye />}
+                  </span>
+                </div>
+              )}
+              {isValidPasswordCheck ? null : (
+                <div className={styles.vm}>비밀번호가 일치하지 않습니다.</div>
+              )}
+            </div>
+            {userInfo.name &&
+            userInfo.email &&
+            userInfo.password &&
+            isValidPasswordCheck &&
+            passwordCheckRef.current?.value.length !== 0 ? (
+              <button className={styles.btn} onClick={handleSignup}>
+                회원가입
+              </button>
             ) : (
-              <div className={styles.wrapper}>
-                <input
-                  id="checkPassword"
-                  name="checkPassword"
-                  type="password"
-                  placeholder="비밀번호를 재입력하세요"
-                  onChange={handleChange}
-                  ref={passwordCheckRef}
-                />
-                <span onClick={togglePasswordCheck} className={styles.show}>
-                  {showPasswordCheck ? <FiEyeOff /> : <FiEye />}
-                </span>
-              </div>
-            )}
-            {isValidPasswordCheck ? null : (
-              <div className={styles.vm}>비밀번호가 일치하지 않습니다.</div>
+              <button className={`${styles.btn} ${styles.invalid}`}>
+                회원가입
+              </button>
             )}
           </div>
-          {userInfo.name &&
-          userInfo.email &&
-          userInfo.password &&
-          isValidPasswordCheck &&
-          passwordCheckRef.current?.value.length !== 0 ? (
-            <button className={styles.btn} onClick={handleSignup}>
-              회원가입
-            </button>
-          ) : (
-            <button className={`${styles.btn} ${styles.invalid}`}>
-              회원가입
-            </button>
-          )}
         </div>
       </div>
-    </div>
+    </>
   );
 }

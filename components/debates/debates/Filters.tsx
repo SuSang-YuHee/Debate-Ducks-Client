@@ -1,5 +1,3 @@
-import { Dispatch, SetStateAction } from "react";
-
 import { CATEGORIES, STATUSES } from "../../../utils/common/constant";
 import styles from "./Filters.module.scss";
 
@@ -10,9 +8,9 @@ export default function Filters({
   setCategories,
 }: {
   statuses: string[];
-  setStatuses: Dispatch<SetStateAction<string[]>>;
+  setStatuses: (params: string[]) => void;
   categories: string[];
-  setCategories: Dispatch<SetStateAction<string[]>>;
+  setCategories: (params: string[]) => void;
 }) {
   return (
     <div className={styles.outer}>

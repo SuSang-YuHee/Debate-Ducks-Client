@@ -5,6 +5,7 @@
   padding: 10px;
   max-width: 1200px;
   margin: 0 auto;
+  min-width: 22rem;
   .background {
     width: 100%;
     height: 100%;
@@ -17,14 +18,16 @@
     display: flex;
     font-size: 1.8rem;
     font-weight: bold;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    user-select: none;
-    cursor: pointer;
-    width: 300px;
-    margin: 0 auto;
+    @include center {
+      justify-content: flex-start;
+    }
+    @include disabledText;
+    width: 100%;
+    .image {
+      cursor: pointer;
+    }
     .title {
+      cursor: pointer;
       margin: 0 10px;
     }
   }
@@ -33,21 +36,26 @@
     top: 50%;
     right: 10px;
     transform: translateY(-50%);
-    cursor: pointer;
-    border: 3px solid $c-pros;
-    border-radius: 999px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @include center {
+      gap: 0.5rem;
+    }
+    .image_box {
+      border-radius: 100%;
+      background-color: $c-pros;
+      @include center;
+      padding: 3px;
+      cursor: pointer;
+    }
     & img {
       border-radius: 999px;
     }
     z-index: 2;
     .list {
+      cursor: pointer;
       position: absolute;
       top: 40px;
       right: 0;
-      background-color: #fff;
+      background-color: $c-white;
       border: 1px solid $c-pros;
       border-radius: 10px;
       overflow: hidden;
@@ -58,16 +66,63 @@
       padding: 10px;
       &:hover {
         background-color: $c-pros;
-        color: #fff;
+        color: $c-white;
       }
     }
     .sign_btn {
-      background-color: $c-pros;
-      border: none;
-      border-radius: 999px;
-      padding: 10px 20px;
-      color: #fff;
+      @include btn-w(5rem) {
+        border-radius: 9px;
+      }
+      @include btn-c($c-pros, $c-pros, $c-white);
+      &:hover {
+        @include btn-c($c-white, $c-pros, $c-pros);
+      }
       cursor: pointer;
+      &_cut {
+        cursor: pointer;
+        color: $c-pros;
+        font-weight: 700;
+        width: 2.2rem;
+        height: 2.2rem;
+        @include center;
+        border-radius: 100%;
+        border: 3px solid $c-pros;
+        &:hover {
+          background-color: $c-pros;
+          border: 3px solid $c-pros;
+          color: $c-white;
+        }
+      }
     }
+  }
+}
+
+@include media(480px) {
+  .title {
+    font-size: 1.6rem;
+  }
+}
+
+@include media(450px) {
+  .title {
+    font-size: 1.4rem;
+  }
+}
+
+@include media(430px) {
+  .title {
+    font-size: 1.2rem;
+  }
+}
+
+@include media(410px) {
+  .title {
+    font-size: 1rem;
+  }
+}
+
+@include media(380px) {
+  .title {
+    font-size: 0.8rem;
   }
 }

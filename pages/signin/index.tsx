@@ -1,17 +1,17 @@
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { ChangeEvent, useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import { useQueryClient } from "react-query";
+
 import { login } from "../../api/users";
-import { useGetUser } from "../../utils/queries/users";
+import { queryStr } from "../../utils/queries";
 import styles from "./Signin.module.scss";
 
 export default function Signin() {
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const [userInfo, setUserInfo] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
-
-  const router = useRouter();
-  const user = useGetUser();
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const valueType = e.target.name;
@@ -20,10 +20,15 @@ export default function Signin() {
   }
 
   function handleSignin() {
-    console.log(userInfo);
     login(userInfo.email, userInfo.password, () => {
-      router.push("/");
-      user.refetch();
+      queryClient.invalidateQueries([queryStr.users]);
+      const storage = globalThis?.sessionStorage;
+      const link =
+        storage.getItem("prevPath") === "/signin" ||
+        storage.getItem("prevPath") === "/signup"
+          ? "/"
+          : storage.getItem("prevPath") || "/";
+      router.push(link);
     });
   }
 
@@ -83,9 +88,13 @@ export default function Signin() {
         )}
         <div className={styles.signup}>
           <div>아직 회원이 아니신가요?</div>
-          <Link href="/signup">
+          <div
+            onClick={() => {
+              router.push("/signup");
+            }}
+          >
             <div>회원 가입하기</div>
-          </Link>
+          </div>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 
 import { useGetUser } from "../../../utils/queries/users";
 import styles from "./LikeBtn.module.scss";
@@ -10,7 +10,7 @@ export default function LikeBtn({
   setIsHeartListOn,
 }: {
   isHeartListOn: boolean;
-  setIsHeartListOn: Dispatch<SetStateAction<boolean>>;
+  setIsHeartListOn: (params: boolean) => void;
 }) {
   const [isModalOn, setIsModalOn] = useState<boolean>(false);
 

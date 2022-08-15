@@ -42,6 +42,7 @@ export default function DebateCard({
           layout="fill"
           objectFit="cover"
           objectPosition="center"
+          priority={true}
         />
       </div>
       <div className={styles.debaters}>

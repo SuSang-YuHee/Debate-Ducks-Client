@@ -1,5 +1,3 @@
-import { Dispatch, SetStateAction } from "react";
-
 import { useGetDebates } from "../../../utils/queries/debates";
 import { useSelect } from "../../../utils/common/useInputSelect";
 
@@ -20,9 +18,9 @@ export default function DebatesList({
   statuses: string[];
   categories: string[];
   order: string;
-  setOrder: Dispatch<SetStateAction<string>>;
+  setOrder: (params: string) => void;
   isSearchListOn: boolean;
-  setIsSearchListOn: Dispatch<SetStateAction<boolean>>;
+  setIsSearchListOn: (params: boolean) => void;
 }) {
   const orderSelect = useSelect(order, refetch, setOrder);
 

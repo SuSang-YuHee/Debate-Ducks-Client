@@ -49,7 +49,6 @@ export default function MyPage() {
     } else {
       setIsValidationShow(false);
       setNickname(e.target.value);
-      console.log(nickname);
     }
   };
 
