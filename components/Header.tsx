@@ -63,12 +63,14 @@ export default function Header() {
         ></div>
       ) : null}
       <div className={styles.logo_container} onClick={handleLogoClick}>
-        <Image
-          src="/images/logo/debate-ducks-symbol.svg"
-          alt="logo_image"
-          width="40"
-          height="40"
-        />
+        <div className={styles.image}>
+          <Image
+            src="/images/logo/debate-ducks-symbol.svg"
+            alt="logo_image"
+            width="40"
+            height="40"
+          />
+        </div>
         <h1 className={styles.title}>DEBATE DUCKS</h1>
       </div>
       <div className={styles.profile_container}>
