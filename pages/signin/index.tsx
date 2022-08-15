@@ -7,7 +7,7 @@ import { login } from "../../api/users";
 import { queryStr } from "../../utils/queries";
 import styles from "./Signin.module.scss";
 
-export default function Signin() {
+export default function SigninPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [userInfo, setUserInfo] = useState({ email: "", password: "" });
