@@ -39,6 +39,7 @@ export default function DebaterInfo({
           objectFit="cover"
           objectPosition="center"
           unoptimized={true}
+          priority={true}
         />
       </div>
       <div
@@ -75,6 +76,7 @@ export default function DebaterInfo({
           objectFit="cover"
           objectPosition="center"
           unoptimized={true}
+          priority={true}
         />
       </div>
       <div
