@@ -37,7 +37,7 @@
     right: 10px;
     transform: translateY(-50%);
     @include center {
-      gap: 1rem;
+      gap: 0.5rem;
     }
     .image_box {
       border-radius: 100%;
@@ -123,6 +123,6 @@
 
 @include media(380px) {
   .title {
-    display: none;
+    font-size: 0.8rem;
   }
 }

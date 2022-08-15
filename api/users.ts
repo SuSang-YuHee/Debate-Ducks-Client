@@ -22,7 +22,6 @@ export const postUser = (userInfo: UserInfo, callback?: () => void) => {
       }
     })
     .catch((err: AxiosError<{ message: string }>) => {
-      console.log(err);
       toast.error(
         `${err.response?.data?.message || "네트워크 에러가 발생했습니다."}`,
       );
@@ -46,7 +45,6 @@ export const login = (
       toast.success("로그인에 성공했습니다.");
     })
     .catch((err: AxiosError<{ message: string }>) => {
-      console.log(err);
       toast.error(
         `${err.response?.data?.message || "네트워크 에러가 발생했습니다."}`,
       );

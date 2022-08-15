@@ -26,7 +26,6 @@ export default function ChangePasswordModal({
   };
 
   const handleSaveNextPassword = () => {
-    console.log(prevPassword, nextPassword);
     patchUserPassword.mutate();
     cancelFunc();
   };
