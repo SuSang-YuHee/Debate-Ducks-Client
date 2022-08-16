@@ -1,18 +1,14 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import toast from "react-hot-toast";
-import { useQueryClient } from "react-query";
 
 import { useGetUser } from "../utils/queries/users";
-import { queryStr } from "../utils/queries";
 import styles from "./Header.module.scss";
 
-import ConfirmModal from "./common/modal/ConfirmModal";
+import SignoutModal from "./common/modal/SignoutModal";
 
 export default function Header() {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const [isSigninModalOpen, setIsSigninModalOpen] = useState(false);
   const [isSignoutModalOpen, setIsSignoutModalOpen] = useState(false);
 
@@ -37,23 +33,10 @@ export default function Header() {
 
   return /\/debateroom/.test(router.pathname) ? null : (
     <div className={styles.container}>
-      {isSignoutModalOpen ? (
-        <ConfirmModal
-          title="다음에 또 봐요! 👋"
-          content="로그아웃 하시겠습니까?"
-          firstBtn="머무르기"
-          firstFunc={() => {
-            setIsSignoutModalOpen(false);
-          }}
-          secondBtn={"로그아웃"}
-          secondFunc={() => {
-            setIsSignoutModalOpen(false);
-            window.localStorage.removeItem("debate-ducks-token");
-            queryClient.setQueryData([queryStr.users], () => null);
-            toast.success("로그아웃 되었습니다!");
-          }}
-        />
-      ) : null}
+      <SignoutModal
+        isSignoutModalOpen={isSignoutModalOpen}
+        setIsSignoutModalOpen={setIsSignoutModalOpen}
+      />
       {isSigninModalOpen ? (
         <div
           className={styles.background}

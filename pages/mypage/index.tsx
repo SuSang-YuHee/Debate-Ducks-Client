@@ -1,15 +1,16 @@
 import Image from "next/image";
+import { BaseSyntheticEvent, useEffect, useState } from "react";
+import { FiEdit, FiCheckSquare, FiXSquare } from "react-icons/fi";
+
 import {
   useGetUser,
   usePatchUserImage,
   usePatchUserNickname,
 } from "../../utils/queries/users";
 import styles from "./MyPage.module.scss";
-import { BaseSyntheticEvent, useEffect, useState } from "react";
-import { FiEdit, FiCheckSquare, FiXSquare } from "react-icons/fi";
-import ConfirmModal from "../../components/common/modal/ConfirmModal";
-import { useRouter } from "next/router";
+
 import ChangePasswordModal from "../../components/common/modal/ChangePasswordModal";
+import SignoutModal from "../../components/common/modal/SignoutModal";
 
 export default function MyPagePage() {
   const [image, setImage] = useState<File>();
@@ -19,12 +20,10 @@ export default function MyPagePage() {
   const [nickname, setNickname] = useState("");
   const [isValidationShow, setIsValidationShow] = useState(false);
   const [isPasswordModalOn, setIsPasswordModalOn] = useState(false);
-  const [isUnsubscribeModalOn, setIsUnsubscribeModalOn] = useState(false);
+  const [isSignoutModalOpen, setIsSignoutModalOpen] = useState(false);
   const user = useGetUser();
   const patchUserImage = usePatchUserImage(user.data?.id || "", formData);
   const patchUserNickname = usePatchUserNickname(user.data?.id || "", nickname);
-
-  const router = useRouter();
 
   useEffect(() => {
     const formData = new FormData();
@@ -87,21 +86,10 @@ export default function MyPagePage() {
           }}
         />
       ) : null}
-      {isUnsubscribeModalOn ? (
-        <ConfirmModal
-          title="다음에 또 봐요! 👋"
-          content="로그아웃 하시겠습니까?"
-          firstBtn="머무르기"
-          firstFunc={() => {
-            setIsUnsubscribeModalOn(false);
-          }}
-          secondBtn={"로그아웃"}
-          secondFunc={() => {
-            window.localStorage.removeItem("debate-ducks-token");
-            router.push("/");
-          }}
-        />
-      ) : null}
+      <SignoutModal
+        isSignoutModalOpen={isSignoutModalOpen}
+        setIsSignoutModalOpen={setIsSignoutModalOpen}
+      />
       <div className={styles.container}>
         <div className={styles.inner}>
           <div className={styles.wrapper}>
@@ -197,7 +185,7 @@ export default function MyPagePage() {
               <div
                 className={styles.unsubscribe}
                 onClick={() => {
-                  setIsUnsubscribeModalOn(true);
+                  setIsSignoutModalOpen(true);
                 }}
               >
                 로그아웃
