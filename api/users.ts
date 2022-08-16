@@ -18,13 +18,12 @@ export const getUser = async (token: string | null) => {
 export const postUser = (userInfo: UserInfo, callback?: () => void) => {
   axios
     .post(`${process.env.NEXT_PUBLIC_API_URL}/users`, userInfo)
-    .then((res) => {
-      if (res.statusText === "Created") {
-        if (callback) callback();
-        toast.success("회원가입이 완료되었습니다.");
-      }
+    .then(() => {
+      if (callback) callback();
+      toast.success("회원가입이 완료되었습니다.");
     })
     .catch((err: AxiosError<{ message: string }>) => {
+      if (callback) callback();
       toast.error(
         `${err.response?.data?.message || "네트워크 에러가 발생했습니다."}`,
       );
