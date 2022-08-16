@@ -43,7 +43,7 @@ export default function Buttons({
   setIsReady,
   isStart,
   turn,
-  timeRef,
+  time,
   recorderRef,
 }: Pick<
   IDebateroom,
@@ -65,11 +65,20 @@ export default function Buttons({
   | "setIsReady"
   | "isStart"
   | "turn"
-  | "timeRef"
+  | "time"
   | "recorderRef"
 >) {
   const router = useRouter();
   const [isExitModalOn, setIsExitModalOn] = useState<boolean>(false);
+
+  //* 넘기기 가능 여부
+  const checkCanSkip = () => {
+    if (time < 60 && time > 1) {
+      if (isPros && (turn === "pros" || turn === "prosCross")) return true;
+      if (!isPros && (turn === "cons" || turn === "consCross")) return true;
+    }
+    return false;
+  };
 
   return (
     <>
@@ -166,9 +175,13 @@ export default function Buttons({
         {isStart ? (
           <div className={styles.box}>
             <div
-              className={`${styles.btn} ${styles.btn_pros}`}
+              className={`${styles.btn} ${
+                checkCanSkip() ? styles.btn_pros : styles.btn_disabled
+              }`}
               onClick={() => {
-                wsTransmitSkip({ debateId, socketRef, isPros, turn, timeRef });
+                if (checkCanSkip()) {
+                  wsTransmitSkip({ debateId, socketRef, isPros });
+                }
               }}
             >
               <MdDoubleArrow />
