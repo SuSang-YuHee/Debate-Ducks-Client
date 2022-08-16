@@ -5,12 +5,12 @@ import { useState } from "react";
 import { useGetUser } from "../utils/queries/users";
 import styles from "./Header.module.scss";
 
-import SignoutModal from "./common/modal/SignoutModal";
+import SignOutModal from "./common/modal/SignOutModal";
 
 export default function Header() {
   const router = useRouter();
   const [isSigninModalOpen, setIsSigninModalOpen] = useState(false);
-  const [isSignoutModalOpen, setIsSignoutModalOpen] = useState(false);
+  const [isSignOutModalOpen, setIsSignOutModalOpen] = useState(false);
 
   const user = useGetUser();
 
@@ -33,9 +33,9 @@ export default function Header() {
 
   return /\/debateroom/.test(router.pathname) ? null : (
     <div className={styles.container}>
-      <SignoutModal
-        isSignoutModalOpen={isSignoutModalOpen}
-        setIsSignoutModalOpen={setIsSignoutModalOpen}
+      <SignOutModal
+        isSignOutModalOpen={isSignOutModalOpen}
+        setIsSignOutModalOpen={setIsSignOutModalOpen}
       />
       {isSigninModalOpen ? (
         <div
@@ -65,7 +65,7 @@ export default function Header() {
             <li
               className={styles.item}
               onClick={() => {
-                setIsSignoutModalOpen(true);
+                setIsSignOutModalOpen(true);
                 setIsSigninModalOpen(false);
               }}
             >

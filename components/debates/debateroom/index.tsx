@@ -7,7 +7,7 @@ import { useWebSocket } from "../../../utils/debates/debateroom/webSocket";
 import { useAutoOff } from "../../../utils/debates/debateroom/useAutoOff";
 import { useSetRecorder } from "../../../utils/debates/debateroom/useSetRecorder";
 import { usePreventBack } from "../../../utils/debates/debateroom/usePreventBack";
-import { queryStr } from "../../../utils/queries";
+import { queryKeys } from "../../../utils/queries";
 
 import ConfirmModal from "../../common/modal/ConfirmModal";
 import Canvas from "./Canvas";
@@ -130,7 +130,7 @@ export default function Debateroom({
             });
             peerRef.current?.destroy();
             socketRef.current.disconnect();
-            queryClient.invalidateQueries([queryStr.debates, `${debateId}`]);
+            queryClient.invalidateQueries([queryKeys.debates, `${debateId}`]);
             router.push(`/${debateId}`);
           }}
           secondBtn={"네"}
@@ -146,7 +146,7 @@ export default function Debateroom({
             window.URL.revokeObjectURL(url);
             peerRef.current?.destroy();
             socketRef.current.disconnect();
-            queryClient.invalidateQueries([queryStr.debates, `${debateId}`]);
+            queryClient.invalidateQueries([queryKeys.debates, `${debateId}`]);
             router.push(`/${debateId}`);
           }}
         />

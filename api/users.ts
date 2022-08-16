@@ -3,6 +3,7 @@ import axios, { AxiosError } from "axios";
 
 import { UserInfo } from "../types";
 
+//*- 사용자 정보 조회
 export const getUser = async (token: string | null) => {
   const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
     headers: {
@@ -13,13 +14,14 @@ export const getUser = async (token: string | null) => {
   return data;
 };
 
+//*- 회원가입
 export const postUser = (userInfo: UserInfo, callback?: () => void) => {
   axios
     .post(`${process.env.NEXT_PUBLIC_API_URL}/users`, userInfo)
     .then((res) => {
       if (res.statusText === "Created") {
         if (callback) callback();
-        toast.success("회원가입이 완료되었습니다!");
+        toast.success("회원가입이 완료되었습니다.");
       }
     })
     .catch((err: AxiosError<{ message: string }>) => {
@@ -29,6 +31,7 @@ export const postUser = (userInfo: UserInfo, callback?: () => void) => {
     });
 };
 
+//*- 로그인
 export const login = async (userInfo: Omit<UserInfo, "name">) => {
   const { data } = await axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/users/login`,
@@ -38,6 +41,7 @@ export const login = async (userInfo: Omit<UserInfo, "name">) => {
   return data;
 };
 
+//*- 사용자 이미지 수정
 export const patchUserImage = async (
   id: string,
   formData: FormData | undefined,
@@ -53,6 +57,7 @@ export const patchUserImage = async (
   return data;
 };
 
+//*- 사용자 닉네임 수정
 export const patchUserNickname = async (id: string, nickname: string) => {
   const { data } = await axios.patch(
     `${process.env.NEXT_PUBLIC_API_URL}/users/${id}/nickname`,
@@ -64,6 +69,7 @@ export const patchUserNickname = async (id: string, nickname: string) => {
   return data;
 };
 
+//*- 사용자 암호 수정
 export const patchUserPassword = async (
   id: string,
   prevPassword: string,

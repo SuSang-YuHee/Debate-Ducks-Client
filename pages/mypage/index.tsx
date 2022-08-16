@@ -10,8 +10,9 @@ import {
 import styles from "./MyPage.module.scss";
 
 import ChangePasswordModal from "../../components/common/modal/ChangePasswordModal";
-import SignoutModal from "../../components/common/modal/SignoutModal";
+import SignOutModal from "../../components/common/modal/SignOutModal";
 
+// Todo: 이름 유효성 검사(회원가입에서도 필요), createObjectURL 에러 해결, 페이지 접근 권한 설정, 프로필 변경 취소 버튼 제작 / 이름 변경 시 사진 밀리는거 해결, 인풋에 기존 아이디 유지 및 placeholder 색 구분
 export default function MyPagePage() {
   const [image, setImage] = useState<File>();
   const [previewImageUrl, setPreviewImageUrl] = useState<string>("");
@@ -20,7 +21,7 @@ export default function MyPagePage() {
   const [nickname, setNickname] = useState("");
   const [isValidationShow, setIsValidationShow] = useState(false);
   const [isPasswordModalOn, setIsPasswordModalOn] = useState(false);
-  const [isSignoutModalOpen, setIsSignoutModalOpen] = useState(false);
+  const [isSignOutModalOpen, setIsSignOutModalOpen] = useState(false);
   const user = useGetUser();
   const patchUserImage = usePatchUserImage(user.data?.id || "", formData);
   const patchUserNickname = usePatchUserNickname(user.data?.id || "", nickname);
@@ -86,9 +87,9 @@ export default function MyPagePage() {
           }}
         />
       ) : null}
-      <SignoutModal
-        isSignoutModalOpen={isSignoutModalOpen}
-        setIsSignoutModalOpen={setIsSignoutModalOpen}
+      <SignOutModal
+        isSignOutModalOpen={isSignOutModalOpen}
+        setIsSignOutModalOpen={setIsSignOutModalOpen}
       />
       <div className={styles.container}>
         <div className={styles.inner}>
@@ -185,7 +186,7 @@ export default function MyPagePage() {
               <div
                 className={styles.unsubscribe}
                 onClick={() => {
-                  setIsSignoutModalOpen(true);
+                  setIsSignOutModalOpen(true);
                 }}
               >
                 로그아웃

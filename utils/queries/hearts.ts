@@ -10,16 +10,17 @@ import {
 } from "react-query";
 
 import { getHeart, postHeart, deleteHeart } from "../../api/hearts";
-import { queryStr } from ".";
+import { queryKeys } from ".";
 
 import { Debate, DebateAndUserID } from "../../types";
 
+//*- 좋아요 여부 조회
 export const useGetHeart = (
   debateAndUserId: DebateAndUserID,
   options?: UseQueryOptions<boolean, AxiosError>,
 ) => {
   const query = useQuery<boolean, AxiosError>(
-    [queryStr.hearts, `${debateAndUserId.target_debate_id}`],
+    [queryKeys.hearts, `${debateAndUserId.target_debate_id}`],
     () => getHeart(debateAndUserId),
     {
       enabled: !!debateAndUserId.target_user_id,
@@ -29,6 +30,7 @@ export const useGetHeart = (
   return query;
 };
 
+//*- 좋아요 생성
 export const usePostHeart = (
   options?: UseMutationOptions<DebateAndUserID, AxiosError, DebateAndUserID>,
 ): UseMutationResult<DebateAndUserID, AxiosError, DebateAndUserID> => {
@@ -37,30 +39,30 @@ export const usePostHeart = (
     ...options,
     onMutate: (debateAndUserId) => {
       const prevHeart: boolean | undefined = queryClient.getQueryData([
-        queryStr.hearts,
+        queryKeys.hearts,
         `${debateAndUserId.target_debate_id}`,
       ]);
       const prevDebate: Debate | undefined = queryClient.getQueryData([
-        queryStr.debates,
+        queryKeys.debates,
         `${debateAndUserId.target_debate_id}`,
       ]);
       if (prevHeart !== undefined && prevDebate !== undefined) {
         queryClient.cancelQueries([
-          queryStr.hearts,
+          queryKeys.hearts,
           `${debateAndUserId.target_debate_id}`,
         ]);
         queryClient.cancelQueries([
-          queryStr.debates,
+          queryKeys.debates,
           `${debateAndUserId.target_debate_id}`,
         ]);
         queryClient.setQueryData(
-          [queryStr.hearts, `${debateAndUserId.target_debate_id}`],
+          [queryKeys.hearts, `${debateAndUserId.target_debate_id}`],
           () => {
             return !prevHeart;
           },
         );
         queryClient.setQueryData(
-          [queryStr.debates, `${debateAndUserId.target_debate_id}`],
+          [queryKeys.debates, `${debateAndUserId.target_debate_id}`],
           () => {
             return {
               ...prevDebate,
@@ -70,11 +72,11 @@ export const usePostHeart = (
         );
         return () => {
           queryClient.setQueryData(
-            [queryStr.hearts, `${debateAndUserId.target_debate_id}`],
+            [queryKeys.hearts, `${debateAndUserId.target_debate_id}`],
             prevHeart,
           );
           queryClient.setQueryData(
-            [queryStr.debates, `${debateAndUserId.target_debate_id}`],
+            [queryKeys.debates, `${debateAndUserId.target_debate_id}`],
             prevDebate,
           );
         };
@@ -93,6 +95,7 @@ export const usePostHeart = (
   });
 };
 
+//*- 좋아요 삭제
 export const useDeleteHeart = (
   options?: UseMutationOptions<DebateAndUserID, AxiosError, DebateAndUserID>,
 ): UseMutationResult<DebateAndUserID, AxiosError, DebateAndUserID> => {
@@ -101,30 +104,30 @@ export const useDeleteHeart = (
     ...options,
     onMutate: (debateAndUserId) => {
       const prevHeart: boolean | undefined = queryClient.getQueryData([
-        queryStr.hearts,
+        queryKeys.hearts,
         `${debateAndUserId.target_debate_id}`,
       ]);
       const prevDebate: Debate | undefined = queryClient.getQueryData([
-        queryStr.debates,
+        queryKeys.debates,
         `${debateAndUserId.target_debate_id}`,
       ]);
       if (prevHeart !== undefined && prevDebate !== undefined) {
         queryClient.cancelQueries([
-          queryStr.hearts,
+          queryKeys.hearts,
           `${debateAndUserId.target_debate_id}`,
         ]);
         queryClient.cancelQueries([
-          queryStr.debates,
+          queryKeys.debates,
           `${debateAndUserId.target_debate_id}`,
         ]);
         queryClient.setQueryData(
-          [queryStr.hearts, `${debateAndUserId.target_debate_id}`],
+          [queryKeys.hearts, `${debateAndUserId.target_debate_id}`],
           () => {
             return !prevHeart;
           },
         );
         queryClient.setQueryData(
-          [queryStr.debates, `${debateAndUserId.target_debate_id}`],
+          [queryKeys.debates, `${debateAndUserId.target_debate_id}`],
           () => {
             return {
               ...prevDebate,
@@ -134,11 +137,11 @@ export const useDeleteHeart = (
         );
         return () => {
           queryClient.setQueryData(
-            [queryStr.hearts, `${debateAndUserId.target_debate_id}`],
+            [queryKeys.hearts, `${debateAndUserId.target_debate_id}`],
             prevHeart,
           );
           queryClient.setQueryData(
-            [queryStr.debates, `${debateAndUserId.target_debate_id}`],
+            [queryKeys.debates, `${debateAndUserId.target_debate_id}`],
             prevDebate,
           );
         };

@@ -16,17 +16,18 @@ import {
   patchUserPassword,
   login,
 } from "../../api/users";
-import { queryStr } from ".";
+import { queryKeys } from ".";
 
 import { User, UserInfo } from "../../types";
 
+//*- 사용자 정보 조회
 export const useGetUser = (options?: UseQueryOptions<User, AxiosError>) => {
   const token =
     typeof window !== "undefined"
       ? localStorage.getItem("debate-ducks-token")
       : null;
   const query = useQuery<User, AxiosError>(
-    [queryStr.users],
+    [queryKeys.users],
     () => getUser(token),
     {
       enabled: !!token,
@@ -36,6 +37,7 @@ export const useGetUser = (options?: UseQueryOptions<User, AxiosError>) => {
   return query;
 };
 
+//*- 로그인
 export const useLogin = (
   options?: UseMutationOptions<
     string,
@@ -50,9 +52,9 @@ export const useLogin = (
     onSuccess: (data) => {
       localStorage.setItem("debate-ducks-token", data);
 
-      queryClient.invalidateQueries([queryStr.users]);
-      queryClient.invalidateQueries([queryStr.hearts]);
-      queryClient.invalidateQueries([queryStr.votes]);
+      queryClient.invalidateQueries([queryKeys.users]);
+      queryClient.invalidateQueries([queryKeys.hearts]);
+      queryClient.invalidateQueries([queryKeys.votes]);
 
       const storage = globalThis?.sessionStorage;
       const link =
@@ -61,8 +63,6 @@ export const useLogin = (
           ? "/"
           : storage.getItem("prevPath") || "/";
       router.push(link);
-
-      toast.success("로그인에 성공했습니다.");
     },
     onError: (err: AxiosError<{ message: string }>) => {
       toast.error(
@@ -72,6 +72,7 @@ export const useLogin = (
   });
 };
 
+//*- 사용자 이미지 수정
 export const usePatchUserImage = (
   userId: string,
   formData: FormData | undefined,
@@ -79,8 +80,9 @@ export const usePatchUserImage = (
   const queryClient = useQueryClient();
   return useMutation(() => patchUserImage(userId, formData), {
     onSuccess: () => {
-      queryClient.invalidateQueries([queryStr.users]);
-      toast.success("프로필 이미지가 수정되었습니다!");
+      queryClient.invalidateQueries([queryKeys.users]);
+      queryClient.invalidateQueries([queryKeys.debates]);
+      queryClient.invalidateQueries([queryKeys.comments]);
     },
     onError: (err: AxiosError<{ message: string }>) => {
       toast.error(
@@ -90,12 +92,14 @@ export const usePatchUserImage = (
   });
 };
 
+//*- 사용자 닉네임 수정
 export const usePatchUserNickname = (userId: string, nickname: string) => {
   const queryClient = useQueryClient();
   return useMutation(() => patchUserNickname(userId, nickname), {
     onSuccess: () => {
-      queryClient.invalidateQueries([queryStr.users]);
-      toast.success("이름이 변경되었습니다!");
+      queryClient.invalidateQueries([queryKeys.users]);
+      queryClient.invalidateQueries([queryKeys.debates]);
+      queryClient.invalidateQueries([queryKeys.comments]);
     },
     onError: (err: AxiosError<{ message: string }>) => {
       toast.error(
@@ -105,18 +109,17 @@ export const usePatchUserNickname = (userId: string, nickname: string) => {
   });
 };
 
+//*- 사용자 암호 수정
 export const usePatchUserPassword = (
   userId: string,
   prevPassword: string,
   nextPassword: string,
 ) => {
-  const queryClient = useQueryClient();
   return useMutation(
     () => patchUserPassword(userId, prevPassword, nextPassword),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([queryStr.users]);
-        toast.success("비밀번호가 변경되었습니다!");
+        toast.success("비밀번호 변경이 완료되었습니다.");
       },
       onError: (err: AxiosError<{ message: string }>) => {
         toast.error(

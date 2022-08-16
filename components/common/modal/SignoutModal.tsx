@@ -1,36 +1,34 @@
 import { Dispatch, SetStateAction } from "react";
-import toast from "react-hot-toast";
 import { useQueryClient } from "react-query";
 
-import { queryStr } from "../../../utils/queries";
+import { queryKeys } from "../../../utils/queries";
 
 import ConfirmModal from "./ConfirmModal";
 
-export default function SignoutModal({
-  isSignoutModalOpen,
-  setIsSignoutModalOpen,
+export default function SignOutModal({
+  isSignOutModalOpen,
+  setIsSignOutModalOpen,
 }: {
-  isSignoutModalOpen: boolean;
-  setIsSignoutModalOpen: Dispatch<SetStateAction<boolean>>;
+  isSignOutModalOpen: boolean;
+  setIsSignOutModalOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   const queryClient = useQueryClient();
 
   return (
     <>
-      {isSignoutModalOpen ? (
+      {isSignOutModalOpen ? (
         <ConfirmModal
           title="로그아웃"
           content="로그아웃 하시겠습니까?"
           firstBtn="아니요"
           firstFunc={() => {
-            setIsSignoutModalOpen(false);
+            setIsSignOutModalOpen(false);
           }}
           secondBtn={"로그아웃"}
           secondFunc={() => {
-            setIsSignoutModalOpen(false);
+            setIsSignOutModalOpen(false);
             window.localStorage.removeItem("debate-ducks-token");
-            queryClient.setQueryData([queryStr.users], () => null);
-            toast.success("로그아웃 되었습니다!");
+            queryClient.setQueryData([queryKeys.users], () => null);
           }}
         />
       ) : null}
