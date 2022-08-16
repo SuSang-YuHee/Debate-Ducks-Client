@@ -1,17 +1,16 @@
 import { useRouter } from "next/router";
 import { ChangeEvent, useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { useQueryClient } from "react-query";
 
-import { login } from "../../api/users";
-import { queryStr } from "../../utils/queries";
+import { useLogin } from "../../utils/queries/users";
 import styles from "./Signin.module.scss";
 
 export default function SigninPage() {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const [userInfo, setUserInfo] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
+
+  const login = useLogin();
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const valueType = e.target.name;
@@ -20,16 +19,7 @@ export default function SigninPage() {
   }
 
   function handleSignin() {
-    login(userInfo.email, userInfo.password, () => {
-      queryClient.invalidateQueries([queryStr.users]);
-      const storage = globalThis?.sessionStorage;
-      const link =
-        storage.getItem("prevPath") === "/signin" ||
-        storage.getItem("prevPath") === "/signup"
-          ? "/"
-          : storage.getItem("prevPath") || "/";
-      router.push(link);
-    });
+    login.mutate({ email: userInfo.email, password: userInfo.password });
   }
 
   function togglePassword() {

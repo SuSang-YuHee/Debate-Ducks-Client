@@ -21,7 +21,10 @@ export const useGetVote = (
   const query = useQuery<Vote, AxiosError>(
     [queryStr.votes, `${debateAndUserId.target_debate_id}`],
     () => getVote(debateAndUserId),
-    options,
+    {
+      enabled: !!debateAndUserId.target_user_id,
+      ...options,
+    },
   );
   return query;
 };

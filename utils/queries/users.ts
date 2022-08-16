@@ -1,21 +1,24 @@
 import { AxiosError } from "axios";
 import {
   useMutation,
+  UseMutationOptions,
   useQuery,
   useQueryClient,
   UseQueryOptions,
 } from "react-query";
 import { toast } from "react-hot-toast";
+import { useRouter } from "next/router";
 
 import {
   getUser,
   patchUserNickname,
   patchUserImage,
   patchUserPassword,
+  login,
 } from "../../api/users";
 import { queryStr } from ".";
 
-import { User } from "../../types";
+import { User, UserInfo } from "../../types";
 
 export const useGetUser = (options?: UseQueryOptions<User, AxiosError>) => {
   const token =
@@ -31,6 +34,42 @@ export const useGetUser = (options?: UseQueryOptions<User, AxiosError>) => {
     },
   );
   return query;
+};
+
+export const useLogin = (
+  options?: UseMutationOptions<
+    string,
+    AxiosError,
+    Pick<UserInfo, "email" | "password">
+  >,
+) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  return useMutation((userInfo) => login(userInfo), {
+    ...options,
+    onSuccess: (data) => {
+      localStorage.setItem("debate-ducks-token", data);
+
+      queryClient.invalidateQueries([queryStr.users]);
+      queryClient.invalidateQueries([queryStr.hearts]);
+      queryClient.invalidateQueries([queryStr.votes]);
+
+      const storage = globalThis?.sessionStorage;
+      const link =
+        storage.getItem("prevPath") === "/signin" ||
+        storage.getItem("prevPath") === "/signup"
+          ? "/"
+          : storage.getItem("prevPath") || "/";
+      router.push(link);
+
+      toast.success("로그인에 성공했습니다.");
+    },
+    onError: (err: AxiosError<{ message: string }>) => {
+      toast.error(
+        `${err.response?.data?.message || "네트워크 에러가 발생했습니다."}`,
+      );
+    },
+  });
 };
 
 export const usePatchUserImage = (

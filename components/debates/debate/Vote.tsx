@@ -16,15 +16,10 @@ export default function Vote({ debateId }: { debateId: number }) {
 
   const user = useGetUser();
   const debate = useGetDebate(debateId);
-  const vote = useGetVote(
-    {
-      target_debate_id: debateId,
-      target_user_id: user.data?.id || "",
-    },
-    {
-      enabled: !!user.data?.id,
-    },
-  );
+  const vote = useGetVote({
+    target_debate_id: debateId,
+    target_user_id: user.data?.id || "",
+  });
   const postVote = usePostVote();
   const patchVote = usePatchVote();
 
@@ -64,7 +59,7 @@ export default function Vote({ debateId }: { debateId: number }) {
         setIsModalOn={setIsCheckModalOn}
       />
       <div className={styles.box_vote}>
-        {vote.data?.isVote && vote.data?.pros ? (
+        {vote.data?.isVote && vote.data?.pros && user.data ? (
           <div className={`${styles.btn} ${styles.btn_pros_clicked}`}>✓</div>
         ) : (
           <div
@@ -74,7 +69,7 @@ export default function Vote({ debateId }: { debateId: number }) {
             찬성
           </div>
         )}
-        {vote.data?.isVote && !vote.data?.pros ? (
+        {vote.data?.isVote && !vote.data?.pros && user.data ? (
           <div className={`${styles.btn} ${styles.btn_cons_clicked}`}>✓</div>
         ) : (
           <div
