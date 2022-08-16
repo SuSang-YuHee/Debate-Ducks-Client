@@ -27,15 +27,10 @@ export default function Debate({ debateId }: { debateId: number }) {
 
   const user = useGetUser();
   const debate = useGetDebate(debateId);
-  const heart = useGetHeart(
-    {
-      target_debate_id: debateId,
-      target_user_id: user.data?.id || "",
-    },
-    {
-      enabled: !!user.data?.id,
-    },
-  );
+  const heart = useGetHeart({
+    target_debate_id: debateId,
+    target_user_id: user.data?.id || "",
+  });
   const patchDebate = usePatchDebate(debateId, user.data);
   const postHeart = usePostHeart();
   const deleteHeart = useDeleteHeart();
@@ -135,7 +130,7 @@ export default function Debate({ debateId }: { debateId: number }) {
         ) : null}
         <div
           className={`${styles.heart} ${
-            heart.data ? styles.heart_fill : styles.heart_empty
+            heart.data && user.data ? styles.heart_fill : styles.heart_empty
           }`}
           onClick={handleHeart}
         >{`♥︎ ${thousandDigit(

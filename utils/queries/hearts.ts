@@ -21,7 +21,10 @@ export const useGetHeart = (
   const query = useQuery<boolean, AxiosError>(
     [queryStr.hearts, `${debateAndUserId.target_debate_id}`],
     () => getHeart(debateAndUserId),
-    options,
+    {
+      enabled: !!debateAndUserId.target_user_id,
+      ...options,
+    },
   );
   return query;
 };
