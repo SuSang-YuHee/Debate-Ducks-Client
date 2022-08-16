@@ -48,7 +48,7 @@ export default function Debateroom({
   const [isStart, setIsStart] = useState<boolean>(false);
   const isDoneRef = useRef<boolean>(false);
   const [turn, setTurn] = useState<TTurn>("none");
-  const timeRef = useRef<number>(0);
+  const [time, setTime] = useState<number>(0);
   //* 녹화 변수
   const mergedAudioRef = useRef<MediaStreamTrack[] | undefined>();
   const recorderRef = useRef<MediaRecorder | undefined>();
@@ -83,7 +83,7 @@ export default function Debateroom({
     setIsStart,
     isDoneRef,
     setTurn,
-    timeRef,
+    setTime,
     mergedAudioRef,
     recorderRef,
     blobRef,
@@ -223,7 +223,7 @@ export default function Debateroom({
           setIsReady={setIsReady}
           isStart={isStart}
           turn={turn}
-          timeRef={timeRef}
+          time={time}
           recorderRef={recorderRef}
         />
         <a ref={aRef} download={debate.title} />
