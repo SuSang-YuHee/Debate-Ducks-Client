@@ -223,7 +223,7 @@ export const useWebSocket = ({
     blobRef,
   ]); // dependency에 reConnect 필요
 
-  //* 연결 해제
+  //*- 연결 해제
   useEffect(() => {
     socketRef.current.on("peerDisconnect", () => {
       if (recorderRef.current?.state === "recording") {
@@ -289,6 +289,7 @@ export const useWebSocket = ({
   }, [debateId, isReady, socketRef, isPros]);
 };
 
+//*- 넘기기 정보 송신
 export const wsTransmitSkip = ({
   debateId,
   socketRef,

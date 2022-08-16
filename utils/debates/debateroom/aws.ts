@@ -1,6 +1,7 @@
 import AWS from "aws-sdk";
 import toast from "react-hot-toast";
 
+//* s3에 녹화 영상 업로드
 export default async function uploadVideo(
   file: Blob | undefined,
   fileName: string,
