@@ -2,6 +2,8 @@ import { useState, ChangeEvent } from "react";
 
 import { UseInputResult, UseRadioResult, UseSelectResult } from "../../types";
 
+//* string 인풋 요소의 value 관리
+//* ex. const exampleInput = useInput("초기값", "") / <input {...exampleInput.attribute} />
 export const useInput = (
   initialValue: string,
   placeholder: string,
@@ -21,6 +23,8 @@ export const useInput = (
   };
 };
 
+//* boolean 인풋 요소의 value 관리
+//* ex. const exampleRadio = useRadio("true", "example") / <input {...exampleRadio.attributeTrue} /><input {...exampleRadio.attributeFalse} />
 export const useRadio = (
   initialValue: "true" | "false",
   name: string,
@@ -51,6 +55,8 @@ export const useRadio = (
   };
 };
 
+//* 선택 요소의 value 관리
+//* ex. const exampleSelect = useSelect(EXAMPLES[0]) / <select {...exampleSelect.attribute}>{EXAMPLES.map((ex) => (<option key={ex}>{ex}</option>))}</select>
 export const useSelect = (
   initialValue: string,
   callback?: () => void,
