@@ -43,7 +43,8 @@ export interface IDebateroom {
   isDoneRef: MutableRefObject<boolean>;
   turn: TTurn;
   setTurn: Dispatch<SetStateAction<TTurn>>;
-  timeRef: MutableRefObject<number>;
+  time: number;
+  setTime: Dispatch<SetStateAction<number>>;
   //* 녹화 타입
   mergedAudioRef: MutableRefObject<MediaStreamTrack[] | undefined>;
   recorderRef: MutableRefObject<MediaRecorder | undefined>;
