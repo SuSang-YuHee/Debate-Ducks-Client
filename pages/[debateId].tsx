@@ -4,7 +4,7 @@ import { useGetDebate } from "../utils/queries/debates";
 
 import Debate from "../components/debates/debate";
 
-export default function Debates() {
+export default function DebatePage() {
   const router = useRouter();
   const param = router.query;
   const debateId =

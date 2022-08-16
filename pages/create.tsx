@@ -10,7 +10,7 @@ import { removeSpace } from "../utils/common/removeSpace";
 import CreateOrEdit from "../components/debates/CreateOrEdit";
 import CheckSignInModal from "../components/common/modal/CheckSignInModal";
 
-export default function Create() {
+export default function CreatePage() {
   const router = useRouter();
   const [isCheckModalOn, setIsCheckModalOn] = useState<boolean>(false);
   const [isCancelModalOn, setIsCancelModalOn] = useState<boolean>(false);

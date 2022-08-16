@@ -8,7 +8,7 @@ import ConfirmModal from "../../components/common/modal/ConfirmModal";
 
 import { UserInfo } from "../../types";
 
-export default function Signup() {
+export default function SignupPage() {
   const [isWaitingModalOn, SetIsWaitingModalOn] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<UserInfo>({
     name: "",

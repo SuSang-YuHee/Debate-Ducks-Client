@@ -11,7 +11,7 @@ import ConfirmModal from "../../components/common/modal/ConfirmModal";
 import { useRouter } from "next/router";
 import ChangePasswordModal from "../../components/common/modal/ChangePasswordModal";
 
-export default function MyPage() {
+export default function MyPagePage() {
   const [image, setImage] = useState<File>();
   const [previewImageUrl, setPreviewImageUrl] = useState<string>("");
   const [formData, setFormData] = useState<FormData>();

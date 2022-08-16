@@ -15,7 +15,7 @@ import { removeSpace } from "../../utils/common/removeSpace";
 import CreateOrEdit from "../../components/debates/CreateOrEdit";
 import CheckSignInModal from "../../components/common/modal/CheckSignInModal";
 
-export default function Edit() {
+export default function EditPage() {
   const router = useRouter();
   const param = router.query;
   const debateId =
