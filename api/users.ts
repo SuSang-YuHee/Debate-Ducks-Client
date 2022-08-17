@@ -15,15 +15,18 @@ export const getUser = async (token: string | null) => {
 };
 
 //*- 회원가입
-export const postUser = (userInfo: IUserInfo, callback?: () => void) => {
+export const postUser = (
+  userInfo: IUserInfo,
+  callback?: (params: boolean) => void,
+) => {
   axios
     .post(`${process.env.NEXT_PUBLIC_API_URL}/users`, userInfo)
     .then(() => {
-      if (callback) callback();
+      if (callback) callback(true);
       toast.success("회원가입이 완료되었습니다.");
     })
     .catch((err: AxiosError<{ message: string }>) => {
-      if (callback) callback();
+      if (callback) callback(false);
       toast.error(
         `${err.response?.data?.message || "네트워크 에러가 발생했습니다."}`,
       );
