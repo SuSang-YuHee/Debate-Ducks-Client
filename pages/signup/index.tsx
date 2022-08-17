@@ -88,9 +88,9 @@ export default function SignupPage() {
 
   function handleSignup() {
     SetIsWaitingModalOn(true);
-    postUser(userInfo, () => {
+    postUser(userInfo, (isSuccess: boolean) => {
       SetIsWaitingModalOn(false);
-      router.push("/signin");
+      if (isSuccess) router.push("/signin");
     });
   }
 
