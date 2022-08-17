@@ -38,7 +38,7 @@ export const useWebSocket = ({
   setIsStart,
   isDoneRef,
   setTurn,
-  setTime,
+  setIsSkipTime,
   mergedAudioRef,
   recorderRef,
   blobRef,
@@ -68,7 +68,7 @@ export const useWebSocket = ({
   | "setIsStart"
   | "isDoneRef"
   | "setTurn"
-  | "setTime"
+  | "setIsSkipTime"
   | "mergedAudioRef"
   | "recorderRef"
   | "blobRef"
@@ -166,7 +166,11 @@ export const useWebSocket = ({
         if (debateData.turn === 4) turn = "prosCross";
         if (debateData.turn === 2) turn = "consCross";
         setTurn(turn);
-        setTime(debateData.time);
+        if (debateData.time > 1 && debateData.time < 120) {
+          setIsSkipTime(true);
+        } else {
+          setIsSkipTime(false);
+        }
         drawNotice({ canvasRef, turn }, debateData, debate.title);
         if (debateData.time === 10 || debateData.time === 1) beep();
       }
@@ -216,7 +220,7 @@ export const useWebSocket = ({
     setTurn,
     socketRef,
     streamRef,
-    setTime,
+    setIsSkipTime,
     videoRef,
     reConnect,
     setIsUploadModalOn,
@@ -245,7 +249,7 @@ export const useWebSocket = ({
       setIsReady(false);
       setIsStart(false);
       setTurn("none");
-      setTime(0);
+      setIsSkipTime(false);
       mergedAudioRef.current = undefined;
       recorderRef.current = undefined;
 
@@ -271,7 +275,7 @@ export const useWebSocket = ({
     setTurn,
     socketRef,
     streamRef,
-    setTime,
+    setIsSkipTime,
     videoRef,
   ]);
 
