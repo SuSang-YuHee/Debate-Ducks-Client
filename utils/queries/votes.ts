@@ -10,16 +10,22 @@ import {
 } from "react-query";
 
 import { postVote, patchVote, getVote } from "../../api/votes";
-import { queryStr } from ".";
+import { queryKeys } from ".";
 
-import { Debate, DebateAndUserID, Vote, VotePostOrPatch } from "../../types";
+import {
+  IDebate,
+  IDebateAndUserID,
+  IVote,
+  IVotePostOrPatch,
+} from "../../types";
 
+//*- 투표 여부 및 찬반 조회
 export const useGetVote = (
-  debateAndUserId: DebateAndUserID,
-  options?: UseQueryOptions<Vote, AxiosError>,
+  debateAndUserId: IDebateAndUserID,
+  options?: UseQueryOptions<IVote, AxiosError>,
 ) => {
-  const query = useQuery<Vote, AxiosError>(
-    [queryStr.votes, `${debateAndUserId.target_debate_id}`],
+  const query = useQuery<IVote, AxiosError>(
+    [queryKeys.votes, `${debateAndUserId.target_debate_id}`],
     () => getVote(debateAndUserId),
     {
       enabled: !!debateAndUserId.target_user_id,
@@ -29,32 +35,33 @@ export const useGetVote = (
   return query;
 };
 
+//*- 투표 생성
 export const usePostVote = (
-  options?: UseMutationOptions<VotePostOrPatch, AxiosError, VotePostOrPatch>,
-): UseMutationResult<VotePostOrPatch, AxiosError, VotePostOrPatch> => {
+  options?: UseMutationOptions<IVotePostOrPatch, AxiosError, IVotePostOrPatch>,
+): UseMutationResult<IVotePostOrPatch, AxiosError, IVotePostOrPatch> => {
   const queryClient = useQueryClient();
   return useMutation((votePostOrPatch) => postVote(votePostOrPatch), {
     ...options,
     onMutate: (votePostOrPatch) => {
-      const prevVote: Vote | undefined = queryClient.getQueryData([
-        queryStr.votes,
+      const prevVote: IVote | undefined = queryClient.getQueryData([
+        queryKeys.votes,
         `${votePostOrPatch.target_debate_id}`,
       ]);
-      const prevDebate: Debate | undefined = queryClient.getQueryData([
-        queryStr.debates,
+      const prevDebate: IDebate | undefined = queryClient.getQueryData([
+        queryKeys.debates,
         `${votePostOrPatch.target_debate_id}`,
       ]);
       if (prevVote !== undefined && prevDebate !== undefined) {
         queryClient.cancelQueries([
-          queryStr.votes,
+          queryKeys.votes,
           `${votePostOrPatch.target_debate_id}`,
         ]);
         queryClient.cancelQueries([
-          queryStr.debates,
+          queryKeys.debates,
           `${votePostOrPatch.target_debate_id}`,
         ]);
         queryClient.setQueryData(
-          [queryStr.votes, `${votePostOrPatch.target_debate_id}`],
+          [queryKeys.votes, `${votePostOrPatch.target_debate_id}`],
           () => {
             return {
               isVote: true,
@@ -63,7 +70,7 @@ export const usePostVote = (
           },
         );
         queryClient.setQueryData(
-          [queryStr.debates, `${votePostOrPatch.target_debate_id}`],
+          [queryKeys.debates, `${votePostOrPatch.target_debate_id}`],
           () => {
             if (votePostOrPatch.pros) {
               return {
@@ -86,11 +93,11 @@ export const usePostVote = (
         );
         return () => {
           queryClient.setQueryData(
-            [queryStr.votes, `${votePostOrPatch.target_debate_id}`],
+            [queryKeys.votes, `${votePostOrPatch.target_debate_id}`],
             prevVote,
           );
           queryClient.setQueryData(
-            [queryStr.debates, `${votePostOrPatch.target_debate_id}`],
+            [queryKeys.debates, `${votePostOrPatch.target_debate_id}`],
             prevDebate,
           );
         };
@@ -109,32 +116,33 @@ export const usePostVote = (
   });
 };
 
+//*- 투표 수정
 export const usePatchVote = (
-  options?: UseMutationOptions<VotePostOrPatch, AxiosError, VotePostOrPatch>,
-): UseMutationResult<VotePostOrPatch, AxiosError, VotePostOrPatch> => {
+  options?: UseMutationOptions<IVotePostOrPatch, AxiosError, IVotePostOrPatch>,
+): UseMutationResult<IVotePostOrPatch, AxiosError, IVotePostOrPatch> => {
   const queryClient = useQueryClient();
   return useMutation((votePostOrPatch) => patchVote(votePostOrPatch), {
     ...options,
     onMutate: (votePostOrPatch) => {
-      const prevVote: Vote | undefined = queryClient.getQueryData([
-        queryStr.votes,
+      const prevVote: IVote | undefined = queryClient.getQueryData([
+        queryKeys.votes,
         `${votePostOrPatch.target_debate_id}`,
       ]);
-      const prevDebate: Debate | undefined = queryClient.getQueryData([
-        queryStr.debates,
+      const prevDebate: IDebate | undefined = queryClient.getQueryData([
+        queryKeys.debates,
         `${votePostOrPatch.target_debate_id}`,
       ]);
       if (prevVote !== undefined && prevDebate !== undefined) {
         queryClient.cancelQueries([
-          queryStr.votes,
+          queryKeys.votes,
           `${votePostOrPatch.target_debate_id}`,
         ]);
         queryClient.cancelQueries([
-          queryStr.debates,
+          queryKeys.debates,
           `${votePostOrPatch.target_debate_id}`,
         ]);
         queryClient.setQueryData(
-          [queryStr.votes, `${votePostOrPatch.target_debate_id}`],
+          [queryKeys.votes, `${votePostOrPatch.target_debate_id}`],
           () => {
             return {
               isVote: true,
@@ -143,7 +151,7 @@ export const usePatchVote = (
           },
         );
         queryClient.setQueryData(
-          [queryStr.debates, `${votePostOrPatch.target_debate_id}`],
+          [queryKeys.debates, `${votePostOrPatch.target_debate_id}`],
           () => {
             if (votePostOrPatch.pros) {
               return {
@@ -166,7 +174,7 @@ export const usePatchVote = (
         );
         return () => {
           queryClient.setQueryData(
-            [queryStr.debates, `${votePostOrPatch.target_debate_id}`],
+            [queryKeys.debates, `${votePostOrPatch.target_debate_id}`],
             prevDebate,
           );
         };

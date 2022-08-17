@@ -4,7 +4,7 @@ import { useGetUser } from "../../../utils/queries/users";
 
 import DebatesCards from "./DebatesCards";
 
-import { UseInputResult } from "../../../types";
+import { IUseInputResult } from "../../../types";
 
 export default function DebatesHeartList({
   search,
@@ -15,7 +15,7 @@ export default function DebatesHeartList({
   isSearchListOn,
   setIsSearchListOn,
 }: {
-  search: UseInputResult;
+  search: IUseInputResult;
   statuses: string[];
   categories: string[];
   order: string;

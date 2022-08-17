@@ -1,8 +1,9 @@
 import { toast } from "react-hot-toast";
 import axios, { AxiosError } from "axios";
 
-import { UserInfo } from "../types";
+import { IUserInfo } from "../types";
 
+//*- 사용자 정보 조회
 export const getUser = async (token: string | null) => {
   const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
     headers: {
@@ -13,23 +14,24 @@ export const getUser = async (token: string | null) => {
   return data;
 };
 
-export const postUser = (userInfo: UserInfo, callback?: () => void) => {
+//*- 회원가입
+export const postUser = (userInfo: IUserInfo, callback?: () => void) => {
   axios
     .post(`${process.env.NEXT_PUBLIC_API_URL}/users`, userInfo)
-    .then((res) => {
-      if (res.statusText === "Created") {
-        if (callback) callback();
-        toast.success("회원가입이 완료되었습니다!");
-      }
+    .then(() => {
+      if (callback) callback();
+      toast.success("회원가입이 완료되었습니다.");
     })
     .catch((err: AxiosError<{ message: string }>) => {
+      if (callback) callback();
       toast.error(
         `${err.response?.data?.message || "네트워크 에러가 발생했습니다."}`,
       );
     });
 };
 
-export const login = async (userInfo: Omit<UserInfo, "name">) => {
+//*- 로그인
+export const login = async (userInfo: Omit<IUserInfo, "name">) => {
   const { data } = await axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/users/login`,
     { email: userInfo.email, password: userInfo.password },
@@ -38,6 +40,7 @@ export const login = async (userInfo: Omit<UserInfo, "name">) => {
   return data;
 };
 
+//*- 사용자 이미지 수정
 export const patchUserImage = async (
   id: string,
   formData: FormData | undefined,
@@ -53,6 +56,7 @@ export const patchUserImage = async (
   return data;
 };
 
+//*- 사용자 닉네임 수정
 export const patchUserNickname = async (id: string, nickname: string) => {
   const { data } = await axios.patch(
     `${process.env.NEXT_PUBLIC_API_URL}/users/${id}/nickname`,
@@ -64,6 +68,7 @@ export const patchUserNickname = async (id: string, nickname: string) => {
   return data;
 };
 
+//*- 사용자 암호 수정
 export const patchUserPassword = async (
   id: string,
   prevPassword: string,

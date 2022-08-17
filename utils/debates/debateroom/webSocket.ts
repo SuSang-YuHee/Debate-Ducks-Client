@@ -38,7 +38,7 @@ export const useWebSocket = ({
   setIsStart,
   isDoneRef,
   setTurn,
-  timeRef,
+  setIsSkipTime,
   mergedAudioRef,
   recorderRef,
   blobRef,
@@ -68,7 +68,7 @@ export const useWebSocket = ({
   | "setIsStart"
   | "isDoneRef"
   | "setTurn"
-  | "timeRef"
+  | "setIsSkipTime"
   | "mergedAudioRef"
   | "recorderRef"
   | "blobRef"
@@ -166,7 +166,11 @@ export const useWebSocket = ({
         if (debateData.turn === 4) turn = "prosCross";
         if (debateData.turn === 2) turn = "consCross";
         setTurn(turn);
-        timeRef.current = debateData.time;
+        if (debateData.time > 1 && debateData.time < 120) {
+          setIsSkipTime(true);
+        } else {
+          setIsSkipTime(false);
+        }
         drawNotice({ canvasRef, turn }, debateData, debate.title);
         if (debateData.time === 10 || debateData.time === 1) beep();
       }
@@ -216,14 +220,14 @@ export const useWebSocket = ({
     setTurn,
     socketRef,
     streamRef,
-    timeRef,
+    setIsSkipTime,
     videoRef,
     reConnect,
     setIsUploadModalOn,
     blobRef,
   ]); // dependency에 reConnect 필요
 
-  //* 연결 해제
+  //*- 연결 해제
   useEffect(() => {
     socketRef.current.on("peerDisconnect", () => {
       if (recorderRef.current?.state === "recording") {
@@ -245,7 +249,7 @@ export const useWebSocket = ({
       setIsReady(false);
       setIsStart(false);
       setTurn("none");
-      timeRef.current = 0;
+      setIsSkipTime(false);
       mergedAudioRef.current = undefined;
       recorderRef.current = undefined;
 
@@ -271,7 +275,7 @@ export const useWebSocket = ({
     setTurn,
     socketRef,
     streamRef,
-    timeRef,
+    setIsSkipTime,
     videoRef,
   ]);
 
@@ -289,29 +293,11 @@ export const useWebSocket = ({
   }, [debateId, isReady, socketRef, isPros]);
 };
 
+//*- 넘기기 정보 송신
 export const wsTransmitSkip = ({
   debateId,
   socketRef,
   isPros,
-  turn,
-  timeRef,
-}: Pick<
-  IDebateroom,
-  "debateId" | "socketRef" | "isPros" | "turn" | "timeRef"
->) => {
-  const checkTurn = () => {
-    if (isPros && (turn === "pros" || turn === "prosCross")) return true;
-    if (!isPros && (turn === "cons" || turn === "consCross")) return true;
-    return false;
-  };
-  if (checkTurn()) {
-    socketRef.current.emit("skip", { debateId, isPros }); //!
-    if (timeRef.current < 60 && timeRef.current > 1) {
-      socketRef.current.emit("skip", { debateId, isPros });
-    } else {
-      toast.error("스킵은 1분 미만일 때만 할 수 있습니다.");
-    }
-  } else {
-    toast.error("스킵은 자신의 차례일 때만 할 수 있습니다.");
-  }
+}: Pick<IDebateroom, "debateId" | "socketRef" | "isPros">) => {
+  socketRef.current.emit("skip", { debateId, isPros });
 };

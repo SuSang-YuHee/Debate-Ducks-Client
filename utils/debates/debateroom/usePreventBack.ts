@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 
+//* 뒤로가기 방지
 export const usePreventBack = () => {
   useEffect(() => {
     const preventGoBack = () => {

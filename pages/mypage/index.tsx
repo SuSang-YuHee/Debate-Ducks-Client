@@ -1,16 +1,18 @@
 import Image from "next/image";
+import { BaseSyntheticEvent, useEffect, useState } from "react";
+import { FiEdit, FiCheckSquare, FiXSquare } from "react-icons/fi";
+
 import {
   useGetUser,
   usePatchUserImage,
   usePatchUserNickname,
 } from "../../utils/queries/users";
 import styles from "./MyPage.module.scss";
-import { BaseSyntheticEvent, useEffect, useState } from "react";
-import { FiEdit, FiCheckSquare, FiXSquare } from "react-icons/fi";
-import ConfirmModal from "../../components/common/modal/ConfirmModal";
-import { useRouter } from "next/router";
-import ChangePasswordModal from "../../components/common/modal/ChangePasswordModal";
 
+import ChangePasswordModal from "../../components/common/modal/ChangePasswordModal";
+import SignOutModal from "../../components/common/modal/SignOutModal";
+
+// Todo: 이름 유효성 검사(회원가입에서도 필요), createObjectURL 에러 해결, 페이지 접근 권한 설정, 프로필 변경 취소 버튼 제작 / 이름 변경 시 사진 밀리는거 해결, 인풋에 기존 아이디 유지 및 placeholder 색 구분
 export default function MyPagePage() {
   const [image, setImage] = useState<File>();
   const [previewImageUrl, setPreviewImageUrl] = useState<string>("");
@@ -19,12 +21,10 @@ export default function MyPagePage() {
   const [nickname, setNickname] = useState("");
   const [isValidationShow, setIsValidationShow] = useState(false);
   const [isPasswordModalOn, setIsPasswordModalOn] = useState(false);
-  const [isUnsubscribeModalOn, setIsUnsubscribeModalOn] = useState(false);
+  const [isSignOutModalOpen, setIsSignOutModalOpen] = useState(false);
   const user = useGetUser();
   const patchUserImage = usePatchUserImage(user.data?.id || "", formData);
   const patchUserNickname = usePatchUserNickname(user.data?.id || "", nickname);
-
-  const router = useRouter();
 
   useEffect(() => {
     const formData = new FormData();
@@ -87,21 +87,10 @@ export default function MyPagePage() {
           }}
         />
       ) : null}
-      {isUnsubscribeModalOn ? (
-        <ConfirmModal
-          title="다음에 또 봐요! 👋"
-          content="로그아웃 하시겠습니까?"
-          firstBtn="머무르기"
-          firstFunc={() => {
-            setIsUnsubscribeModalOn(false);
-          }}
-          secondBtn={"로그아웃"}
-          secondFunc={() => {
-            window.localStorage.removeItem("debate-ducks-token");
-            router.push("/");
-          }}
-        />
-      ) : null}
+      <SignOutModal
+        isSignOutModalOpen={isSignOutModalOpen}
+        setIsSignOutModalOpen={setIsSignOutModalOpen}
+      />
       <div className={styles.container}>
         <div className={styles.inner}>
           <div className={styles.wrapper}>
@@ -197,7 +186,7 @@ export default function MyPagePage() {
               <div
                 className={styles.unsubscribe}
                 onClick={() => {
-                  setIsUnsubscribeModalOn(true);
+                  setIsSignOutModalOpen(true);
                 }}
               >
                 로그아웃

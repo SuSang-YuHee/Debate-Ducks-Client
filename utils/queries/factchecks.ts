@@ -12,19 +12,20 @@ import {
   patchFactcheck,
   deleteFactcheck,
 } from "../../api/factchecks";
-import { queryStr } from ".";
+import { queryKeys } from ".";
 
-import { FactcheckPost, FactcheckPatch, Debate } from "../../types";
+import { TFactcheckPost, TFactcheckPatch, IDebate } from "../../types";
 
+//*- 팩트페크 생성
 export const usePostFactcheck = (
   debateId: number,
-  options?: UseMutationOptions<FactcheckPost, AxiosError, FactcheckPost>,
-): UseMutationResult<FactcheckPost, AxiosError, FactcheckPost> => {
+  options?: UseMutationOptions<TFactcheckPost, AxiosError, TFactcheckPost>,
+): UseMutationResult<TFactcheckPost, AxiosError, TFactcheckPost> => {
   const queryClient = useQueryClient();
   return useMutation((factcheckPost) => postFactcheck(factcheckPost), {
     ...options,
     onSuccess: () => {
-      queryClient.invalidateQueries([queryStr.debates, `${debateId}`]);
+      queryClient.invalidateQueries([queryKeys.debates, `${debateId}`]);
     },
     onError: (err: AxiosError<{ message: string }>) => {
       toast.error(
@@ -34,21 +35,22 @@ export const usePostFactcheck = (
   });
 };
 
+//*- 팩트페크 수정
 export const usePatchFactcheck = (
   debateId: number,
-  options?: UseMutationOptions<FactcheckPatch, AxiosError, FactcheckPatch>,
-): UseMutationResult<FactcheckPatch, AxiosError, FactcheckPatch> => {
+  options?: UseMutationOptions<TFactcheckPatch, AxiosError, TFactcheckPatch>,
+): UseMutationResult<TFactcheckPatch, AxiosError, TFactcheckPatch> => {
   const queryClient = useQueryClient();
   return useMutation((factcheckPatch) => patchFactcheck(factcheckPatch), {
     ...options,
     onMutate: (factcheckPatch) => {
-      const prevDebate: Debate | undefined = queryClient.getQueryData([
-        queryStr.debates,
+      const prevDebate: IDebate | undefined = queryClient.getQueryData([
+        queryKeys.debates,
         `${debateId}`,
       ]);
       if (prevDebate !== undefined) {
-        queryClient.cancelQueries([queryStr.debates, `${debateId}`]);
-        queryClient.setQueryData([queryStr.debates, `${debateId}`], () => {
+        queryClient.cancelQueries([queryKeys.debates, `${debateId}`]);
+        queryClient.setQueryData([queryKeys.debates, `${debateId}`], () => {
           return {
             ...prevDebate,
             factchecks: prevDebate.factchecks.map((factcheck) => {
@@ -65,7 +67,7 @@ export const usePatchFactcheck = (
         });
         return () => {
           queryClient.setQueryData(
-            [queryStr.debates, `${debateId}`],
+            [queryKeys.debates, `${debateId}`],
             prevDebate,
           );
         };
@@ -84,6 +86,7 @@ export const usePatchFactcheck = (
   });
 };
 
+//*- 팩트페크 삭제
 export const useDeleteFactcheck = (
   debateId: number,
   options?: UseMutationOptions<number, AxiosError, number>,
@@ -92,13 +95,13 @@ export const useDeleteFactcheck = (
   return useMutation((factcheckId) => deleteFactcheck(factcheckId), {
     ...options,
     onMutate: (factcheckId) => {
-      const prevDebate: Debate | undefined = queryClient.getQueryData([
-        queryStr.debates,
+      const prevDebate: IDebate | undefined = queryClient.getQueryData([
+        queryKeys.debates,
         `${debateId}`,
       ]);
       if (prevDebate !== undefined) {
-        queryClient.cancelQueries([queryStr.debates, `${debateId}`]);
-        queryClient.setQueryData([queryStr.debates, `${debateId}`], () => {
+        queryClient.cancelQueries([queryKeys.debates, `${debateId}`]);
+        queryClient.setQueryData([queryKeys.debates, `${debateId}`], () => {
           return {
             ...prevDebate,
             factchecks: prevDebate.factchecks.filter(
@@ -108,7 +111,7 @@ export const useDeleteFactcheck = (
         });
         return () => {
           queryClient.setQueryData(
-            [queryStr.debates, `${debateId}`],
+            [queryKeys.debates, `${debateId}`],
             prevDebate,
           );
         };

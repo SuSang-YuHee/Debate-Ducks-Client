@@ -2,6 +2,7 @@ import { COLORS } from "../../common/constant";
 
 import { IDebateroom, IDebateData } from "../../../types";
 
+//*- 내용
 export const drawContents = ({
   debate,
   isPros,
@@ -26,9 +27,11 @@ export const drawContents = ({
   | "isScreenOn"
   | "isPeerScreenOn"
 >) => {
+  //* 배경
   drawSquare({ canvasRef }, COLORS.white, 0, 80, 1280, 640);
 
   if (isScreenOn) {
+    //** 자신 공유 화면
     if (!videoRef.current) return;
     drawSquare({ canvasRef }, COLORS.black, 0, 80, 1280, 640);
     const [w, h] = resize(videoRef.current);
@@ -36,6 +39,7 @@ export const drawContents = ({
       ?.getContext("2d")
       ?.drawImage(videoRef.current, 640 - w / 2, 440 - h / 2, w, h);
   } else if (isPeerScreenOn) {
+    //** 상대 공유 화면
     if (!peerVideoRef.current) return;
     drawSquare({ canvasRef }, COLORS.black, 0, 80, 1280, 640);
     const [w, h] = resize(peerVideoRef.current);
@@ -43,6 +47,7 @@ export const drawContents = ({
       ?.getContext("2d")
       ?.drawImage(peerVideoRef.current, 640 - w / 2, 440 - h / 2, w, h);
   } else {
+    //** VS
     drawText(
       { canvasRef },
       COLORS.black,
@@ -52,6 +57,7 @@ export const drawContents = ({
       420,
     );
 
+    //** 찬성 정보
     drawSquare({ canvasRef }, COLORS.pros, 40, 110, 520, 520);
     drawSquare({ canvasRef }, COLORS.black, 50, 120, 500, 500);
     drawText(
@@ -75,6 +81,7 @@ export const drawContents = ({
       380,
     );
 
+    //** 반대 정보
     drawSquare({ canvasRef }, COLORS.cons, 720, 110, 520, 520);
     drawSquare({ canvasRef }, COLORS.black, 730, 120, 500, 500);
     drawText(
@@ -105,11 +112,13 @@ export const drawContents = ({
     const IsProsVideoOn = isPros ? isVideoOn : isPeerVideoOn;
     const IsConsVideoOn = isPros ? isPeerVideoOn : isVideoOn;
 
+    //** 찬성 비디오
     if (IsProsVideoOn) {
       canvasRef.current
         ?.getContext("2d")
         ?.drawImage(prosVideo, 50, 120, 500, 500);
     }
+    //** 반대 비디오
     if (IsConsVideoOn) {
       canvasRef.current
         ?.getContext("2d")
@@ -118,6 +127,7 @@ export const drawContents = ({
   }
 };
 
+//*- 공지
 export const drawNotice = (
   { canvasRef, turn = "none" }: Pick<IDebateroom, "canvasRef" | "turn">,
   debateData: IDebateData,
@@ -144,6 +154,7 @@ export const drawNotice = (
 };
 
 //*- utils
+//* 사각형 그리기
 function drawSquare(
   { canvasRef }: Pick<IDebateroom, "canvasRef">,
   color: string,
@@ -158,6 +169,7 @@ function drawSquare(
   ctx.fillRect(dx, dy, w, h);
 }
 
+//* 글 적기
 function drawText(
   { canvasRef }: Pick<IDebateroom, "canvasRef">,
   color: string,
@@ -174,6 +186,7 @@ function drawText(
   ctx.fillText(text, w, h);
 }
 
+//* 공유화면 비율 조정
 function resize(screen: HTMLVideoElement) {
   let w = 0;
   let h = 0;
