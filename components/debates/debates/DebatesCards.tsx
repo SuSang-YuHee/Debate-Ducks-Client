@@ -173,9 +173,9 @@ export default function DebatesCards({
             })}
           </div>
         ))}
-        <div className={styles.empty_message}>
-          {checkEmpty() ? "해당하는 토론이 없습니다." : null}
-        </div>
+        {checkEmpty() ? (
+          <div className={styles.empty_message}>해당하는 토론이 없습니다.</div>
+        ) : null}
         <div ref={ref}></div>
       </div>
     </>
