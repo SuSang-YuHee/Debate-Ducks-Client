@@ -22,6 +22,13 @@ export default function SigninPage() {
     login.mutate({ email: userInfo.email, password: userInfo.password });
   }
 
+  function handleExperienceSignin() {
+    login.mutate({
+      email: "experience@account.com",
+      password: "0p9o8i7u6y5t4r3e2w!",
+    });
+  }
+
   function togglePassword() {
     setShowPassword(!showPassword);
   }
@@ -76,6 +83,12 @@ export default function SigninPage() {
             로그인
           </button>
         )}
+        <button
+          onClick={handleExperienceSignin}
+          className={`${styles.btn} ${styles.btn_cons}`}
+        >
+          체험 로그인
+        </button>
         <div className={styles.signup}>
           <div>아직 회원이 아니신가요?</div>
           <div

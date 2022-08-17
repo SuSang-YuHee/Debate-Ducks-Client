@@ -78,7 +78,7 @@
       width: 100%;
       border: none;
       border-radius: 0.2rem;
-      margin: 20px 0;
+      margin: 20px 0 0;
       padding: 10px 0;
       color: #fff;
       cursor: pointer;
@@ -88,8 +88,14 @@
         border: 1px solid #ccc;
         cursor: not-allowed;
       }
+      &_cons {
+        color: $c-pros;
+        background-color: #fff;
+        border: 1px solid $c-pros;
+      }
     }
     .signup {
+      margin-top: 10px;
       text-align: center;
       font-size: 0.85rem;
       line-height: 1.5rem;

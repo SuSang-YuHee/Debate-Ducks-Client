@@ -115,6 +115,7 @@ export const usePatchDebate = (
       }
     },
     onSuccess: () => {
+      queryClient.invalidateQueries([queryKeys.debates], { exact: true });
       if (/\/edit/.test(router.pathname)) {
         router.push(`/${debateId}`);
       }
@@ -125,6 +126,10 @@ export const usePatchDebate = (
       rollback: (() => IDebate) | undefined,
     ) => {
       if (rollback) rollback();
+      //* 참여 실패 시 다른 참여자 보여주기 위함
+      if (participant) {
+        queryClient.invalidateQueries([queryKeys.debates, `${debateId}`]);
+      }
       toast.error(
         `${err.response?.data?.message || "네트워크 에러가 발생했습니다."}`,
       );
