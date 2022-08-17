@@ -45,8 +45,8 @@ export default function Header() {
           }}
         ></div>
       ) : null}
-      <div className={styles.logo_container} onClick={handleLogoClick}>
-        <div className={styles.image}>
+      <div className={styles.logo_container}>
+        <div className={styles.image} onClick={handleLogoClick}>
           <Image
             src="/images/logo/debate-ducks-symbol.svg"
             alt="logo_image"
@@ -54,7 +54,9 @@ export default function Header() {
             height="40"
           />
         </div>
-        <h1 className={styles.title}>DEBATE DUCKS</h1>
+        <h1 className={styles.title} onClick={handleLogoClick}>
+          DEBATE DUCKS
+        </h1>
       </div>
       <div className={styles.profile_container}>
         {isSigninModalOpen ? (
