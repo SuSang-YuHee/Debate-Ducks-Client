@@ -8,7 +8,7 @@ import Link from "next/link";
 export default function Footer() {
   const router = useRouter();
 
-  return (
+  return /\/debateroom|\/signin|\/signup/.test(router.pathname) ? null : (
     <div className={`${styles.outer}`}>
       <div className={`inner ${styles.box}`}>
         <div className={styles.item}>
