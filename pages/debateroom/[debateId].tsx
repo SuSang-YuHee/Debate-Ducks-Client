@@ -1,7 +1,10 @@
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
+import { GetServerSideProps } from "next";
+import { dehydrate, QueryClient } from "react-query";
 
+import { getDebate } from "../../api/debates";
 import { useGetUser } from "../../utils/queries/users";
 import { useGetDebate } from "../../utils/queries/debates";
 
@@ -45,3 +48,19 @@ export default function DebateroomPage() {
     />
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const debateId =
+    typeof context.params?.debateId === "string"
+      ? parseInt(context.params?.debateId)
+      : 0;
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery(["debates", `${debateId}`], () =>
+    getDebate(debateId),
+  );
+  return {
+    props: {
+      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
+    },
+  };
+};
