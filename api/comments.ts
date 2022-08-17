@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { CommentPatch, CommentPost } from "../types";
+import { ICommentPatch, ICommentPost } from "../types";
 
 //*- 댓글 목록 조회 (무한 스크롤 적용)
 export const getComments = async (
@@ -16,7 +16,7 @@ export const getComments = async (
 };
 
 //*- 댓글 생성
-export const postComment = async (commentPost: CommentPost) => {
+export const postComment = async (commentPost: ICommentPost) => {
   const { data } = await axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/comments`,
     commentPost,
@@ -26,7 +26,7 @@ export const postComment = async (commentPost: CommentPost) => {
 };
 
 //*- 댓글 수정
-export const patchComment = async (commentPatch: CommentPatch) => {
+export const patchComment = async (commentPatch: ICommentPatch) => {
   const { data } = await axios.patch(
     `${process.env.NEXT_PUBLIC_API_URL}/comments`,
     commentPatch,

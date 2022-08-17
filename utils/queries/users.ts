@@ -18,15 +18,15 @@ import {
 } from "../../api/users";
 import { queryKeys } from ".";
 
-import { User, UserInfo } from "../../types";
+import { IUser, IUserInfo } from "../../types";
 
 //*- 사용자 정보 조회
-export const useGetUser = (options?: UseQueryOptions<User, AxiosError>) => {
+export const useGetUser = (options?: UseQueryOptions<IUser, AxiosError>) => {
   const token =
     typeof window !== "undefined"
       ? localStorage.getItem("debate-ducks-token")
       : null;
-  const query = useQuery<User, AxiosError>(
+  const query = useQuery<IUser, AxiosError>(
     [queryKeys.users],
     () => getUser(token),
     {
@@ -42,7 +42,7 @@ export const useLogin = (
   options?: UseMutationOptions<
     string,
     AxiosError,
-    Pick<UserInfo, "email" | "password">
+    Pick<IUserInfo, "email" | "password">
   >,
 ) => {
   const router = useRouter();

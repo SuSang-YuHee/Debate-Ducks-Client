@@ -1,7 +1,7 @@
 import { toast } from "react-hot-toast";
 import axios, { AxiosError } from "axios";
 
-import { UserInfo } from "../types";
+import { IUserInfo } from "../types";
 
 //*- 사용자 정보 조회
 export const getUser = async (token: string | null) => {
@@ -15,7 +15,7 @@ export const getUser = async (token: string | null) => {
 };
 
 //*- 회원가입
-export const postUser = (userInfo: UserInfo, callback?: () => void) => {
+export const postUser = (userInfo: IUserInfo, callback?: () => void) => {
   axios
     .post(`${process.env.NEXT_PUBLIC_API_URL}/users`, userInfo)
     .then(() => {
@@ -31,7 +31,7 @@ export const postUser = (userInfo: UserInfo, callback?: () => void) => {
 };
 
 //*- 로그인
-export const login = async (userInfo: Omit<UserInfo, "name">) => {
+export const login = async (userInfo: Omit<IUserInfo, "name">) => {
   const { data } = await axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/users/login`,
     { email: userInfo.email, password: userInfo.password },

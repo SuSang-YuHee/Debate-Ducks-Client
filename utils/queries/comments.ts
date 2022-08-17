@@ -16,7 +16,7 @@ import {
 } from "../../api/comments";
 import { queryKeys } from ".";
 
-import { CommentPatch, CommentPost } from "../../types";
+import { ICommentPatch, ICommentPost } from "../../types";
 
 //*- 댓글 목록 조회 (무한 스크롤 적용)
 export const useGetComments = (debateId: number, order: string) => {
@@ -34,8 +34,8 @@ export const useGetComments = (debateId: number, order: string) => {
 //*- 댓글 생성
 export const usePostComment = (
   debateId: number,
-  options?: UseMutationOptions<CommentPost, AxiosError, CommentPost>,
-): UseMutationResult<CommentPost, AxiosError, CommentPost> => {
+  options?: UseMutationOptions<ICommentPost, AxiosError, ICommentPost>,
+): UseMutationResult<ICommentPost, AxiosError, ICommentPost> => {
   const queryClient = useQueryClient();
   return useMutation((commentPost) => postComment(commentPost), {
     ...options,
@@ -53,8 +53,8 @@ export const usePostComment = (
 //*- 댓글 수정
 export const usePatchComment = (
   debateId: number,
-  options?: UseMutationOptions<CommentPatch, AxiosError, CommentPatch>,
-): UseMutationResult<CommentPatch, AxiosError, CommentPatch> => {
+  options?: UseMutationOptions<ICommentPatch, AxiosError, ICommentPatch>,
+): UseMutationResult<ICommentPatch, AxiosError, ICommentPatch> => {
   const queryClient = useQueryClient();
   return useMutation((commentPatch) => patchComment(commentPatch), {
     ...options,

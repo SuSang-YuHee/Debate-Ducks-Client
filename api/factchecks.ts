@@ -1,9 +1,9 @@
 import axios from "axios";
 
-import { FactcheckPatch, FactcheckPost } from "./../types";
+import { TFactcheckPatch, TFactcheckPost } from "./../types";
 
 //*- 팩트페크 생성
-export const postFactcheck = async (factcheckPost: FactcheckPost) => {
+export const postFactcheck = async (factcheckPost: TFactcheckPost) => {
   const { data } = await axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/factchecks`,
     factcheckPost,
@@ -13,7 +13,7 @@ export const postFactcheck = async (factcheckPost: FactcheckPost) => {
 };
 
 //*- 팩트페크 수정
-export const patchFactcheck = async (factcheckPatch: FactcheckPatch) => {
+export const patchFactcheck = async (factcheckPatch: TFactcheckPatch) => {
   const { data } = await axios.patch(
     `${process.env.NEXT_PUBLIC_API_URL}/factchecks`,
     factcheckPatch,

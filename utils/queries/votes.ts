@@ -12,14 +12,19 @@ import {
 import { postVote, patchVote, getVote } from "../../api/votes";
 import { queryKeys } from ".";
 
-import { Debate, DebateAndUserID, Vote, VotePostOrPatch } from "../../types";
+import {
+  IDebate,
+  IDebateAndUserID,
+  IVote,
+  IVotePostOrPatch,
+} from "../../types";
 
 //*- 투표 여부 및 찬반 조회
 export const useGetVote = (
-  debateAndUserId: DebateAndUserID,
-  options?: UseQueryOptions<Vote, AxiosError>,
+  debateAndUserId: IDebateAndUserID,
+  options?: UseQueryOptions<IVote, AxiosError>,
 ) => {
-  const query = useQuery<Vote, AxiosError>(
+  const query = useQuery<IVote, AxiosError>(
     [queryKeys.votes, `${debateAndUserId.target_debate_id}`],
     () => getVote(debateAndUserId),
     {
@@ -32,17 +37,17 @@ export const useGetVote = (
 
 //*- 투표 생성
 export const usePostVote = (
-  options?: UseMutationOptions<VotePostOrPatch, AxiosError, VotePostOrPatch>,
-): UseMutationResult<VotePostOrPatch, AxiosError, VotePostOrPatch> => {
+  options?: UseMutationOptions<IVotePostOrPatch, AxiosError, IVotePostOrPatch>,
+): UseMutationResult<IVotePostOrPatch, AxiosError, IVotePostOrPatch> => {
   const queryClient = useQueryClient();
   return useMutation((votePostOrPatch) => postVote(votePostOrPatch), {
     ...options,
     onMutate: (votePostOrPatch) => {
-      const prevVote: Vote | undefined = queryClient.getQueryData([
+      const prevVote: IVote | undefined = queryClient.getQueryData([
         queryKeys.votes,
         `${votePostOrPatch.target_debate_id}`,
       ]);
-      const prevDebate: Debate | undefined = queryClient.getQueryData([
+      const prevDebate: IDebate | undefined = queryClient.getQueryData([
         queryKeys.debates,
         `${votePostOrPatch.target_debate_id}`,
       ]);
@@ -113,17 +118,17 @@ export const usePostVote = (
 
 //*- 투표 수정
 export const usePatchVote = (
-  options?: UseMutationOptions<VotePostOrPatch, AxiosError, VotePostOrPatch>,
-): UseMutationResult<VotePostOrPatch, AxiosError, VotePostOrPatch> => {
+  options?: UseMutationOptions<IVotePostOrPatch, AxiosError, IVotePostOrPatch>,
+): UseMutationResult<IVotePostOrPatch, AxiosError, IVotePostOrPatch> => {
   const queryClient = useQueryClient();
   return useMutation((votePostOrPatch) => patchVote(votePostOrPatch), {
     ...options,
     onMutate: (votePostOrPatch) => {
-      const prevVote: Vote | undefined = queryClient.getQueryData([
+      const prevVote: IVote | undefined = queryClient.getQueryData([
         queryKeys.votes,
         `${votePostOrPatch.target_debate_id}`,
       ]);
-      const prevDebate: Debate | undefined = queryClient.getQueryData([
+      const prevDebate: IDebate | undefined = queryClient.getQueryData([
         queryKeys.debates,
         `${votePostOrPatch.target_debate_id}`,
       ]);

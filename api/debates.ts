@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { DebatePost, DebatePatch } from "../types";
+import { IDebatePost, IDebatePatch } from "../types";
 
 //*- 토론 목록 조회 (무한 스크롤 적용)
 export const getDebates = async (
@@ -38,7 +38,7 @@ export const getDebate = async (debateId: number) => {
 };
 
 //*- 토론 생성
-export const postDebate = async (debatePost: DebatePost) => {
+export const postDebate = async (debatePost: IDebatePost) => {
   const { data } = await axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/debates`,
     debatePost,
@@ -48,7 +48,7 @@ export const postDebate = async (debatePost: DebatePost) => {
 };
 
 //*- 토론 수정
-export const patchDebate = async (debatePatch: DebatePatch) => {
+export const patchDebate = async (debatePatch: IDebatePatch) => {
   const { data } = await axios.patch(
     `${process.env.NEXT_PUBLIC_API_URL}/debates`,
     debatePatch,

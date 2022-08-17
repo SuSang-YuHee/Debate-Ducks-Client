@@ -1,9 +1,9 @@
 import axios from "axios";
 
-import { DebateAndUserID } from "./../types";
+import { IDebateAndUserID } from "./../types";
 
 //*- 좋아요 여부 조회
-export const getHeart = async (debateAndUserId: DebateAndUserID) => {
+export const getHeart = async (debateAndUserId: IDebateAndUserID) => {
   const { data } = await axios.get(
     `${process.env.NEXT_PUBLIC_API_URL}/hearts?target_debate_id=${debateAndUserId.target_debate_id}&target_user_id=${debateAndUserId.target_user_id}`,
     { withCredentials: true },
@@ -12,7 +12,7 @@ export const getHeart = async (debateAndUserId: DebateAndUserID) => {
 };
 
 //*- 좋아요 생성
-export const postHeart = async (debateAndUserId: DebateAndUserID) => {
+export const postHeart = async (debateAndUserId: IDebateAndUserID) => {
   const { data } = await axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/hearts`,
     debateAndUserId,
@@ -22,7 +22,7 @@ export const postHeart = async (debateAndUserId: DebateAndUserID) => {
 };
 
 //*- 좋아요 삭제
-export const deleteHeart = async (debateAndUserId: DebateAndUserID) => {
+export const deleteHeart = async (debateAndUserId: IDebateAndUserID) => {
   const { data } = await axios.delete(
     `${process.env.NEXT_PUBLIC_API_URL}/hearts?target_debate_id=${debateAndUserId.target_debate_id}&target_user_id=${debateAndUserId.target_user_id}`,
     {

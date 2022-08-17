@@ -1,13 +1,13 @@
 import { useState, ChangeEvent } from "react";
 
-import { UseInputResult, UseRadioResult, UseSelectResult } from "../../types";
+import { IUseInputResult, I, IUseSelectResult } from "../../types";
 
 //* string 인풋 요소의 value 관리
 //* ex. const exampleInput = useInput("초기값", "") / <input {...exampleInput.attribute} />
 export const useInput = (
   initialValue: string,
   placeholder: string,
-): UseInputResult => {
+): IUseInputResult => {
   const [value, setValue] = useState(initialValue);
 
   const onChange = (
@@ -25,10 +25,7 @@ export const useInput = (
 
 //* boolean 인풋 요소의 value 관리
 //* ex. const exampleRadio = useRadio("true", "example") / <input {...exampleRadio.attributeTrue} /><input {...exampleRadio.attributeFalse} />
-export const useRadio = (
-  initialValue: "true" | "false",
-  name: string,
-): UseRadioResult => {
+export const useRadio = (initialValue: "true" | "false", name: string): I => {
   const [value, setValue] = useState<string>(initialValue);
 
   const onChange = (ev: ChangeEvent<HTMLInputElement>) => {
@@ -61,7 +58,7 @@ export const useSelect = (
   initialValue: string,
   callback?: () => void,
   setSelect?: (params: string) => void,
-): UseSelectResult => {
+): IUseSelectResult => {
   const [value, setValue] = useState(initialValue);
 
   const onChange = (ev: ChangeEvent<HTMLSelectElement>) => {

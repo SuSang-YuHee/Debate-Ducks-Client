@@ -21,7 +21,7 @@ import {
 } from "../../api/debates";
 import { queryKeys } from ".";
 
-import { Debate, DebatePost, DebatePatch, User } from "../../types";
+import { IDebate, IDebatePost, IDebatePatch, IUser } from "../../types";
 
 //*- 토론 목록 조회 (무한 스크롤 적용)
 export const useGetDebates = (searchValue: string, order: string) => {
@@ -52,9 +52,9 @@ export const useGetDebatesHeart = (userId: string, order: string) => {
 //*- 토론 조회
 export const useGetDebate = (
   debateId: number,
-  options?: UseQueryOptions<Debate, AxiosError>,
+  options?: UseQueryOptions<IDebate, AxiosError>,
 ) => {
-  const query = useQuery<Debate, AxiosError>(
+  const query = useQuery<IDebate, AxiosError>(
     [queryKeys.debates, `${debateId}`],
     () => getDebate(debateId),
     options,
@@ -65,8 +65,8 @@ export const useGetDebate = (
 
 //*- 토론 생성
 export const usePostDebate = (
-  options?: UseMutationOptions<DebatePost, AxiosError, DebatePost>,
-): UseMutationResult<DebatePost, AxiosError, DebatePost> => {
+  options?: UseMutationOptions<IDebatePost, AxiosError, IDebatePost>,
+): UseMutationResult<IDebatePost, AxiosError, IDebatePost> => {
   const router = useRouter();
   const queryClient = useQueryClient();
   return useMutation((debate) => postDebate(debate), {
@@ -86,15 +86,15 @@ export const usePostDebate = (
 //*- 토론 수정
 export const usePatchDebate = (
   debateId: number,
-  participant?: User,
-  options?: UseMutationOptions<DebatePatch, AxiosError, DebatePatch>,
-): UseMutationResult<DebatePatch, AxiosError, DebatePatch> => {
+  participant?: IUser,
+  options?: UseMutationOptions<IDebatePatch, AxiosError, IDebatePatch>,
+): UseMutationResult<IDebatePatch, AxiosError, IDebatePatch> => {
   const router = useRouter();
   const queryClient = useQueryClient();
   return useMutation((debate) => patchDebate(debate), {
     ...options,
     onMutate: (debate) => {
-      const prevDebate: Debate | undefined = queryClient.getQueryData([
+      const prevDebate: IDebate | undefined = queryClient.getQueryData([
         queryKeys.debates,
         `${debateId}`,
       ]);
@@ -122,7 +122,7 @@ export const usePatchDebate = (
     onError: (
       err: AxiosError<{ message: string }>,
       _,
-      rollback: (() => Debate) | undefined,
+      rollback: (() => IDebate) | undefined,
     ) => {
       if (rollback) rollback();
       toast.error(

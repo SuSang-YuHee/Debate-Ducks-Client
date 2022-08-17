@@ -7,7 +7,7 @@ import styles from "./CreateOrEdit.module.scss";
 
 import ConfirmModal from "../common/modal/ConfirmModal";
 
-import { UseInputResult, UseRadioResult, UseSelectResult } from "../../types";
+import { IUseInputResult, I, IUseSelectResult } from "../../types";
 
 export default function CreateOrEdit({
   isCancelModalOn,
@@ -22,10 +22,10 @@ export default function CreateOrEdit({
 }: {
   isCancelModalOn: boolean;
   setIsCancelModalOn: Dispatch<SetStateAction<boolean>>;
-  titleInput: UseInputResult;
-  categorySelect: UseSelectResult;
-  prosConsRadio: UseRadioResult;
-  contentsInput: UseInputResult;
+  titleInput: IUseInputResult;
+  categorySelect: IUseSelectResult;
+  prosConsRadio: I;
+  contentsInput: IUseInputResult;
   handler: () => void;
   createOrEdit: string;
   routerPush: () => void;

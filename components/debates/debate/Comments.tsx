@@ -19,7 +19,7 @@ import styles from "./Comments.module.scss";
 import CheckSignInModal from "../../common/modal/CheckSignInModal";
 import ConfirmModal from "../../common/modal/ConfirmModal";
 
-import { CommentOfDebate } from "../../../types";
+import { ICommentOfDebate } from "../../../types";
 
 export default function Comments({ debateId }: { debateId: number }) {
   const { ref, inView } = useInView();
@@ -170,7 +170,7 @@ export default function Comments({ debateId }: { debateId: number }) {
             <div className={styles.comment_box}>
               {comments.data?.pages.map((page, idx) => (
                 <div key={idx}>
-                  {page.list.map((comment: CommentOfDebate) => (
+                  {page.list.map((comment: ICommentOfDebate) => (
                     <div
                       className={`${styles.comment} ${
                         comment.pros
