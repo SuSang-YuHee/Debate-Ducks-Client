@@ -52,7 +52,7 @@ export default function Debateroom({
   //* 녹화 변수
   const mergedAudioRef = useRef<MediaStreamTrack[] | undefined>();
   const recorderRef = useRef<MediaRecorder | undefined>();
-  const blobsRef = useRef<Blob[]>([]); //Todo: 재시작 시 비우기
+  const blobsRef = useRef<Blob[]>([]);
   const blobRef = useRef<Blob | undefined>();
   const aRef = useRef<HTMLAnchorElement | null>(null);
 
