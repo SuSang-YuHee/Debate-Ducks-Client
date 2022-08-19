@@ -1,0 +1,93 @@
+@import "../../styles/variable.scss";
+
+.experience_box {
+  background-image: url("/images/qna.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-width: 22rem;
+  width: 100vw;
+  height: 20rem;
+  padding: 3rem;
+  @include center {
+    flex-direction: column;
+  }
+  .detail {
+    color: $c-white;
+    text-shadow: -1px 0 $c-black, 0 1px $c-black, 1px 0 $c-black,
+      0 -1px $c-black;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    line-height: 130%;
+    @include disabledText;
+  }
+  .btn {
+    @include btn-w(7rem, 1.1rem);
+    @include btn-c($c-white, $c-gray_dark, $c-black);
+    margin-top: 3rem;
+  }
+}
+
+.inner_box {
+  min-width: 22rem;
+  margin-bottom: 3rem;
+  font-size: 1rem;
+  color: darken($c-gray_dark, 60%);
+  .qna {
+    color: $c-cons;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 2rem 1rem;
+  }
+  .qna_box {
+    background-color: lighten($c-white, 10%);
+    box-shadow: 5px 5px 5px $c-gray_dark;
+    margin: 1rem;
+    padding: 0.5rem;
+    border-radius: 9px;
+    .title_box {
+      @include center {
+        justify-content: space-between;
+      }
+      @include disabledText;
+      cursor: pointer;
+      padding: 1rem;
+      .title_open {
+        color: $c-cons;
+        font-weight: 700;
+      }
+      .open {
+        color: $c-pros;
+      }
+      .close {
+        color: $c-cons;
+      }
+    }
+    .detail {
+      display: none;
+      height: 0;
+      &_open {
+        padding: 0 1rem 1rem;
+        font-size: 0.9rem;
+        display: block;
+        height: auto;
+        line-height: 150%;
+        word-break: break-all;
+        white-space: pre-line;
+      }
+    }
+  }
+}
+
+@include mobile {
+  .experience_box {
+    height: 15rem;
+    .detail {
+      font-size: 1.2rem;
+    }
+    .btn {
+      @include btn-w(6rem, 0.9rem);
+      margin-top: 2rem;
+    }
+  }
+}
