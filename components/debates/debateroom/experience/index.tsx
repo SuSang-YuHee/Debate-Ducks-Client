@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import Peer from "simple-peer";
+import ysFixWebmDuration from "fix-webm-duration";
 
 import { useGetUser } from "../../../../utils/queries/users";
 import { drawNotice } from "../../../../utils/debates/debateroom/draw";
@@ -59,6 +60,7 @@ export default function ExperienceDebateroom() {
     ["반대 측 반론 및 요약", 180],
     ["토론이 종료되었습니다.", 0],
   ]);
+  const startTimeRef = useRef<number>(Date.now());
 
   //# 서버 정보
   const user = useGetUser();
@@ -191,10 +193,15 @@ export default function ExperienceDebateroom() {
           };
           //- 녹화 종료 후
           recorderRef.current.onstop = () => {
+            const duration = Date.now() - startTimeRef.current;
             const blob = new Blob(blobsRef.current, {
               type: "video/webm",
             });
-            blobRef.current = blob;
+            ysFixWebmDuration(blob, duration, { logger: false }).then(
+              (fixedBlob) => {
+                blobRef.current = fixedBlob;
+              },
+            );
             blobsRef.current = [];
           };
         };
@@ -272,6 +279,7 @@ export default function ExperienceDebateroom() {
             setIsStart(true);
             debateStart();
             recorderRef.current?.start(1000 / 30);
+            startTimeRef.current = Date.now();
           }}
         />
       ) : null}
