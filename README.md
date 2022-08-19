@@ -12,7 +12,11 @@
 
 ## Release
 
-### Debate Ducks 2.0.0
+### Debate Ducks 2.0.1 [*](https://github.com/SuSang-YuHee/Debate-Ducks-Client/pull/114)
+
+- 체험 로그인
+
+### Debate Ducks 2.0.0 []()
 
 - 회원가입 / 사용자 정보 수정 및 삭제
 - 토론 생성, 수정 및 삭제
