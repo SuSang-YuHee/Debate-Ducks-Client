@@ -8,15 +8,15 @@
   opacity: 0.7;
   @include btn-w(2.1rem, 1rem);
   @include btn-c(
-    darken($c-gray-dark, 20%),
-    darken($c-gray-dark, 20%),
+    darken($c-gray_dark, 20%),
+    darken($c-gray_dark, 20%),
     $c-white
   );
   &:hover {
     @include btn-c(
       $c-white,
-      darken($c-gray-dark, 20%),
-      darken($c-gray-dark, 20%)
+      darken($c-gray_dark, 20%),
+      darken($c-gray_dark, 20%)
     );
   }
   &_home {

@@ -148,6 +148,7 @@ function setRecorder({
     const blob = new Blob(blobsRef.current, {
       type: "video/webm",
     });
+    blobsRef.current = [];
     blobRef.current = blob;
 
     if (isDoneRef.current) {
