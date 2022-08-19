@@ -12,6 +12,7 @@
     "@reduxjs/toolkit": "^1.8.3",
     "aws-sdk": "^2.1190.0",
     "axios": "^0.27.2",
+    "fix-webm-duration": "^1.0.5",
     "next": "12.1.6",
     "next-optimized-images": "^2.6.2",
     "next-redux-wrapper": "^7.0.5",
