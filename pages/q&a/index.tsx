@@ -1,7 +1,10 @@
+import { useRouter } from "next/router";
 import { useState } from "react";
+
 import styles from "./index.module.scss";
 
 export default function QnAPage() {
+  const router = useRouter();
   const [openedDetail, setOpenedDetail] = useState<number[]>([]);
 
   const CONTENTS = [
@@ -54,9 +57,16 @@ export default function QnAPage() {
     <div>
       <div className={styles.experience_box}>
         <pre className={styles.detail}>
-          {"토론이 어떻게 진행되는지 궁금하다면\n체험 토론을 진행해 보세요!"}
+          {
+            "토론이 어떻게 진행되는지 궁금하다면\n혼자 하는 체험 토론을 진행해 보세요!"
+          }
         </pre>
-        <div className={styles.btn}>체험 토론</div>
+        <div
+          className={styles.btn}
+          onClick={() => router.push("/debateroom/experience")}
+        >
+          체험 토론
+        </div>
       </div>
       <div className={`inner ${styles.inner_box}`}>
         <div className={styles.qna}>{"자주 묻는 질문"}</div>
