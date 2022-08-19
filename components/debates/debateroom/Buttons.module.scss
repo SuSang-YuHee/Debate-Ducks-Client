@@ -41,14 +41,14 @@
   }
   &_disabled {
     cursor: default;
-    border: 1px solid darken($c-gray-dark, 30%);
-    background-color: darken($c-gray-dark, 30%);
+    border: 1px solid darken($c-gray_dark, 30%);
+    background-color: darken($c-gray_dark, 30%);
     color: $c-white;
   }
 }
 
 .name {
-  color: darken($c-gray-dark, 30%);
+  color: darken($c-gray_dark, 30%);
 }
 
 @include mobile {
