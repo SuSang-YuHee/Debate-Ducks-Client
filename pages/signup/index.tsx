@@ -6,11 +6,11 @@ import styles from "./Signup.module.scss";
 
 import ConfirmModal from "../../components/common/modal/ConfirmModal";
 
-import { UserInfo } from "../../types";
+import { IUserInfo } from "../../types";
 
-export default function Signup() {
+export default function SignupPage() {
   const [isWaitingModalOn, SetIsWaitingModalOn] = useState<boolean>(false);
-  const [userInfo, setUserInfo] = useState<UserInfo>({
+  const [userInfo, setUserInfo] = useState<IUserInfo>({
     name: "",
     email: "",
     password: "",
@@ -88,9 +88,9 @@ export default function Signup() {
 
   function handleSignup() {
     SetIsWaitingModalOn(true);
-    postUser(userInfo, () => {
+    postUser(userInfo, (isSuccess: boolean) => {
       SetIsWaitingModalOn(false);
-      router.push("/signin");
+      if (isSuccess) router.push("/signin");
     });
   }
 

@@ -31,6 +31,7 @@ export const useAutoOff = ({
 >) => {
   //*- 턴 전환 시 오디오 및 화면 공유 끄기
   useEffect(() => {
+    //* 화면 공유 끄기
     offScreenShare({
       peerRef,
       streamRef,
@@ -42,12 +43,14 @@ export const useAutoOff = ({
     if (turn === "none") return;
 
     if (isPros) {
+      //* 찬성 비디오 끄기/켜기
       if (turn === "pros" || turn === "prosCross") {
         toggleMic({ streamRef, isMicOn: true, setIsMicOn });
       } else {
         toggleMic({ streamRef, isMicOn: false, setIsMicOn });
       }
     } else {
+      //* 반대 비디오 끄기/켜기
       if (turn === "cons" || turn === "consCross") {
         toggleMic({ streamRef, isMicOn: true, setIsMicOn });
       } else {

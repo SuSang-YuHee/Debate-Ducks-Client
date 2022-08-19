@@ -7,7 +7,7 @@ export interface IDebateroom {
   //* Props 타입
   debateId: string;
   socketRef: MutableRefObject<Socket>;
-  debate: Debate;
+  debate: IDebate;
   isPros: boolean;
   //* 모달 타입
   setIsDoneModalOn: Dispatch<SetStateAction<boolean>>;
@@ -43,7 +43,8 @@ export interface IDebateroom {
   isDoneRef: MutableRefObject<boolean>;
   turn: TTurn;
   setTurn: Dispatch<SetStateAction<TTurn>>;
-  timeRef: MutableRefObject<number>;
+  isSkipTime: boolean;
+  setIsSkipTime: Dispatch<SetStateAction<boolean>>;
   //* 녹화 타입
   mergedAudioRef: MutableRefObject<MediaStreamTrack[] | undefined>;
   recorderRef: MutableRefObject<MediaRecorder | undefined>;
@@ -73,21 +74,21 @@ export interface IDummy {
 }
 
 //*- users
-export interface User {
+export interface IUser {
   id: string;
   nickname: string;
   email: string;
-  profile_image?: string | null;
+  profile_image: string | null;
 }
 
-export interface UserInfo {
+export interface IUserInfo {
   name: string | undefined;
   email: string | undefined;
   password: string | undefined;
 }
 
 //*- debates
-export interface Debate {
+export interface IDebate {
   id: number;
   title: string;
   contents: string;
@@ -96,89 +97,89 @@ export interface Debate {
   author_pros: boolean;
   created_date: string;
   updated_date: string | null;
-  author: User | null;
-  participant: User | null;
-  factchecks: Factcheck[];
+  author: IUser | null;
+  participant: IUser | null;
+  factchecks: IFactcheck[];
   hearts_cnt: number;
   vote: { prosCnt: number; consCnt: number };
 }
 
-export type DebateOfDebates = Omit<Debate, "factchecks" | "vote">;
+export type TDebateOfDebates = Omit<IDebate, "factchecks" | "vote">;
 
-export interface DebatePost
-  extends Pick<Debate, "title" | "contents" | "category" | "author_pros"> {
+export interface IDebatePost
+  extends Pick<IDebate, "title" | "contents" | "category" | "author_pros"> {
   author_id: string;
 }
 
-type TempDebatePatch = Pick<Debate, "id"> &
+type TDebatePatch = Pick<IDebate, "id"> &
   Partial<
     Pick<
-      Debate,
+      IDebate,
       "title" | "contents" | "category" | "author_pros" | "video_url"
     >
   >;
-export interface DebatePatch extends TempDebatePatch {
+export interface IDebatePatch extends TDebatePatch {
   participant_id?: string;
 }
 
 //*- factchecks
-export interface Factcheck {
+export interface IFactcheck {
   id: number;
   pros: boolean;
   description: string;
   reference_url: string;
 }
 
-export type FactcheckPost = Pick<
-  Factcheck,
+export type TFactcheckPost = Pick<
+  IFactcheck,
   "pros" | "description" | "reference_url"
 > &
-  DebateAndUserID;
+  IDebateAndUserID;
 
-export type FactcheckPatch = Pick<
-  Factcheck,
+export type TFactcheckPatch = Pick<
+  IFactcheck,
   "id" | "description" | "reference_url"
 >;
 
 //*- debate and user id
-export interface DebateAndUserID {
+export interface IDebateAndUserID {
   target_debate_id: number;
   target_user_id: string;
 }
 
 //*- votes
-export interface Vote {
+export interface IVote {
   isVote: boolean;
   pros: boolean;
 }
 
-export interface VotePostOrPatch extends DebateAndUserID {
+export interface IVotePostOrPatch extends IDebateAndUserID {
   pros: boolean;
 }
 
 //*- comments
-export interface CommentOfDebate {
+export interface ICommentOfDebate {
   id: number;
   pros: boolean | null;
   contents: string;
   created_date: string;
   updated_date: string | null;
-  target_user: User;
+  target_user: IUser;
 }
 
-export interface CommentPost extends DebateAndUserID {
+export interface ICommentPost extends IDebateAndUserID {
   pros: boolean | null;
   contents: string;
 }
 
-export interface CommentPatch {
+export interface ICommentPatch {
   id: number;
   pros: boolean | null;
   contents: string;
 }
 
 //*- useInPutSelect
-export interface UseInputResult {
+export interface IUseInputResult {
   attribute: {
     value: string;
     placeholder: string;
@@ -188,7 +189,7 @@ export interface UseInputResult {
   setValue: Dispatch<SetStateAction<string>>;
 }
 
-export interface UseRadioResult {
+export interface IUseRadioResult {
   attributeTrue: {
     type: string;
     name: string;
@@ -207,7 +208,7 @@ export interface UseRadioResult {
   setValue: Dispatch<SetStateAction<string>>;
 }
 
-export interface UseSelectResult {
+export interface IUseSelectResult {
   attribute: {
     value: string;
     onChange: (ev: ChangeEvent<HTMLSelectElement>) => void;

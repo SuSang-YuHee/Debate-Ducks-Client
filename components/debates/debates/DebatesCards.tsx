@@ -12,9 +12,9 @@ import CheckSignInModal from "../../common/modal/CheckSignInModal";
 import DebateCard from "./DebateCard";
 
 import {
-  DebateOfDebates,
-  UseInputResult,
-  UseSelectResult,
+  TDebateOfDebates,
+  IUseInputResult,
+  IUseSelectResult,
 } from "../../../types";
 
 export default function DebatesCards({
@@ -40,8 +40,8 @@ export default function DebatesCards({
     unknown
   >;
   refetch: () => void;
-  search: UseInputResult;
-  orderSelect: UseSelectResult;
+  search: IUseInputResult;
+  orderSelect: IUseSelectResult;
   isSearchListOn: boolean;
   setIsSearchListOn: (params: boolean) => void;
 }) {
@@ -59,7 +59,7 @@ export default function DebatesCards({
     return debates.data
       ? debates.data?.pages
           .map((page) =>
-            page.list.filter((debate: DebateOfDebates) => {
+            page.list.filter((debate: TDebateOfDebates) => {
               const status = debate.video_url
                 ? STATUSES[2]
                 : debate.participant?.id
@@ -154,7 +154,7 @@ export default function DebatesCards({
         </div>
         {debates.data?.pages.map((page, idx) => (
           <div className={styles.cards} key={idx}>
-            {page.list.map((debate: DebateOfDebates) => {
+            {page.list.map((debate: TDebateOfDebates) => {
               const status = debate.video_url
                 ? STATUSES[2]
                 : debate.participant?.id
@@ -173,9 +173,9 @@ export default function DebatesCards({
             })}
           </div>
         ))}
-        <div className={styles.empty_message}>
-          {checkEmpty() ? "해당하는 토론이 없습니다." : null}
-        </div>
+        {checkEmpty() ? (
+          <div className={styles.empty_message}>해당하는 토론이 없습니다.</div>
+        ) : null}
         <div ref={ref}></div>
       </div>
     </>

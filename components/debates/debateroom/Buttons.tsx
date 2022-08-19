@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
   IoMic,
@@ -43,7 +43,7 @@ export default function Buttons({
   setIsReady,
   isStart,
   turn,
-  timeRef,
+  isSkipTime,
   recorderRef,
 }: Pick<
   IDebateroom,
@@ -65,11 +65,23 @@ export default function Buttons({
   | "setIsReady"
   | "isStart"
   | "turn"
-  | "timeRef"
+  | "isSkipTime"
   | "recorderRef"
 >) {
   const router = useRouter();
   const [isExitModalOn, setIsExitModalOn] = useState<boolean>(false);
+  const [isSkipOn, setIsSkipOn] = useState<boolean>(false);
+
+  //* 넘기기 가능 여부
+  useEffect(() => {
+    const newState = isSkipTime
+      ? (isPros && (turn === "pros" || turn === "prosCross")) ||
+        (!isPros && (turn === "cons" || turn === "consCross"))
+        ? true
+        : false
+      : false;
+    setIsSkipOn(newState);
+  }, [isPros, isSkipTime, turn]);
 
   return (
     <>
@@ -166,9 +178,13 @@ export default function Buttons({
         {isStart ? (
           <div className={styles.box}>
             <div
-              className={`${styles.btn} ${styles.btn_pros}`}
+              className={`${styles.btn} ${
+                isSkipOn ? styles.btn_pros : styles.btn_disabled
+              }`}
               onClick={() => {
-                wsTransmitSkip({ debateId, socketRef, isPros, turn, timeRef });
+                if (isSkipOn) {
+                  wsTransmitSkip({ debateId, socketRef, isPros });
+                }
               }}
             >
               <MdDoubleArrow />

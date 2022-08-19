@@ -1,17 +1,16 @@
 import { useRouter } from "next/router";
 import { ChangeEvent, useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { useQueryClient } from "react-query";
 
-import { login } from "../../api/users";
-import { queryStr } from "../../utils/queries";
+import { useLogin } from "../../utils/queries/users";
 import styles from "./Signin.module.scss";
 
-export default function Signin() {
+export default function SigninPage() {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const [userInfo, setUserInfo] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
+
+  const login = useLogin();
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const valueType = e.target.name;
@@ -20,15 +19,13 @@ export default function Signin() {
   }
 
   function handleSignin() {
-    login(userInfo.email, userInfo.password, () => {
-      queryClient.invalidateQueries([queryStr.users]);
-      const storage = globalThis?.sessionStorage;
-      const link =
-        storage.getItem("prevPath") === "/signin" ||
-        storage.getItem("prevPath") === "/signup"
-          ? "/"
-          : storage.getItem("prevPath") || "/";
-      router.push(link);
+    login.mutate({ email: userInfo.email, password: userInfo.password });
+  }
+
+  function handleExperienceSignin() {
+    login.mutate({
+      email: "experience@account.com",
+      password: "0p9o8i7u6y5t4r3e2w!",
     });
   }
 
@@ -86,6 +83,12 @@ export default function Signin() {
             로그인
           </button>
         )}
+        <button
+          onClick={handleExperienceSignin}
+          className={`${styles.btn} ${styles.btn_cons}`}
+        >
+          체험 로그인
+        </button>
         <div className={styles.signup}>
           <div>아직 회원이 아니신가요?</div>
           <div

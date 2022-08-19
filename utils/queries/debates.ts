@@ -19,13 +19,14 @@ import {
   patchDebate,
   postDebate,
 } from "../../api/debates";
-import { queryStr } from ".";
+import { queryKeys } from ".";
 
-import { Debate, DebatePost, DebatePatch, User } from "../../types";
+import { IDebate, IDebatePost, IDebatePatch, IUser } from "../../types";
 
+//*- 토론 목록 조회 (무한 스크롤 적용)
 export const useGetDebates = (searchValue: string, order: string) => {
   const query = useInfiniteQuery(
-    [queryStr.debates],
+    [queryKeys.debates],
     ({ pageParam = 0 }) => getDebates(searchValue, pageParam, order),
     {
       getNextPageParam: (lastPage) =>
@@ -35,9 +36,10 @@ export const useGetDebates = (searchValue: string, order: string) => {
   return query;
 };
 
+//*- 좋아요한 토론 목록 조회 (무한 스크롤 적용)
 export const useGetDebatesHeart = (userId: string, order: string) => {
   const query = useInfiniteQuery(
-    [queryStr.debates, "heart"],
+    [queryKeys.debates, "heart"],
     ({ pageParam = 0 }) => getDebatesHeart(userId, pageParam, order),
     {
       getNextPageParam: (lastPage) =>
@@ -47,12 +49,13 @@ export const useGetDebatesHeart = (userId: string, order: string) => {
   return query;
 };
 
+//*- 토론 조회
 export const useGetDebate = (
   debateId: number,
-  options?: UseQueryOptions<Debate, AxiosError>,
+  options?: UseQueryOptions<IDebate, AxiosError>,
 ) => {
-  const query = useQuery<Debate, AxiosError>(
-    [queryStr.debates, `${debateId}`],
+  const query = useQuery<IDebate, AxiosError>(
+    [queryKeys.debates, `${debateId}`],
     () => getDebate(debateId),
     options,
   );
@@ -60,15 +63,16 @@ export const useGetDebate = (
   return query;
 };
 
+//*- 토론 생성
 export const usePostDebate = (
-  options?: UseMutationOptions<DebatePost, AxiosError, DebatePost>,
-): UseMutationResult<DebatePost, AxiosError, DebatePost> => {
+  options?: UseMutationOptions<IDebatePost, AxiosError, IDebatePost>,
+): UseMutationResult<IDebatePost, AxiosError, IDebatePost> => {
   const router = useRouter();
   const queryClient = useQueryClient();
   return useMutation((debate) => postDebate(debate), {
     ...options,
     onSuccess: () => {
-      queryClient.invalidateQueries([queryStr.debates], { exact: true });
+      queryClient.invalidateQueries([queryKeys.debates], { exact: true });
       router.push(`/`);
     },
     onError: (err: AxiosError<{ message: string }>) => {
@@ -79,23 +83,24 @@ export const usePostDebate = (
   });
 };
 
+//*- 토론 수정
 export const usePatchDebate = (
   debateId: number,
-  participant?: User,
-  options?: UseMutationOptions<DebatePatch, AxiosError, DebatePatch>,
-): UseMutationResult<DebatePatch, AxiosError, DebatePatch> => {
+  participant?: IUser,
+  options?: UseMutationOptions<IDebatePatch, AxiosError, IDebatePatch>,
+): UseMutationResult<IDebatePatch, AxiosError, IDebatePatch> => {
   const router = useRouter();
   const queryClient = useQueryClient();
   return useMutation((debate) => patchDebate(debate), {
     ...options,
     onMutate: (debate) => {
-      const prevDebate: Debate | undefined = queryClient.getQueryData([
-        queryStr.debates,
+      const prevDebate: IDebate | undefined = queryClient.getQueryData([
+        queryKeys.debates,
         `${debateId}`,
       ]);
       if (prevDebate) {
-        queryClient.cancelQueries([queryStr.debates, `${debateId}`]);
-        queryClient.setQueryData([queryStr.debates, `${debateId}`], () => {
+        queryClient.cancelQueries([queryKeys.debates, `${debateId}`]);
+        queryClient.setQueryData([queryKeys.debates, `${debateId}`], () => {
           return {
             ...prevDebate,
             ...debate,
@@ -104,12 +109,13 @@ export const usePatchDebate = (
         });
         return () =>
           queryClient.setQueryData(
-            [queryStr.debates, `${debateId}`],
+            [queryKeys.debates, `${debateId}`],
             prevDebate,
           );
       }
     },
     onSuccess: () => {
+      queryClient.invalidateQueries([queryKeys.debates], { exact: true });
       if (/\/edit/.test(router.pathname)) {
         router.push(`/${debateId}`);
       }
@@ -117,9 +123,13 @@ export const usePatchDebate = (
     onError: (
       err: AxiosError<{ message: string }>,
       _,
-      rollback: (() => Debate) | undefined,
+      rollback: (() => IDebate) | undefined,
     ) => {
       if (rollback) rollback();
+      //* 참여 실패 시 다른 참여자 보여주기 위함
+      if (participant) {
+        queryClient.invalidateQueries([queryKeys.debates, `${debateId}`]);
+      }
       toast.error(
         `${err.response?.data?.message || "네트워크 에러가 발생했습니다."}`,
       );
@@ -127,6 +137,7 @@ export const usePatchDebate = (
   });
 };
 
+//*- 토론 삭제
 export const useDeleteDebate = (
   options?: UseMutationOptions<number, AxiosError, number>,
 ): UseMutationResult<number, AxiosError, number> => {
@@ -135,7 +146,7 @@ export const useDeleteDebate = (
   return useMutation((debateId) => deleteDebate(debateId), {
     ...options,
     onSuccess: () => {
-      queryClient.invalidateQueries([queryStr.debates], { exact: true });
+      queryClient.invalidateQueries([queryKeys.debates], { exact: true });
       router.push(`/`);
     },
     onError: (err: AxiosError<{ message: string }>) => {

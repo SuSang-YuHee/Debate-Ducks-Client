@@ -2,6 +2,7 @@ import { useEffect } from "react";
 
 import { IDebateroom } from "../../../types";
 
+//*- 녹화
 export const useSetRecorder = ({
   socketRef,
   debateId,
@@ -32,7 +33,9 @@ export const useSetRecorder = ({
 >) => {
   useEffect(() => {
     if (!isStart) return;
+    //* 오디오 합침
     mergeAudio({ streamRef, peerStream, mergedAudioRef });
+    //* 녹화 설정
     setRecorder({
       socketRef,
       debateId,
@@ -44,6 +47,7 @@ export const useSetRecorder = ({
       blobsRef,
       blobRef,
     });
+    //* 녹화 시작
     if (recorderRef.current?.state !== "recording") {
       recorderRef.current?.start(1000 / 30);
     }
@@ -64,6 +68,7 @@ export const useSetRecorder = ({
 };
 
 //*- utils
+//* 오디오 합치기
 function mergeAudio({
   streamRef,
   peerStream,
@@ -92,6 +97,7 @@ function mergeAudio({
   mergedAudioRef.current = merge({ streamRef, peerStream });
 }
 
+//* 녹화 설정
 function setRecorder({
   socketRef,
   debateId,
@@ -114,9 +120,11 @@ function setRecorder({
   | "blobsRef"
   | "blobRef"
 >) {
+  //** 30fps로 캔버스 요소 녹화
   const canvasStream = canvasRef.current?.captureStream(30);
 
   if (!canvasStream || !mergedAudioRef.current) return;
+  //** 캔버스 녹화 영상과 합친 오디오 병합
   const mergedTracks = canvasStream
     .getVideoTracks()
     .concat(mergedAudioRef.current);
@@ -131,13 +139,16 @@ function setRecorder({
 
   if (!recorder) return;
   recorderRef.current = recorder;
+  //** 녹화 중
   recorderRef.current.ondataavailable = (ev) => {
     blobsRef.current.push(ev.data);
   };
+  //** 녹화 종료 후
   recorderRef.current.onstop = () => {
     const blob = new Blob(blobsRef.current, {
       type: "video/webm",
     });
+    blobsRef.current = [];
     blobRef.current = blob;
 
     if (isDoneRef.current) {

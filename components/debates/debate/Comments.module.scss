@@ -78,7 +78,7 @@
             border-radius: 100%;
             @include center;
             padding: 0.2rem;
-            background-color: darken($c-gray-dark, 20%);
+            background-color: darken($c-gray_dark, 20%);
             &_pros {
               background-color: $c-pros;
             }
@@ -172,7 +172,7 @@
 .empty_message {
   margin-top: 4rem;
   font-size: 1.2rem;
-  color: darken($c-gray-dark, 20%);
+  color: darken($c-gray_dark, 20%);
 }
 
 @include tablet {

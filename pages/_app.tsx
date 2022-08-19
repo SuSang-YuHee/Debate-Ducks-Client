@@ -1,6 +1,6 @@
 import type { AppProps } from "next/app";
 import { useEffect, useState } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { Toaster } from "react-hot-toast";
 import Head from "next/head";
@@ -11,6 +11,7 @@ import store from "../redux/store";
 import "../styles/globals.scss";
 
 import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -44,19 +45,22 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
-        <Head>
-          <title>Debate Ducks</title>
-        </Head>
-        {isToaster ? (
-          <Toaster
-            toastOptions={{
-              position: "top-center",
-              duration: 2000,
-            }}
-          />
-        ) : null}
-        <Header />
-        <Component {...pageProps} />
+        <Hydrate state={pageProps.dehydratedState}>
+          <Head>
+            <title>Debate Ducks</title>
+          </Head>
+          {isToaster ? (
+            <Toaster
+              toastOptions={{
+                position: "top-center",
+                duration: 2000,
+              }}
+            />
+          ) : null}
+          <Header />
+          <Component {...pageProps} />
+          <Footer />
+        </Hydrate>
         <ReactQueryDevtools />
       </QueryClientProvider>
     </Provider>

@@ -1,4 +1,4 @@
-export const queryStr = {
+export const queryKeys = {
   debates: "debates",
   hearts: "hearts",
   votes: "votes",

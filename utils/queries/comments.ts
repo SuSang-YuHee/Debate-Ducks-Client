@@ -14,13 +14,14 @@ import {
   patchComment,
   getComments,
 } from "../../api/comments";
-import { queryStr } from ".";
+import { queryKeys } from ".";
 
-import { CommentPatch, CommentPost } from "../../types";
+import { ICommentPatch, ICommentPost } from "../../types";
 
+//*- 댓글 목록 조회 (무한 스크롤 적용)
 export const useGetComments = (debateId: number, order: string) => {
   const query = useInfiniteQuery(
-    [queryStr.comments, `${debateId}`],
+    [queryKeys.comments, `${debateId}`],
     ({ pageParam = 0 }) => getComments(debateId, pageParam, order),
     {
       getNextPageParam: (lastPage) =>
@@ -30,15 +31,16 @@ export const useGetComments = (debateId: number, order: string) => {
   return query;
 };
 
+//*- 댓글 생성
 export const usePostComment = (
   debateId: number,
-  options?: UseMutationOptions<CommentPost, AxiosError, CommentPost>,
-): UseMutationResult<CommentPost, AxiosError, CommentPost> => {
+  options?: UseMutationOptions<ICommentPost, AxiosError, ICommentPost>,
+): UseMutationResult<ICommentPost, AxiosError, ICommentPost> => {
   const queryClient = useQueryClient();
   return useMutation((commentPost) => postComment(commentPost), {
     ...options,
     onSuccess: () => {
-      queryClient.invalidateQueries([queryStr.comments, `${debateId}`]);
+      queryClient.invalidateQueries([queryKeys.comments, `${debateId}`]);
     },
     onError: (err: AxiosError<{ message: string }>) => {
       toast.error(
@@ -48,15 +50,16 @@ export const usePostComment = (
   });
 };
 
+//*- 댓글 수정
 export const usePatchComment = (
   debateId: number,
-  options?: UseMutationOptions<CommentPatch, AxiosError, CommentPatch>,
-): UseMutationResult<CommentPatch, AxiosError, CommentPatch> => {
+  options?: UseMutationOptions<ICommentPatch, AxiosError, ICommentPatch>,
+): UseMutationResult<ICommentPatch, AxiosError, ICommentPatch> => {
   const queryClient = useQueryClient();
   return useMutation((commentPatch) => patchComment(commentPatch), {
     ...options,
     onSuccess: () => {
-      queryClient.invalidateQueries([queryStr.comments, `${debateId}`]);
+      queryClient.invalidateQueries([queryKeys.comments, `${debateId}`]);
     },
     onError: (err: AxiosError<{ message: string }>) => {
       toast.error(
@@ -66,6 +69,7 @@ export const usePatchComment = (
   });
 };
 
+//*- 댓글 삭제
 export const useDeleteComment = (
   debateId: number,
   options?: UseMutationOptions<number, AxiosError, number>,
@@ -74,7 +78,7 @@ export const useDeleteComment = (
   return useMutation((commentId) => deleteComment(commentId), {
     ...options,
     onSuccess: () => {
-      queryClient.invalidateQueries([queryStr.comments, `${debateId}`]);
+      queryClient.invalidateQueries([queryKeys.comments, `${debateId}`]);
     },
     onError: (err: AxiosError<{ message: string }>) => {
       toast.error(

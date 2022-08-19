@@ -1,5 +1,6 @@
 import { IDebateroom } from "../../../types";
 
+//*- 화면공유
 export const screenShare = async ({
   peerRef,
   streamRef,
@@ -48,6 +49,7 @@ export const screenShare = async ({
   }
 };
 
+//*- 화면 공유 끄기
 export const offScreenShare = ({
   peerRef,
   streamRef,

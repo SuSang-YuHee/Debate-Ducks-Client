@@ -7,7 +7,7 @@ import { useWebSocket } from "../../../utils/debates/debateroom/webSocket";
 import { useAutoOff } from "../../../utils/debates/debateroom/useAutoOff";
 import { useSetRecorder } from "../../../utils/debates/debateroom/useSetRecorder";
 import { usePreventBack } from "../../../utils/debates/debateroom/usePreventBack";
-import { queryStr } from "../../../utils/queries";
+import { queryKeys } from "../../../utils/queries";
 
 import ConfirmModal from "../../common/modal/ConfirmModal";
 import Canvas from "./Canvas";
@@ -48,11 +48,11 @@ export default function Debateroom({
   const [isStart, setIsStart] = useState<boolean>(false);
   const isDoneRef = useRef<boolean>(false);
   const [turn, setTurn] = useState<TTurn>("none");
-  const timeRef = useRef<number>(0);
+  const [isSkipTime, setIsSkipTime] = useState<boolean>(false);
   //* 녹화 변수
   const mergedAudioRef = useRef<MediaStreamTrack[] | undefined>();
   const recorderRef = useRef<MediaRecorder | undefined>();
-  const blobsRef = useRef<Blob[]>([]); //Todo: 재시작 시 비우기
+  const blobsRef = useRef<Blob[]>([]);
   const blobRef = useRef<Blob | undefined>();
   const aRef = useRef<HTMLAnchorElement | null>(null);
 
@@ -83,7 +83,7 @@ export default function Debateroom({
     setIsStart,
     isDoneRef,
     setTurn,
-    timeRef,
+    setIsSkipTime,
     mergedAudioRef,
     recorderRef,
     blobRef,
@@ -130,7 +130,7 @@ export default function Debateroom({
             });
             peerRef.current?.destroy();
             socketRef.current.disconnect();
-            queryClient.invalidateQueries([queryStr.debates, `${debateId}`]);
+            queryClient.invalidateQueries([queryKeys.debates, `${debateId}`]);
             router.push(`/${debateId}`);
           }}
           secondBtn={"네"}
@@ -146,7 +146,7 @@ export default function Debateroom({
             window.URL.revokeObjectURL(url);
             peerRef.current?.destroy();
             socketRef.current.disconnect();
-            queryClient.invalidateQueries([queryStr.debates, `${debateId}`]);
+            queryClient.invalidateQueries([queryKeys.debates, `${debateId}`]);
             router.push(`/${debateId}`);
           }}
         />
@@ -223,7 +223,7 @@ export default function Debateroom({
           setIsReady={setIsReady}
           isStart={isStart}
           turn={turn}
-          timeRef={timeRef}
+          isSkipTime={isSkipTime}
           recorderRef={recorderRef}
         />
         <a ref={aRef} download={debate.title} />

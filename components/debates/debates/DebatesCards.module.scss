@@ -6,7 +6,6 @@
     flex-direction: column;
   }
   min-width: 22rem;
-  margin-bottom: 5rem;
 }
 
 .btn_edit {
@@ -41,7 +40,7 @@
 .input {
   @include input(9rem, $c-cons);
   &_disabled {
-    color: darken($c-gray-dark, 20%);
+    color: darken($c-gray_dark, 20%);
     text-decoration: line-through;
     background-color: $c-gray-light;
   }
@@ -76,5 +75,6 @@
 .empty_message {
   margin-top: 4rem;
   font-size: 1.2rem;
-  color: darken($c-gray-dark, 20%);
+  color: darken($c-gray_dark, 20%);
+  margin-bottom: 7rem;
 }
