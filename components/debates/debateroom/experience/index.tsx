@@ -38,7 +38,6 @@ export default function ExperienceDebateroom() {
   const [isStart, setIsStart] = useState<boolean>(false);
   const [turn, setTurn] = useState<TTurn>("none");
   //# 녹화 변수
-  const mergedAudioRef = useRef<MediaStreamTrack[] | undefined>();
   const recorderRef = useRef<MediaRecorder | undefined>();
   const blobsRef = useRef<Blob[]>([]);
   const blobRef = useRef<Blob | undefined>();
@@ -144,42 +143,6 @@ export default function ExperienceDebateroom() {
 
   //# 토론 준비
   const handleReady = () => {
-    //> 녹화 준비
-    const setRecorder = () => {
-      //- 30fps로 캔버스 요소 녹화
-      const canvasStream = canvasRef.current?.captureStream(30);
-
-      if (!canvasStream || !mergedAudioRef.current) return;
-      //- 캔버스 녹화 영상과 합친 오디오 병합
-      const mergedTracks = canvasStream
-        .getVideoTracks()
-        .concat(mergedAudioRef.current);
-
-      if (!mergedTracks) return;
-      const mergedStream = new MediaStream(mergedTracks);
-
-      if (!mergedStream) return;
-      const recorder = new MediaRecorder(mergedStream, {
-        mimeType: "video/webm",
-      });
-
-      if (!recorder) return;
-      recorderRef.current = recorder;
-      //- 녹화 중
-      recorderRef.current.ondataavailable = (ev) => {
-        blobsRef.current.push(ev.data);
-      };
-      //- 녹화 종료 후
-      recorderRef.current.onstop = () => {
-        const blob = new Blob(blobsRef.current, {
-          type: "video/webm",
-        });
-        blobsRef.current = [];
-        blobRef.current = blob;
-      };
-    };
-    setRecorder();
-    //> 토론 시작
     setIsReadyModalOn(true);
   };
 
@@ -200,7 +163,42 @@ export default function ExperienceDebateroom() {
         });
         streamRef.current = stream;
         if (videoRef.current) videoRef.current.srcObject = stream;
-        mergedAudioRef.current = stream.getAudioTracks();
+        //> 녹화 준비
+        const mergedAudioRef = stream.getAudioTracks();
+        const setRecorder = () => {
+          //- 30fps로 캔버스 요소 녹화
+          const canvasStream = canvasRef.current?.captureStream(30);
+
+          if (!canvasStream || !mergedAudioRef) return;
+          //- 캔버스 녹화 영상과 합친 오디오 병합
+          const mergedTracks = canvasStream
+            .getVideoTracks()
+            .concat(mergedAudioRef);
+
+          if (!mergedTracks) return;
+          const mergedStream = new MediaStream(mergedTracks);
+
+          if (!mergedStream) return;
+          const recorder = new MediaRecorder(mergedStream, {
+            mimeType: "video/webm",
+          });
+
+          if (!recorder) return;
+          recorderRef.current = recorder;
+          //- 녹화 중
+          recorderRef.current.ondataavailable = (ev) => {
+            blobsRef.current.push(ev.data);
+          };
+          //- 녹화 종료 후
+          recorderRef.current.onstop = () => {
+            const blob = new Blob(blobsRef.current, {
+              type: "video/webm",
+            });
+            blobRef.current = blob;
+            blobsRef.current = [];
+          };
+        };
+        setRecorder();
       });
 
     //> 최초 공지
