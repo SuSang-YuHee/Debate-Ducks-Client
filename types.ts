@@ -51,6 +51,21 @@ export interface IDebateroom {
   blobsRef: MutableRefObject<Blob[]>;
   blobRef: MutableRefObject<Blob | undefined>;
   aRef: MutableRefObject<HTMLAnchorElement | null>;
+  //* 토론 진행 타입
+  curDebate: {
+    notice: string;
+    turn: number;
+    time: number;
+  };
+  setCurDebate: Dispatch<
+    SetStateAction<{
+      notice: string;
+      turn: number;
+      time: number;
+    }>
+  >;
+  debateProgress: [string, number][];
+  handleReady: () => void;
 }
 
 export type TTurn =
@@ -63,7 +78,7 @@ export type TTurn =
 
 export interface IDebateData {
   notice: string;
-  turn: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  turn: number;
   time: number;
 }
 
