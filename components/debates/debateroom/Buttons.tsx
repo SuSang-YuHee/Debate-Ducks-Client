@@ -72,7 +72,7 @@ export default function Buttons({
   const [isExitModalOn, setIsExitModalOn] = useState<boolean>(false);
   const [isSkipOn, setIsSkipOn] = useState<boolean>(false);
 
-  //* 넘기기 가능 여부
+  //> 넘기기 가능 여부
   useEffect(() => {
     const newState = isSkipTime
       ? (isPros && (turn === "pros" || turn === "prosCross")) ||
@@ -233,7 +233,7 @@ export default function Buttons({
     </>
   );
 
-  //*- utils
+  //# utils
   function checkAudioDisable() {
     if (turn === "notice") return true;
     return false;

@@ -1,6 +1,6 @@
 import { IDebateroom } from "../../../types";
 
-//*- 화면공유
+//# 화면공유
 export const screenShare = async ({
   peerRef,
   streamRef,
@@ -17,7 +17,7 @@ export const screenShare = async ({
       audio: false,
     });
 
-    //* 화면 공유 켜졌을 때
+    //> 화면 공유 켜졌을 때
     if (!streamRef.current || !videoRef.current) return;
 
     peerRef.current?.replaceTrack(
@@ -30,7 +30,7 @@ export const screenShare = async ({
     setIsScreenOn(true);
     screenStreamRef.current = screenStream;
 
-    //* 화면 공유 꺼졌을 때
+    //> 화면 공유 꺼졌을 때
     screenStream.getTracks()[0].onended = () => {
       if (!streamRef.current || !videoRef.current) return;
 
@@ -49,7 +49,7 @@ export const screenShare = async ({
   }
 };
 
-//*- 화면 공유 끄기
+//# 화면 공유 끄기
 export const offScreenShare = ({
   peerRef,
   streamRef,

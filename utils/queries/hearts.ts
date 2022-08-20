@@ -14,7 +14,7 @@ import { queryKeys } from ".";
 
 import { IDebate, IDebateAndUserID } from "../../types";
 
-//*- 좋아요 여부 조회
+//# 좋아요 여부 조회
 export const useGetHeart = (
   debateAndUserId: IDebateAndUserID,
   options?: UseQueryOptions<boolean, AxiosError>,
@@ -30,7 +30,7 @@ export const useGetHeart = (
   return query;
 };
 
-//*- 좋아요 생성
+//# 좋아요 생성
 export const usePostHeart = (
   options?: UseMutationOptions<IDebateAndUserID, AxiosError, IDebateAndUserID>,
 ): UseMutationResult<IDebateAndUserID, AxiosError, IDebateAndUserID> => {
@@ -95,7 +95,7 @@ export const usePostHeart = (
   });
 };
 
-//*- 좋아요 삭제
+//# 좋아요 삭제
 export const useDeleteHeart = (
   options?: UseMutationOptions<IDebateAndUserID, AxiosError, IDebateAndUserID>,
 ): UseMutationResult<IDebateAndUserID, AxiosError, IDebateAndUserID> => {

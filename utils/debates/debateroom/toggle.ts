@@ -1,6 +1,6 @@
 import { IDebateroom } from "../../../types";
 
-//*- 마이크 끄기/켜기
+//# 마이크 끄기/켜기
 export const toggleMic = ({
   streamRef,
   isMicOn,
@@ -11,7 +11,7 @@ export const toggleMic = ({
   setIsMicOn(isMicOn);
 };
 
-//*- 비디오 끄기/켜기
+//# 비디오 끄기/켜기
 export const toggleVideo = ({
   streamRef,
   isVideoOn,
@@ -22,7 +22,7 @@ export const toggleVideo = ({
   setIsVideoOn(isVideoOn);
 };
 
-//*- 준비 하기/취소
+//# 준비 하기/취소
 export const toggleReady = ({
   isReady,
   setIsReady,

@@ -1,4 +1,4 @@
-//* 상태 및 카테고리의 선택 여부와 포함여부 판단
+//> 상태 및 카테고리의 선택 여부와 포함여부 판단
 export const checkFilters = (
   statuses: string[],
   status: string,
