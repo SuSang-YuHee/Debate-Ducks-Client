@@ -10,11 +10,12 @@ import { Provider } from "react-redux";
 import store from "../redux/store";
 import "../styles/globals.scss";
 
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Header from "../components/common/Header";
+import Footer from "../components/common/Footer";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
+  //# 리액트 쿼리 default 설정
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -26,21 +27,31 @@ function MyApp({ Component, pageProps }: AppProps) {
         },
       }),
   );
+
+  //# 토글 toast 메시지
   const [isToaster, setIsToaster] = useState<boolean>(false);
 
   useEffect(() => {
     setIsToaster(true);
   }, []);
 
-  useEffect(() => storePathValues, [router.asPath]);
-
-  function storePathValues() {
+  //# 이전 페이지 기억
+  const storePathValues = () => {
     const storage = globalThis?.sessionStorage;
     if (!storage) return;
     const prevPath = storage.getItem("currentPath");
-    storage.setItem("prevPath", prevPath || "");
+    storage.setItem("prevPath", prevPath || "/");
     storage.setItem("currentPath", globalThis.location.pathname);
-  }
+  };
+
+  useEffect(() => storePathValues(), [router.asPath]);
+
+  //# 스크롤 복원 비활성와
+  useEffect(() => {
+    if (history.scrollRestoration) {
+      window.history.scrollRestoration = "manual";
+    }
+  }, []);
 
   return (
     <Provider store={store}>

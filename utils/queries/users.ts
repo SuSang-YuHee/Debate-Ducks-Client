@@ -26,11 +26,20 @@ export const useGetUser = (options?: UseQueryOptions<IUser, AxiosError>) => {
     typeof window !== "undefined"
       ? localStorage.getItem("debate-ducks-token")
       : null;
+  const queryClient = useQueryClient();
   const query = useQuery<IUser, AxiosError>(
     [queryKeys.users],
     () => getUser(token),
     {
       enabled: !!token,
+      onError: () => {
+        window.localStorage.removeItem("debate-ducks-token");
+        //> 다중 에러 로그 방지
+        setTimeout(() => {
+          queryClient.setQueryData([queryKeys.users], () => null);
+          queryClient.invalidateQueries([queryKeys.users]);
+        }, 100);
+      },
       ...options,
     },
   );
