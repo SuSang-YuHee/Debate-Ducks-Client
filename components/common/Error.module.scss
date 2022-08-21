@@ -1,0 +1,63 @@
+@import "../../styles/variable.scss";
+
+.outer {
+  @include center {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  min-width: 22rem;
+  height: calc(100vh - 14rem);
+  min-height: 44rem;
+}
+
+.box {
+  @include disabledText;
+  @include center {
+    flex-direction: column;
+  }
+  padding: 3rem;
+  color: $c-black;
+  font-size: 1rem;
+}
+
+.message_top {
+  font-size: 500%;
+  font-weight: 700;
+  color: $c-cons;
+}
+
+.message_bottom {
+  margin-top: 0.5rem;
+  font-size: 170%;
+  color: lighten($c-cons, 10%);
+}
+
+.btn {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  @include btn-w(10rem, 1rem);
+  @include btn-c($c-pros, $c-pros, $c-white);
+  &:hover {
+    @include btn-c($c-white, $c-pros, $c-pros);
+  }
+}
+
+@include media(500px) {
+  .box {
+    font-size: 0.8rem;
+  }
+  .btn {
+    margin-top: 1.6rem;
+    @include btn-w(8rem, 0.8rem);
+  }
+}
+
+@include media(400px) {
+  .box {
+    font-size: 0.7rem;
+  }
+  .btn {
+    margin-top: 1.4rem;
+    @include btn-w(7rem, 0.7rem);
+  }
+}
