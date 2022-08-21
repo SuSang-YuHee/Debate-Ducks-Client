@@ -15,6 +15,7 @@ import Footer from "../components/common/Footer";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
+  //# 리액트 쿼리 default 설정
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -26,21 +27,24 @@ function MyApp({ Component, pageProps }: AppProps) {
         },
       }),
   );
+
+  //# 토글 toast 메시지
   const [isToaster, setIsToaster] = useState<boolean>(false);
 
   useEffect(() => {
     setIsToaster(true);
   }, []);
 
-  useEffect(() => storePathValues(), [router.asPath]);
-
-  function storePathValues() {
+  //# 이전 페이지 기억
+  const storePathValues = () => {
     const storage = globalThis?.sessionStorage;
     if (!storage) return;
     const prevPath = storage.getItem("currentPath");
     storage.setItem("prevPath", prevPath || "/");
     storage.setItem("currentPath", globalThis.location.pathname);
-  }
+  };
+
+  useEffect(() => storePathValues(), [router.asPath]);
 
   return (
     <Provider store={store}>

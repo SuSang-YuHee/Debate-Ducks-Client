@@ -39,6 +39,7 @@ import DebatesHeartList from "../components/debates/debates/DebatesHeartList";
 import DebatesList from "../components/debates/debates/DebatesList";
 
 const Home: NextPage = () => {
+  //# 전역 변수
   const dispatch = useAppDispatch();
   const statuses = useAppSelector<string[]>(statusesSelector);
   const setStatuses = (params: string[]) => {
@@ -78,14 +79,17 @@ const Home: NextPage = () => {
     [dispatch],
   );
 
+  //# 검색
   const search = useInput(searchValue, "");
-
-  const user = useGetUser();
 
   useEffect(() => {
     setSearchValue(search.value);
   }, [search.value, setSearchValue]);
 
+  //# 서버 정보 (유저)
+  const user = useGetUser();
+
+  //# 로그아웃 시 초기화
   useEffect(() => {
     if (!user.data) {
       setHeartOrder("DESC");
