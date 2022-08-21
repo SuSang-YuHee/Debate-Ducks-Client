@@ -12,6 +12,8 @@
     "@reduxjs/toolkit": "^1.8.3",
     "aws-sdk": "^2.1190.0",
     "axios": "^0.27.2",
+    "fix-webm-duration": "^1.0.5",
+    "lodash": "^4.17.21",
     "next": "12.1.6",
     "next-optimized-images": "^2.6.2",
     "next-redux-wrapper": "^7.0.5",
@@ -27,6 +29,7 @@
     "socket.io-client": "^4.5.0"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.184",
     "@types/node": "17.0.31",
     "@types/react": "18.0.9",
     "@types/react-dom": "18.0.3",

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 
-//* 뒤로가기 방지
+//> 뒤로가기 방지
 export const usePreventBack = () => {
   useEffect(() => {
     const preventGoBack = () => {

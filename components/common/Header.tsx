@@ -2,10 +2,10 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-import { useGetUser } from "../utils/queries/users";
+import { useGetUser } from "../../utils/queries/users";
 import styles from "./Header.module.scss";
 
-import SignOutModal from "./common/modal/SignOutModal";
+import SignOutModal from "./modal/SignOutModal";
 
 export default function Header() {
   const router = useRouter();

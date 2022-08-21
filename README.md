@@ -12,12 +12,18 @@
 
 ## Release
 
-### Debate Ducks 2.0.1 [*](https://github.com/SuSang-YuHee/Debate-Ducks-Client/pull/114)
+### Debate Ducks 2.1.0 [[PR]](https://github.com/SuSang-YuHee/Debate-Ducks-Client/pull/123)
+(2022.08.22) 
+- Q&A 페이지
+- 체험 토론
+- 에러 페이지
 
+### Debate Ducks 2.0.1 [[PR]](https://github.com/SuSang-YuHee/Debate-Ducks-Client/pull/114)
+(2022.08.20)
 - 체험 로그인
 
-### Debate Ducks 2.0.0 []()
-
+### Debate Ducks 2.0.0
+(2022.08.16)
 - 회원가입 / 사용자 정보 수정 및 삭제
 - 토론 생성, 수정 및 삭제
 - 실시간 영상 토론

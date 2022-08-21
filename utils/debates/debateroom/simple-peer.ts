@@ -3,7 +3,7 @@ import Peer from "simple-peer";
 
 import { IDebateroom } from "../../../types";
 
-//*- 1st
+//# 1st
 export const connectHostPeer = ({
   debateId,
   socketRef,
@@ -38,12 +38,12 @@ export const connectHostPeer = ({
 
   peerRef.current = simplePeer;
 
-  //* 1. 요청 송신
+  //> 1. 요청 송신
   simplePeer.on("signal", (signal) => {
     socketRef.current.emit("offer", { debateId, signal });
   });
 
-  //* 스트림 전달
+  //> 스트림 전달
   simplePeer.on("stream", (stream) => {
     setPeerStream(stream);
     if (peerVideoRef.current) {
@@ -55,14 +55,14 @@ export const connectHostPeer = ({
     toast.error(err.message);
   });
 
-  //* 4. 응답 수신
+  //> 4. 응답 수신
   socketRef.current.on("answer", (signal: Peer.SignalData) => {
     simplePeer.signal(signal);
   });
 };
 
-//*- 2nd
-//* 2. 요청 수신
+//# 2nd
+//> 2. 요청 수신
 export const connectGuestPeer = (
   {
     debateId,
@@ -90,12 +90,12 @@ export const connectGuestPeer = (
 
   peerRef.current = simplePeer;
 
-  //* 3. 응답 송신
+  //> 3. 응답 송신
   simplePeer.on("signal", (signal) => {
     socketRef.current.emit("answer", { debateId, signal });
   });
 
-  //* 스트림 전달
+  //> 스트림 전달
   simplePeer.on("stream", (stream) => {
     setPeerStream(stream);
     if (peerVideoRef.current) {

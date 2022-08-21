@@ -19,7 +19,7 @@ import {
   IVotePostOrPatch,
 } from "../../types";
 
-//*- 투표 여부 및 찬반 조회
+//# 투표 여부 및 찬반 조회
 export const useGetVote = (
   debateAndUserId: IDebateAndUserID,
   options?: UseQueryOptions<IVote, AxiosError>,
@@ -35,7 +35,7 @@ export const useGetVote = (
   return query;
 };
 
-//*- 투표 생성
+//# 투표 생성
 export const usePostVote = (
   options?: UseMutationOptions<IVotePostOrPatch, AxiosError, IVotePostOrPatch>,
 ): UseMutationResult<IVotePostOrPatch, AxiosError, IVotePostOrPatch> => {
@@ -116,7 +116,7 @@ export const usePostVote = (
   });
 };
 
-//*- 투표 수정
+//# 투표 수정
 export const usePatchVote = (
   options?: UseMutationOptions<IVotePostOrPatch, AxiosError, IVotePostOrPatch>,
 ): UseMutationResult<IVotePostOrPatch, AxiosError, IVotePostOrPatch> => {

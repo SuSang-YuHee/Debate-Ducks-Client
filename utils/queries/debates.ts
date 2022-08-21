@@ -23,7 +23,7 @@ import { queryKeys } from ".";
 
 import { IDebate, IDebatePost, IDebatePatch, IUser } from "../../types";
 
-//*- 토론 목록 조회 (무한 스크롤 적용)
+//# 토론 목록 조회 (무한 스크롤 적용)
 export const useGetDebates = (searchValue: string, order: string) => {
   const query = useInfiniteQuery(
     [queryKeys.debates],
@@ -36,7 +36,7 @@ export const useGetDebates = (searchValue: string, order: string) => {
   return query;
 };
 
-//*- 좋아요한 토론 목록 조회 (무한 스크롤 적용)
+//# 좋아요한 토론 목록 조회 (무한 스크롤 적용)
 export const useGetDebatesHeart = (userId: string, order: string) => {
   const query = useInfiniteQuery(
     [queryKeys.debates, "heart"],
@@ -49,7 +49,7 @@ export const useGetDebatesHeart = (userId: string, order: string) => {
   return query;
 };
 
-//*- 토론 조회
+//# 토론 조회
 export const useGetDebate = (
   debateId: number,
   options?: UseQueryOptions<IDebate, AxiosError>,
@@ -63,7 +63,7 @@ export const useGetDebate = (
   return query;
 };
 
-//*- 토론 생성
+//# 토론 생성
 export const usePostDebate = (
   options?: UseMutationOptions<IDebatePost, AxiosError, IDebatePost>,
 ): UseMutationResult<IDebatePost, AxiosError, IDebatePost> => {
@@ -83,7 +83,7 @@ export const usePostDebate = (
   });
 };
 
-//*- 토론 수정
+//# 토론 수정
 export const usePatchDebate = (
   debateId: number,
   participant?: IUser,
@@ -126,7 +126,7 @@ export const usePatchDebate = (
       rollback: (() => IDebate) | undefined,
     ) => {
       if (rollback) rollback();
-      //* 참여 실패 시 다른 참여자 보여주기 위함
+      //> 참여 실패 시 다른 참여자 보여주기 위함
       if (participant) {
         queryClient.invalidateQueries([queryKeys.debates, `${debateId}`]);
       }
@@ -137,7 +137,7 @@ export const usePatchDebate = (
   });
 };
 
-//*- 토론 삭제
+//# 토론 삭제
 export const useDeleteDebate = (
   options?: UseMutationOptions<number, AxiosError, number>,
 ): UseMutationResult<number, AxiosError, number> => {

@@ -20,24 +20,33 @@ import { queryKeys } from ".";
 
 import { IUser, IUserInfo } from "../../types";
 
-//*- 사용자 정보 조회
+//# 사용자 정보 조회
 export const useGetUser = (options?: UseQueryOptions<IUser, AxiosError>) => {
   const token =
     typeof window !== "undefined"
       ? localStorage.getItem("debate-ducks-token")
       : null;
+  const queryClient = useQueryClient();
   const query = useQuery<IUser, AxiosError>(
     [queryKeys.users],
     () => getUser(token),
     {
       enabled: !!token,
+      onError: () => {
+        window.localStorage.removeItem("debate-ducks-token");
+        //> 다중 에러 로그 방지
+        setTimeout(() => {
+          queryClient.setQueryData([queryKeys.users], () => null);
+          queryClient.invalidateQueries([queryKeys.users]);
+        }, 100);
+      },
       ...options,
     },
   );
   return query;
 };
 
-//*- 로그인
+//# 로그인
 export const useLogin = (
   options?: UseMutationOptions<
     string,
@@ -72,7 +81,7 @@ export const useLogin = (
   });
 };
 
-//*- 사용자 이미지 수정
+//# 사용자 이미지 수정
 export const usePatchUserImage = (
   userId: string,
   formData: FormData | undefined,
@@ -92,7 +101,7 @@ export const usePatchUserImage = (
   });
 };
 
-//*- 사용자 닉네임 수정
+//# 사용자 닉네임 수정
 export const usePatchUserNickname = (userId: string, nickname: string) => {
   const queryClient = useQueryClient();
   return useMutation(() => patchUserNickname(userId, nickname), {
@@ -109,7 +118,7 @@ export const usePatchUserNickname = (userId: string, nickname: string) => {
   });
 };
 
-//*- 사용자 암호 수정
+//# 사용자 암호 수정
 export const usePatchUserPassword = (
   userId: string,
   prevPassword: string,

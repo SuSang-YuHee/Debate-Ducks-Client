@@ -1,6 +1,6 @@
-import type { GetServerSideProps, NextPage } from "next";
+import type { NextPage } from "next";
 import { useCallback, useEffect } from "react";
-import { dehydrate, QueryClient } from "react-query";
+import _ from "lodash";
 
 import { useGetUser } from "../utils/queries/users";
 import { useInput } from "../utils/common/useInputSelect";
@@ -30,7 +30,10 @@ import {
   searchValueSelector,
   searchValueAction,
 } from "../redux/modules/searchValue";
-import { getDebates } from "../api/debates";
+import {
+  scrollMainSelector,
+  scrollMainAction,
+} from "../redux/modules/scrollMain";
 
 import HomeAndTopBtn from "../components/common/btn/HomeAndTopBtn";
 import Filters from "../components/debates/debates/Filters";
@@ -39,6 +42,7 @@ import DebatesHeartList from "../components/debates/debates/DebatesHeartList";
 import DebatesList from "../components/debates/debates/DebatesList";
 
 const Home: NextPage = () => {
+  //# 전역 변수
   const dispatch = useAppDispatch();
   const statuses = useAppSelector<string[]>(statusesSelector);
   const setStatuses = (params: string[]) => {
@@ -77,21 +81,53 @@ const Home: NextPage = () => {
     },
     [dispatch],
   );
+  const scrollY = useAppSelector<number>(scrollMainSelector);
+  const setScrollY = useCallback(
+    (params: number) => {
+      dispatch(scrollMainAction(params));
+    },
+    [dispatch],
+  );
 
+  //# 검색
   const search = useInput(searchValue, "");
-
-  const user = useGetUser();
 
   useEffect(() => {
     setSearchValue(search.value);
   }, [search.value, setSearchValue]);
 
+  //# 서버 정보 (유저)
+  const user = useGetUser();
+
+  //# 로그아웃 시 초기화
   useEffect(() => {
     if (!user.data) {
       setHeartOrder("DESC");
       setIsHeartListOn(false);
     }
   }, [setHeartOrder, setIsHeartListOn, user.data]);
+
+  //# 스크롤 위치 기억
+  //> 스크롤 저장
+  const handleSetScrollY = () => {
+    if (globalThis.location.pathname === "/") setScrollY(window.pageYOffset);
+  };
+
+  //> 스크롤 이동
+  useEffect(() => {
+    if (scrollY !== 0) window.scrollTo(0, scrollY);
+  }, [scrollY]);
+
+  //> 스크롤 감지
+  useEffect(() => {
+    const watch = () => {
+      window.addEventListener("scroll", _.debounce(handleSetScrollY, 100));
+    };
+    watch();
+    return () => {
+      window.removeEventListener("scroll", _.debounce(handleSetScrollY, 100));
+    };
+  });
 
   return (
     <div className="inner">
@@ -132,15 +168,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const queryClient = new QueryClient();
-  await queryClient.prefetchInfiniteQuery(["debates"], () =>
-    getDebates("", "0", "DESC"),
-  );
-  return {
-    props: {
-      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
-    },
-  };
-};

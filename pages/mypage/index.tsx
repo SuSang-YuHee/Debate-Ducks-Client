@@ -9,6 +9,7 @@ import {
 } from "../../utils/queries/users";
 import styles from "./MyPage.module.scss";
 
+import Error from "../../components/common/Error";
 import ChangePasswordModal from "../../components/common/modal/ChangePasswordModal";
 import SignOutModal from "../../components/common/modal/SignOutModal";
 
@@ -78,6 +79,7 @@ export default function MyPagePage() {
     e.preventDefault();
   };
 
+  if (user.isError) return <Error />;
   return (
     <>
       {isPasswordModalOn ? (

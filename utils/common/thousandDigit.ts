@@ -1,4 +1,4 @@
-//* 천 단위로 콤마(,) 찍기
+//> 천 단위로 콤마(,) 찍기
 export const thousandDigit = (num: number) => {
   const str = String(num);
   if (str.length <= 3) return str;

@@ -1,9 +1,9 @@
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { FaGithub } from "react-icons/fa";
+import Link from "next/link";
 
 import styles from "./Footer.module.scss";
-import Link from "next/link";
 
 export default function Footer() {
   const router = useRouter();

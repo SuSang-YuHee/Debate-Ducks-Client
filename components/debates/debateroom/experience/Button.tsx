@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import {
   IoMic,
@@ -10,27 +10,22 @@ import {
 import { MdOutlineScreenShare, MdStop, MdDoubleArrow } from "react-icons/md";
 import { TbArrowBarRight } from "react-icons/tb";
 
-import { screenShare } from "../../../utils/debates/debateroom/screenShare";
+import { screenShare } from "../../../../utils/debates/debateroom/screenShare";
 import {
   toggleMic,
   toggleReady,
   toggleVideo,
-} from "../../../utils/debates/debateroom/toggle";
-import { wsTransmitSkip } from "../../../utils/debates/debateroom/webSocket";
-import { offScreenShare } from "../../../utils/debates/debateroom/screenShare";
-import styles from "./Buttons.module.scss";
+} from "../../../../utils/debates/debateroom/toggle";
+import { offScreenShare } from "../../../../utils/debates/debateroom/screenShare";
+import styles from "../Buttons.module.scss";
 
-import ConfirmModal from "../../common/modal/ConfirmModal";
+import ConfirmModal from "../../../common/modal/ConfirmModal";
 
-import { IDebateroom } from "../../../types";
+import { IDebateroom } from "../../../../types";
 
 export default function Buttons({
-  debateId,
-  socketRef,
-  isPros,
   peerRef,
   streamRef,
-  peerStream,
   videoRef,
   screenStreamRef,
   isMicOn,
@@ -43,16 +38,14 @@ export default function Buttons({
   setIsReady,
   isStart,
   turn,
-  isSkipTime,
   recorderRef,
+  curDebate,
+  setCurDebate,
+  handleReady,
 }: Pick<
   IDebateroom,
-  | "debateId"
-  | "socketRef"
-  | "isPros"
   | "peerRef"
   | "streamRef"
-  | "peerStream"
   | "videoRef"
   | "screenStreamRef"
   | "isMicOn"
@@ -65,23 +58,46 @@ export default function Buttons({
   | "setIsReady"
   | "isStart"
   | "turn"
-  | "isSkipTime"
   | "recorderRef"
+  | "curDebate"
+  | "setCurDebate"
+  | "handleReady"
 >) {
   const router = useRouter();
   const [isExitModalOn, setIsExitModalOn] = useState<boolean>(false);
-  const [isSkipOn, setIsSkipOn] = useState<boolean>(false);
 
-  //> 넘기기 가능 여부
-  useEffect(() => {
-    const newState = isSkipTime
-      ? (isPros && (turn === "pros" || turn === "prosCross")) ||
-        (!isPros && (turn === "cons" || turn === "consCross"))
-        ? true
-        : false
-      : false;
-    setIsSkipOn(newState);
-  }, [isPros, isSkipTime, turn]);
+  //# 오디오 비활성화 여부
+  const checkAudioDisable = () => {
+    if (turn === "notice") return true;
+    return false;
+  };
+
+  //# 화면 공유 비활성화 여부
+  const checkScreenShareDisable = () => {
+    if (isScreenOn) return true;
+    if (!isStart && isReady) return true;
+    if (turn === "notice") return true;
+    if (turn === "cons") return true;
+    return false;
+  };
+
+  //# 나가기
+  const handleExit = () => {
+    if (recorderRef.current?.state === "recording") {
+      recorderRef.current?.stop();
+    }
+    offScreenShare({
+      peerRef,
+      streamRef,
+      videoRef,
+      screenStreamRef,
+      setIsScreenOn,
+    });
+    streamRef.current?.getTracks().forEach((track) => {
+      track.stop();
+    });
+    router.push(`/q&a`);
+  };
 
   return (
     <>
@@ -178,23 +194,24 @@ export default function Buttons({
         {isStart ? (
           <div className={styles.box}>
             <div
-              className={`${styles.btn} ${
-                isSkipOn ? styles.btn_pros : styles.btn_disabled
-              }`}
+              className={`${styles.btn} ${styles.btn_pros}`}
               onClick={() => {
-                if (isSkipOn) {
-                  wsTransmitSkip({ debateId, socketRef, isPros });
-                }
+                if (curDebate.turn > 6) return;
+                setCurDebate((prevState) => ({
+                  ...prevState,
+                  time: 1,
+                }));
               }}
             >
               <MdDoubleArrow />
             </div>
             <div className={styles.name}>넘기기</div>
           </div>
-        ) : peerStream ? (
+        ) : (
           <div
             onClick={() => {
               toggleReady({ isReady: !isReady, setIsReady });
+              handleReady();
             }}
           >
             {isReady ? (
@@ -213,58 +230,14 @@ export default function Buttons({
               </div>
             )}
           </div>
-        ) : (
-          <div className={styles.box}>
-            <div className={`${styles.btn} ${styles.btn_disabled}`}>
-              <IoPlay />
-            </div>
-            <div className={styles.name}>준비</div>
-          </div>
         )}
-        {isStart ? null : (
-          <div className={styles.box} onClick={() => setIsExitModalOn(true)}>
-            <div className={`${styles.btn} ${styles.btn_pros}`}>
-              <TbArrowBarRight />
-            </div>
-            <div className={styles.name}>나가기</div>
+        <div className={styles.box} onClick={() => setIsExitModalOn(true)}>
+          <div className={`${styles.btn} ${styles.btn_pros}`}>
+            <TbArrowBarRight />
           </div>
-        )}
+          <div className={styles.name}>나가기</div>
+        </div>
       </div>
     </>
   );
-
-  //# utils
-  function checkAudioDisable() {
-    if (turn === "notice") return true;
-    return false;
-  }
-
-  function checkScreenShareDisable() {
-    if (!peerStream) return true;
-    if (isScreenOn) return true;
-    if (!isStart && isReady) return true;
-    if (turn === "notice") return true;
-    if (isPros && turn === "cons") return true;
-    if (!isPros && turn === "pros") return true;
-    return false;
-  }
-
-  function handleExit() {
-    if (recorderRef.current?.state === "recording") {
-      recorderRef.current?.stop();
-    }
-    offScreenShare({
-      peerRef,
-      streamRef,
-      videoRef,
-      screenStreamRef,
-      setIsScreenOn,
-    });
-    streamRef.current?.getTracks().forEach((track) => {
-      track.stop();
-    });
-    peerRef.current?.destroy();
-    socketRef.current.disconnect();
-    router.push(`/${debateId}`);
-  }
 }

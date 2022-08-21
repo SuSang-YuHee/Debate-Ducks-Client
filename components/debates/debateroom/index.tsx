@@ -23,33 +23,33 @@ export default function Debateroom({
 }: Pick<IDebateroom, "debateId" | "socketRef" | "debate" | "isPros">) {
   const router = useRouter();
   const queryClient = useQueryClient();
-  //* 모달 변수
+  //> 모달 변수
   const [isDoneModalOn, setIsDoneModalOn] = useState<boolean>(false);
   const [isPauseModalOn, setIsPauseModalOn] = useState<boolean>(false);
   const [isUploadModalOn, setIsUploadModalOn] = useState<boolean>(false);
-  //* WebRTC 변수
+  //> WebRTC 변수
   const peerRef = useRef<Peer.Instance | undefined>();
-  //* 캔버스 변수
+  //> 캔버스 변수
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  //* 스트림 변수
+  //> 스트림 변수
   const streamRef = useRef<MediaStream | undefined>();
   const [peerStream, setPeerStream] = useState<MediaStream | undefined>();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const peerVideoRef = useRef<HTMLVideoElement | null>(null);
   const screenStreamRef = useRef<MediaStream | undefined>();
-  //* 토글 변수
+  //> 토글 변수
   const [isMicOn, setIsMicOn] = useState<boolean>(true);
   const [isVideoOn, setIsVideoOn] = useState<boolean>(false);
   const [isPeerVideoOn, setIsPeerVideoOn] = useState<boolean>(false);
   const [isScreenOn, setIsScreenOn] = useState<boolean>(false);
   const [isPeerScreenOn, setIsPeerScreenOn] = useState<boolean>(false);
   const [isReady, setIsReady] = useState<boolean>(false);
-  //* 토론 변수
+  //> 토론 변수
   const [isStart, setIsStart] = useState<boolean>(false);
   const isDoneRef = useRef<boolean>(false);
   const [turn, setTurn] = useState<TTurn>("none");
   const [isSkipTime, setIsSkipTime] = useState<boolean>(false);
-  //* 녹화 변수
+  //> 녹화 변수
   const mergedAudioRef = useRef<MediaStreamTrack[] | undefined>();
   const recorderRef = useRef<MediaRecorder | undefined>();
   const blobsRef = useRef<Blob[]>([]);
