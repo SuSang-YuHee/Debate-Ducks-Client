@@ -32,13 +32,13 @@ function MyApp({ Component, pageProps }: AppProps) {
     setIsToaster(true);
   }, []);
 
-  useEffect(() => storePathValues, [router.asPath]);
+  useEffect(() => storePathValues(), [router.asPath]);
 
   function storePathValues() {
     const storage = globalThis?.sessionStorage;
     if (!storage) return;
     const prevPath = storage.getItem("currentPath");
-    storage.setItem("prevPath", prevPath || "");
+    storage.setItem("prevPath", prevPath || "/");
     storage.setItem("currentPath", globalThis.location.pathname);
   }
 
