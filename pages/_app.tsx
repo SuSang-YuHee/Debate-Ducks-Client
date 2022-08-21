@@ -46,6 +46,13 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => storePathValues(), [router.asPath]);
 
+  //# 스크롤 복원 비활성와
+  useEffect(() => {
+    if (history.scrollRestoration) {
+      window.history.scrollRestoration = "manual";
+    }
+  }, []);
+
   return (
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
