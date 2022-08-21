@@ -15,6 +15,7 @@ import { useGetUser } from "../../utils/queries/users";
 import { useGetDebate, usePatchDebate } from "../../utils/queries/debates";
 import { removeSpace } from "../../utils/common/removeSpace";
 
+import Error from "../../components/common/Error";
 import CreateOrEdit from "../../components/debates/CreateOrEdit";
 import CheckSignInModal from "../../components/common/modal/CheckSignInModal";
 
@@ -70,7 +71,7 @@ export default function EditPage() {
     }
   };
 
-  if (!debate.data) return <>404</>;
+  if (debate.isError) return <Error />;
   return (
     <div className="inner">
       <CheckSignInModal
