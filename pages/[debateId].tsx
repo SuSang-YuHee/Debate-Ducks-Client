@@ -3,7 +3,6 @@ import { GetServerSideProps } from "next";
 import { QueryClient, dehydrate } from "react-query";
 
 import { getDebate } from "../api/debates";
-import { getComments } from "../api/comments";
 import { useGetDebate } from "../utils/queries/debates";
 
 import Error from "../components/common/Error";
@@ -35,9 +34,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery(["debates", `${debateId}`], () =>
     getDebate(debateId),
-  );
-  await queryClient.prefetchInfiniteQuery(["comments", `${debateId}`], () =>
-    getComments(debateId, 1, "DESC"),
   );
   return {
     props: {

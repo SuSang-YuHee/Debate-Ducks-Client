@@ -1,6 +1,5 @@
-import type { GetServerSideProps, NextPage } from "next";
+import type { NextPage } from "next";
 import { useCallback, useEffect } from "react";
-import { dehydrate, QueryClient } from "react-query";
 
 import { useGetUser } from "../utils/queries/users";
 import { useInput } from "../utils/common/useInputSelect";
@@ -30,7 +29,6 @@ import {
   searchValueSelector,
   searchValueAction,
 } from "../redux/modules/searchValue";
-import { getDebates } from "../api/debates";
 
 import HomeAndTopBtn from "../components/common/btn/HomeAndTopBtn";
 import Filters from "../components/debates/debates/Filters";
@@ -136,15 +134,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const queryClient = new QueryClient();
-  await queryClient.prefetchInfiniteQuery(["debates"], () =>
-    getDebates("", "0", "DESC"),
-  );
-  return {
-    props: {
-      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
-    },
-  };
-};
