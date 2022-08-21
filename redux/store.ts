@@ -6,6 +6,7 @@ import heartOrder from "./modules/heartOrder";
 import isHeartListOn from "./modules/isHeartListOn";
 import isSearchListOn from "./modules/isSearchListOn";
 import searchValue from "./modules/searchValue";
+import scrollMain from "./modules/scrollMain";
 
 const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
     isHeartListOn,
     isSearchListOn,
     searchValue,
+    scrollMain,
   },
 });
 
