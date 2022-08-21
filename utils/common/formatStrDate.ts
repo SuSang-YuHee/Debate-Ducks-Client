@@ -16,7 +16,7 @@ const isValidDate = (date: Date) => {
   return typeof date === "object" && date !== null && "getDate" in date;
 };
 
-//* ex. 23 Sep 1994
+//> ex. 23 Sep 1994
 function DMY(strDate: string) {
   const date = new Date(strDate);
   if (isValidDate(date)) {
@@ -28,7 +28,7 @@ function DMY(strDate: string) {
   return "";
 }
 
-//* ex. 23 Sep 1994 13:23
+//> ex. 23 Sep 1994 13:23
 function DMYHM(strDate: string) {
   const date = new Date(strDate);
   if (isValidDate(date)) {
@@ -44,7 +44,7 @@ function DMYHM(strDate: string) {
   return "";
 }
 
-//* ex. 23 Sep 1994 or 13:23
+//> ex. 23 Sep 1994 or 13:23
 function DMYorHM(strDate: string) {
   const date = new Date(strDate);
   if (isValidDate(date)) {

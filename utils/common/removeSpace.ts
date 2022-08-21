@@ -1,4 +1,4 @@
-//* 2칸 이상의 공백과 2줄 이상의 개행 제거
+//> 2칸 이상의 공백과 2줄 이상의 개행 제거
 export const removeSpace = (str: string) => {
   return str
     .replace(/\n/g, `\0`)

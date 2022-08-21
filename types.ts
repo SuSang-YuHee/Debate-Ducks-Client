@@ -2,29 +2,29 @@ import { ChangeEvent, Dispatch, MutableRefObject, SetStateAction } from "react";
 import { Socket } from "socket.io-client";
 import Peer from "simple-peer";
 
-//*> debateroom
+//>> debateroom
 export interface IDebateroom {
-  //* Props 타입
+  //> Props 타입
   debateId: string;
   socketRef: MutableRefObject<Socket>;
   debate: IDebate;
   isPros: boolean;
-  //* 모달 타입
+  //> 모달 타입
   setIsDoneModalOn: Dispatch<SetStateAction<boolean>>;
   setIsPauseModalOn: Dispatch<SetStateAction<boolean>>;
   setIsUploadModalOn: Dispatch<SetStateAction<boolean>>;
-  //* WebRTC 타입
+  //> WebRTC 타입
   peerRef: MutableRefObject<Peer.Instance | undefined>;
-  //* 캔버스 타입
+  //> 캔버스 타입
   canvasRef: MutableRefObject<HTMLCanvasElement | null>;
-  //* 스트림 타입
+  //> 스트림 타입
   streamRef: MutableRefObject<MediaStream | undefined>;
   peerStream: MediaStream | undefined;
   setPeerStream: Dispatch<SetStateAction<MediaStream | undefined>>;
   videoRef: MutableRefObject<HTMLVideoElement | null>;
   peerVideoRef: MutableRefObject<HTMLVideoElement | null>;
   screenStreamRef: MutableRefObject<MediaStream | undefined>;
-  //* 토글 타입
+  //> 토글 타입
   isMicOn: boolean;
   setIsMicOn: Dispatch<SetStateAction<boolean>>;
   isVideoOn: boolean;
@@ -37,7 +37,7 @@ export interface IDebateroom {
   setIsPeerScreenOn: Dispatch<SetStateAction<boolean>>;
   isReady: boolean;
   setIsReady: Dispatch<SetStateAction<boolean>>;
-  //* 토론 타입
+  //> 토론 타입
   isStart: boolean;
   setIsStart: Dispatch<SetStateAction<boolean>>;
   isDoneRef: MutableRefObject<boolean>;
@@ -45,13 +45,13 @@ export interface IDebateroom {
   setTurn: Dispatch<SetStateAction<TTurn>>;
   isSkipTime: boolean;
   setIsSkipTime: Dispatch<SetStateAction<boolean>>;
-  //* 녹화 타입
+  //> 녹화 타입
   mergedAudioRef: MutableRefObject<MediaStreamTrack[] | undefined>;
   recorderRef: MutableRefObject<MediaRecorder | undefined>;
   blobsRef: MutableRefObject<Blob[]>;
   blobRef: MutableRefObject<Blob | undefined>;
   aRef: MutableRefObject<HTMLAnchorElement | null>;
-  //* 토론 진행 타입
+  //> 토론 진행 타입
   curDebate: {
     notice: string;
     turn: number;
@@ -88,7 +88,7 @@ export interface IDummy {
   consName: string;
 }
 
-//*- users
+//# users
 export interface IUser {
   id: string;
   nickname: string;
@@ -102,7 +102,7 @@ export interface IUserInfo {
   password: string | undefined;
 }
 
-//*- debates
+//# debates
 export interface IDebate {
   id: number;
   title: string;
@@ -137,7 +137,7 @@ export interface IDebatePatch extends TDebatePatch {
   participant_id?: string;
 }
 
-//*- factchecks
+//# factchecks
 export interface IFactcheck {
   id: number;
   pros: boolean;
@@ -156,13 +156,13 @@ export type TFactcheckPatch = Pick<
   "id" | "description" | "reference_url"
 >;
 
-//*- debate and user id
+//# debate and user id
 export interface IDebateAndUserID {
   target_debate_id: number;
   target_user_id: string;
 }
 
-//*- votes
+//# votes
 export interface IVote {
   isVote: boolean;
   pros: boolean;
@@ -172,7 +172,7 @@ export interface IVotePostOrPatch extends IDebateAndUserID {
   pros: boolean;
 }
 
-//*- comments
+//# comments
 export interface ICommentOfDebate {
   id: number;
   pros: boolean | null;
@@ -193,7 +193,7 @@ export interface ICommentPatch {
   contents: string;
 }
 
-//*- useInPutSelect
+//# useInPutSelect
 export interface IUseInputResult {
   attribute: {
     value: string;

@@ -16,7 +16,7 @@ import { queryKeys } from ".";
 
 import { TFactcheckPost, TFactcheckPatch, IDebate } from "../../types";
 
-//*- 팩트페크 생성
+//# 팩트페크 생성
 export const usePostFactcheck = (
   debateId: number,
   options?: UseMutationOptions<TFactcheckPost, AxiosError, TFactcheckPost>,
@@ -35,7 +35,7 @@ export const usePostFactcheck = (
   });
 };
 
-//*- 팩트페크 수정
+//# 팩트페크 수정
 export const usePatchFactcheck = (
   debateId: number,
   options?: UseMutationOptions<TFactcheckPatch, AxiosError, TFactcheckPatch>,
@@ -86,7 +86,7 @@ export const usePatchFactcheck = (
   });
 };
 
-//*- 팩트페크 삭제
+//# 팩트페크 삭제
 export const useDeleteFactcheck = (
   debateId: number,
   options?: UseMutationOptions<number, AxiosError, number>,

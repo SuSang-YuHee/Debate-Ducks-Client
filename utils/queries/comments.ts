@@ -18,7 +18,7 @@ import { queryKeys } from ".";
 
 import { ICommentPatch, ICommentPost } from "../../types";
 
-//*- 댓글 목록 조회 (무한 스크롤 적용)
+//# 댓글 목록 조회 (무한 스크롤 적용)
 export const useGetComments = (debateId: number, order: string) => {
   const query = useInfiniteQuery(
     [queryKeys.comments, `${debateId}`],
@@ -31,7 +31,7 @@ export const useGetComments = (debateId: number, order: string) => {
   return query;
 };
 
-//*- 댓글 생성
+//# 댓글 생성
 export const usePostComment = (
   debateId: number,
   options?: UseMutationOptions<ICommentPost, AxiosError, ICommentPost>,
@@ -50,7 +50,7 @@ export const usePostComment = (
   });
 };
 
-//*- 댓글 수정
+//# 댓글 수정
 export const usePatchComment = (
   debateId: number,
   options?: UseMutationOptions<ICommentPatch, AxiosError, ICommentPatch>,
@@ -69,7 +69,7 @@ export const usePatchComment = (
   });
 };
 
-//*- 댓글 삭제
+//# 댓글 삭제
 export const useDeleteComment = (
   debateId: number,
   options?: UseMutationOptions<number, AxiosError, number>,

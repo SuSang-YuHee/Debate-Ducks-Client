@@ -76,9 +76,9 @@ export const useWebSocket = ({
   const router = useRouter();
   const [reConnect, setReConnect] = useState<boolean>(false);
 
-  //*- 연결
+  //# 연결
   useEffect(() => {
-    //* 미디어 획득 및 연결
+    //> 미디어 획득 및 연결
     navigator.mediaDevices
       .getUserMedia({
         video: { facingMode: "user", width: 500, height: 500 },
@@ -128,7 +128,7 @@ export const useWebSocket = ({
         });
       });
 
-    //* 정보 수신
+    //> 정보 수신
     socketRef.current.on("peerVideo", (isPeerVideoOn: boolean) => {
       setIsPeerVideoOn(isPeerVideoOn);
     });
@@ -141,7 +141,7 @@ export const useWebSocket = ({
       setIsStart(true);
     });
 
-    //* 최초 공지
+    //> 최초 공지
     drawNotice(
       { canvasRef, turn: "none" },
       {
@@ -152,7 +152,7 @@ export const useWebSocket = ({
       debate.title,
     );
 
-    //* 토론 및 공지
+    //> 토론 및 공지
     socketRef.current.on("debate", (debateData: IDebateData) => {
       let turn: TTurn = "notice";
       if (debateData.turn === 7 && debateData.time < 0) {
@@ -176,7 +176,7 @@ export const useWebSocket = ({
       }
     });
 
-    //* 토론 종료
+    //> 토론 종료
     socketRef.current.on("debateDone", (isUploader: boolean) => {
       if (isUploader) {
         setIsUploadModalOn(true);
@@ -227,7 +227,7 @@ export const useWebSocket = ({
     blobRef,
   ]); // dependency에 reConnect 필요
 
-  //*- 연결 해제
+  //# 연결 해제
   useEffect(() => {
     socketRef.current.on("peerDisconnect", () => {
       if (recorderRef.current?.state === "recording") {
@@ -279,7 +279,7 @@ export const useWebSocket = ({
     videoRef,
   ]);
 
-  //*- 정보 송신
+  //# 정보 송신
   useEffect(() => {
     socketRef.current.emit("peerVideo", { debateId, isVideoOn });
   }, [debateId, isVideoOn, peerStream, socketRef]); // dependency에 peerStream 필요
@@ -293,7 +293,7 @@ export const useWebSocket = ({
   }, [debateId, isReady, socketRef, isPros]);
 };
 
-//*- 넘기기 정보 송신
+//# 넘기기 정보 송신
 export const wsTransmitSkip = ({
   debateId,
   socketRef,
