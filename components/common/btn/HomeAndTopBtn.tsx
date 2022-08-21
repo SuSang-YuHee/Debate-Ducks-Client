@@ -10,9 +10,7 @@ export default function HomeAndTopBtn({
   isHomeBtnOn: boolean;
 }) {
   const router = useRouter();
-  const [scrollY, setScrollY] = useState<number>(
-    typeof window !== "undefined" ? window.pageYOffset : 0,
-  );
+  const [scrollY, setScrollY] = useState<number>(0);
 
   const handleScrollY = () => {
     setScrollY(window.pageYOffset);
@@ -27,6 +25,10 @@ export default function HomeAndTopBtn({
       window.removeEventListener("scroll", handleScrollY);
     };
   });
+
+  useEffect(() => {
+    setScrollY(window.pageYOffset);
+  }, []);
 
   return (
     <>
