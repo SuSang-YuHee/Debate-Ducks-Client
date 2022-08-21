@@ -10,8 +10,8 @@ import { Provider } from "react-redux";
 import store from "../redux/store";
 import "../styles/globals.scss";
 
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Header from "../components/common/Header";
+import Footer from "../components/common/Footer";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();

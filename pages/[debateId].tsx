@@ -6,6 +6,7 @@ import { getDebate } from "../api/debates";
 import { getComments } from "../api/comments";
 import { useGetDebate } from "../utils/queries/debates";
 
+import Error from "../components/common/Error";
 import Debate from "../components/debates/debate";
 
 export default function DebatePage() {
@@ -18,7 +19,7 @@ export default function DebatePage() {
     enabled: !!debateId,
   });
 
-  if (!debate.data) return <>404</>;
+  if (debate.isError) return <Error />;
   return (
     <div className="inner">
       <Debate debateId={debateId} />

@@ -8,6 +8,7 @@ import { getDebate } from "../../api/debates";
 import { useGetUser } from "../../utils/queries/users";
 import { useGetDebate } from "../../utils/queries/debates";
 
+import Error from "../../components/common/Error";
 import Debateroom from "../../components/debates/debateroom";
 
 export default function DebateroomPage() {
@@ -38,7 +39,7 @@ export default function DebateroomPage() {
     !debate.data.participant ||
     debate.data.video_url
   )
-    return <>404</>;
+    return <Error />;
   return (
     <Debateroom
       debateId={debateId}
