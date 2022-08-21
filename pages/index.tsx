@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import { useCallback, useEffect } from "react";
+import _ from "lodash";
 
 import { useGetUser } from "../utils/queries/users";
 import { useInput } from "../utils/common/useInputSelect";
@@ -29,6 +30,10 @@ import {
   searchValueSelector,
   searchValueAction,
 } from "../redux/modules/searchValue";
+import {
+  scrollMainSelector,
+  scrollMainAction,
+} from "../redux/modules/scrollMain";
 
 import HomeAndTopBtn from "../components/common/btn/HomeAndTopBtn";
 import Filters from "../components/debates/debates/Filters";
@@ -76,6 +81,13 @@ const Home: NextPage = () => {
     },
     [dispatch],
   );
+  const scrollY = useAppSelector<number>(scrollMainSelector);
+  const setScrollY = useCallback(
+    (params: number) => {
+      dispatch(scrollMainAction(params));
+    },
+    [dispatch],
+  );
 
   //# 검색
   const search = useInput(searchValue, "");
@@ -94,6 +106,28 @@ const Home: NextPage = () => {
       setIsHeartListOn(false);
     }
   }, [setHeartOrder, setIsHeartListOn, user.data]);
+
+  //# 스크롤 위치 기억
+  //> 스크롤 저장
+  const handleSetScrollY = () => {
+    if (globalThis.location.pathname === "/") setScrollY(window.pageYOffset);
+  };
+
+  //> 스크롤 이동
+  useEffect(() => {
+    if (scrollY !== 0) window.scrollTo(0, scrollY);
+  }, [scrollY]);
+
+  //> 스크롤 감지
+  useEffect(() => {
+    const watch = () => {
+      window.addEventListener("scroll", _.debounce(handleSetScrollY, 100));
+    };
+    watch();
+    return () => {
+      window.removeEventListener("scroll", _.debounce(handleSetScrollY, 100));
+    };
+  });
 
   return (
     <div className="inner">
