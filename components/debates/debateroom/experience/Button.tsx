@@ -238,14 +238,14 @@ export default function Buttons({
           >
             {isReady ? (
               <div className={styles.box}>
-                <div className={`${styles.btn} ${styles.btn_pros}`}>
+                <div className={`${styles.btn} ${styles.btn_black}`}>
                   <MdStop />
                 </div>
                 <div className={styles.name}>준비 취소</div>
               </div>
             ) : (
               <div className={styles.box}>
-                <div className={`${styles.btn} ${styles.btn_cons}`}>
+                <div className={`${styles.btn} ${styles.btn_black}`}>
                   <IoPlay />
                 </div>
                 <div className={styles.name}>준비</div>
@@ -254,7 +254,7 @@ export default function Buttons({
           </div>
         )}
         <div className={styles.box} onClick={() => setIsExitModalOn(true)}>
-          <div className={`${styles.btn} ${styles.btn_pros}`}>
+          <div className={`${styles.btn} ${styles.btn_black}`}>
             <TbArrowBarRight />
           </div>
           <div className={styles.name}>나가기</div>

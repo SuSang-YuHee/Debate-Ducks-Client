@@ -39,6 +39,15 @@
       color: $c-cons;
     }
   }
+  &_black {
+    border: 1px solid darken($c-gray_dark, 50%);
+    background-color: darken($c-gray_dark, 50%);
+    color: $c-white;
+    &:hover {
+      background-color: $c-white;
+      color: darken($c-gray_dark, 50%);
+    }
+  }
   &_disabled {
     cursor: default;
     border: 1px solid darken($c-gray_dark, 30%);
