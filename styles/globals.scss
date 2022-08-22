@@ -21,3 +21,15 @@ a {
   margin: 0 auto; /* 가로 가운데 정렬 */
   position: relative;
 }
+
+//^IE
+select::-ms-expand {
+  display: none;
+}
+//# SELECT 기본 스타일 제거
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: url("/images/arrow.png") no-repeat 95% 50%/0.7rem auto;
+}
