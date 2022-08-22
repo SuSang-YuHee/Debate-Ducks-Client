@@ -7,7 +7,12 @@ import {
   IoVideocamOff,
   IoPlay,
 } from "react-icons/io5";
-import { MdOutlineScreenShare, MdStop, MdDoubleArrow } from "react-icons/md";
+import {
+  MdOutlineScreenShare,
+  MdOutlineStopScreenShare,
+  MdStop,
+  MdDoubleArrow,
+} from "react-icons/md";
 import { TbArrowBarRight } from "react-icons/tb";
 
 import { screenShare } from "../../../../utils/debates/debateroom/screenShare";
@@ -74,7 +79,6 @@ export default function Buttons({
 
   //# 화면 공유 비활성화 여부
   const checkScreenShareDisable = () => {
-    if (isScreenOn) return true;
     if (!isStart && isReady) return true;
     if (turn === "notice") return true;
     if (turn === "cons") return true;
@@ -168,27 +172,45 @@ export default function Buttons({
         {checkScreenShareDisable() ? (
           <div className={styles.box}>
             <div className={`${styles.btn} ${styles.btn_disabled}`}>
-              <MdOutlineScreenShare />
+              <MdOutlineStopScreenShare />
             </div>
             <div className={styles.name}>화면공유</div>
           </div>
         ) : (
           <div className={styles.box}>
             <div
-              className={`${styles.btn} ${styles.btn_pros}`}
-              onClick={() =>
-                screenShare({
-                  peerRef,
-                  streamRef,
-                  videoRef,
-                  screenStreamRef,
-                  setIsScreenOn,
-                })
-              }
+              className={`${styles.btn} ${
+                isScreenOn ? styles.btn_pros : styles.btn_cons
+              }`}
+              onClick={() => {
+                if (isScreenOn) {
+                  offScreenShare({
+                    peerRef,
+                    streamRef,
+                    videoRef,
+                    screenStreamRef,
+                    setIsScreenOn,
+                  });
+                } else {
+                  screenShare({
+                    peerRef,
+                    streamRef,
+                    videoRef,
+                    screenStreamRef,
+                    setIsScreenOn,
+                  });
+                }
+              }}
             >
-              <MdOutlineScreenShare />
+              {isScreenOn ? (
+                <MdOutlineScreenShare />
+              ) : (
+                <MdOutlineStopScreenShare />
+              )}
             </div>
-            <div className={styles.name}>화면공유</div>
+            <div className={styles.name}>
+              {isScreenOn ? "공유 중지" : "화면공유"}
+            </div>
           </div>
         )}
         {isStart ? (
