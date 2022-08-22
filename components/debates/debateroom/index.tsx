@@ -230,7 +230,7 @@ export default function Debateroom({
           isSkipTime={isSkipTime}
           recorderRef={recorderRef}
         />
-        <a ref={aRef} download={debate.title} />
+        <a ref={aRef} download={`${debate.title}.webm`} />
       </div>
     </>
   );

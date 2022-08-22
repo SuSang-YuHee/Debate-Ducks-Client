@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import Peer from "simple-peer";
 import ysFixWebmDuration from "fix-webm-duration";
+import toast from "react-hot-toast";
 
 import { useGetUser } from "../../../../utils/queries/users";
 import { drawNotice } from "../../../../utils/debates/debateroom/draw";
@@ -182,9 +183,20 @@ export default function ExperienceDebateroom() {
           const mergedStream = new MediaStream(mergedTracks);
 
           if (!mergedStream) return;
-          const recorder = new MediaRecorder(mergedStream, {
-            mimeType: "video/webm",
-          });
+          let recorder;
+          try {
+            recorder = new MediaRecorder(mergedStream, {
+              mimeType: "video/webm",
+            });
+          } catch (err1) {
+            try {
+              recorder = new MediaRecorder(mergedStream, {
+                mimeType: "video/mp4",
+              });
+            } catch (err2) {
+              toast.error("녹화 준비에 실패 했습니다.");
+            }
+          }
 
           if (!recorder) return;
           recorderRef.current = recorder;
@@ -323,7 +335,7 @@ export default function ExperienceDebateroom() {
           setCurDebate={setCurDebate}
           handleReady={handleReady}
         />
-        <a ref={aRef} download={DEBATE_INFO.title} />
+        <a ref={aRef} download={`${DEBATE_INFO.title}.webm`} />
       </div>
     </>
   );

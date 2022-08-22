@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import toast from "react-hot-toast";
 
 import { IDebateroom } from "../../../types";
 
@@ -133,9 +134,20 @@ function setRecorder({
   const mergedStream = new MediaStream(mergedTracks);
 
   if (!mergedStream) return;
-  const recorder = new MediaRecorder(mergedStream, {
-    mimeType: "video/webm",
-  });
+  let recorder;
+  try {
+    recorder = new MediaRecorder(mergedStream, {
+      mimeType: "video/webm",
+    });
+  } catch (err1) {
+    try {
+      recorder = new MediaRecorder(mergedStream, {
+        mimeType: "video/mp4",
+      });
+    } catch (err2) {
+      toast.error("녹화 준비에 실패 했습니다.");
+    }
+  }
 
   if (!recorder) return;
   recorderRef.current = recorder;
