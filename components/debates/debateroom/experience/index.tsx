@@ -10,6 +10,7 @@ import { usePreventBack } from "../../../../utils/debates/debateroom/usePreventB
 import { useAutoOff } from "../../../../utils/debates/debateroom/useAutoOff";
 import { useSetInterval } from "../../../../utils/debates/debateroom/useSetInterval";
 import { toggleReady } from "../../../../utils/debates/debateroom/toggle";
+import styles from "../index.module.scss";
 
 import ConfirmModal from "../../../common/modal/ConfirmModal";
 import Canvas from "./Canvas";
@@ -292,15 +293,16 @@ export default function ExperienceDebateroom() {
           isVideoOn={isVideoOn}
           isScreenOn={isScreenOn}
         />
-        <video
-          ref={videoRef}
-          muted
-          autoPlay
-          playsInline
-          width={0}
-          height={0}
-          style={{ position: "sticky", top: 0 }}
-        ></video>
+        <div className={styles.video_box}>
+          <video
+            ref={videoRef}
+            muted
+            autoPlay
+            playsInline
+            width={0.1}
+            height={0.1}
+          ></video>
+        </div>
         <Buttons
           peerRef={peerRef}
           streamRef={streamRef}

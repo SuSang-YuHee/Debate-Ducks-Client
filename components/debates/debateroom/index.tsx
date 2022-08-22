@@ -8,6 +8,7 @@ import { useAutoOff } from "../../../utils/debates/debateroom/useAutoOff";
 import { useSetRecorder } from "../../../utils/debates/debateroom/useSetRecorder";
 import { usePreventBack } from "../../../utils/debates/debateroom/usePreventBack";
 import { queryKeys } from "../../../utils/queries";
+import styles from "./index.module.scss";
 
 import ConfirmModal from "../../common/modal/ConfirmModal";
 import Canvas from "./Canvas";
@@ -187,23 +188,26 @@ export default function Debateroom({
           isScreenOn={isScreenOn}
           isPeerScreenOn={isPeerScreenOn}
         />
-        <video
-          ref={videoRef}
-          muted
-          autoPlay
-          playsInline
-          width={0}
-          height={0}
-          style={{ position: "sticky", top: 0 }}
-        ></video>
-        <video
-          ref={peerVideoRef}
-          autoPlay
-          playsInline
-          width={0}
-          height={0}
-          style={{ position: "sticky", top: 0 }}
-        ></video>
+        <div className={styles.video_box}>
+          <video
+            ref={videoRef}
+            muted
+            autoPlay
+            playsInline
+            width={0.1}
+            height={0.1}
+          ></video>
+        </div>
+        <div className={styles.video_box}>
+          <video
+            ref={peerVideoRef}
+            muted
+            autoPlay
+            playsInline
+            width={0.1}
+            height={0.1}
+          ></video>
+        </div>
         <Buttons
           debateId={debateId}
           socketRef={socketRef}
