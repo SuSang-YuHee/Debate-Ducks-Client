@@ -38,9 +38,9 @@ export default function MyPagePage() {
   }, [image]);
 
   const handleChangeImage = (e: BaseSyntheticEvent) => {
+    if (!e.target.files[0]) return;
     setImage(e.target.files[0]);
-    const srcUrl = window.URL.createObjectURL(e.target.files[0]);
-    setPreviewImageUrl(srcUrl);
+    setPreviewImageUrl(window.URL.createObjectURL(e.target.files[0]));
   };
 
   const handleChangeNickname = (e: BaseSyntheticEvent) => {
@@ -61,6 +61,8 @@ export default function MyPagePage() {
     if (user.data) {
       patchUserImage.mutate();
       setIsValidationShow(false);
+      handleCancel();
+      window.URL.revokeObjectURL(previewImageUrl);
     }
   };
 
