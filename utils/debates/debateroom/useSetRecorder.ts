@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
+import ysFixWebmDuration from "fix-webm-duration";
 
 import { IDebateroom } from "../../../types";
 
@@ -32,6 +33,8 @@ export const useSetRecorder = ({
   | "blobsRef"
   | "blobRef"
 >) => {
+  const startTimeRef = useRef<number>(Date.now());
+
   useEffect(() => {
     if (!isStart) return;
     //> 오디오 합침
@@ -47,10 +50,12 @@ export const useSetRecorder = ({
       recorderRef,
       blobsRef,
       blobRef,
+      startTimeRef,
     });
     //> 녹화 시작
     if (recorderRef.current?.state !== "recording") {
       recorderRef.current?.start(1000 / 30);
+      startTimeRef.current = Date.now();
     }
   }, [
     blobRef,
@@ -109,6 +114,7 @@ function setRecorder({
   recorderRef,
   blobsRef,
   blobRef,
+  startTimeRef,
 }: Pick<
   IDebateroom,
   | "socketRef"
@@ -120,6 +126,7 @@ function setRecorder({
   | "recorderRef"
   | "blobsRef"
   | "blobRef"
+  | "startTimeRef"
 >) {
   //- 30fps로 캔버스 요소 녹화
   const canvasStream = canvasRef.current?.captureStream(30);
@@ -157,11 +164,14 @@ function setRecorder({
   };
   //- 녹화 종료 후
   recorderRef.current.onstop = () => {
+    const duration = Date.now() - startTimeRef.current;
     const blob = new Blob(blobsRef.current, {
       type: "video/webm",
     });
+    ysFixWebmDuration(blob, duration, { logger: false }).then((fixedBlob) => {
+      blobRef.current = fixedBlob;
+    });
     blobsRef.current = [];
-    blobRef.current = blob;
 
     if (isDoneRef.current) {
       socketRef.current.emit("debateDone", { debateId });
