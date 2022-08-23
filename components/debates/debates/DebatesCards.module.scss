@@ -69,12 +69,13 @@
     flex-wrap: wrap;
   }
   margin-top: 1rem;
+  margin-bottom: 2rem;
   width: 100%;
 }
 
 .empty_message {
-  margin-top: 4rem;
+  margin-top: 2rem;
   font-size: 1.2rem;
   color: darken($c-gray_dark, 20%);
-  margin-bottom: 7rem;
+  margin-bottom: 14rem;
 }
