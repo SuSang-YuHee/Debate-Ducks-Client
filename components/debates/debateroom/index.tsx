@@ -132,7 +132,7 @@ export default function Debateroom({
             peerRef.current?.destroy();
             socketRef.current.disconnect();
             queryClient.invalidateQueries([queryKeys.debates, `${debateId}`]);
-            router.push(`/${debateId}`);
+            router.push(`/debate?debateId=${debateId}`);
           }}
           secondBtn={"네"}
           secondFunc={() => {
@@ -148,7 +148,7 @@ export default function Debateroom({
             peerRef.current?.destroy();
             socketRef.current.disconnect();
             queryClient.invalidateQueries([queryKeys.debates, `${debateId}`]);
-            router.push(`/${debateId}`);
+            router.push(`/debate?debateId=${debateId}`);
           }}
         />
       ) : null}

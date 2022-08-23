@@ -42,13 +42,13 @@ export default function EditPage() {
     if (!user.data) {
       setIsCheckModalOn(true);
     } else if (user.data?.id !== debate.data?.author?.id) {
-      router.push(`/${debate.data?.id}`);
+      router.push(`/debate?debateId=${debate.data?.id}`);
       toast.error("해당 토론의 작성자만 토론을 수정할 수 있습니다.");
     } else if (debate.data?.video_url) {
-      router.push(`/${debate.data?.id}`);
+      router.push(`/debate?debateId=${debate.data?.id}`);
       toast.error("이미 진행된 토론은 수정할 수 없습니다.");
     } else if (debate.data?.participant) {
-      router.push(`/${debate.data?.id}`);
+      router.push(`/debate?debateId=${debate.data?.id}`);
       toast.error("참여자가 있어 토론을 수정할 수 없습니다.");
     } else if (
       debate.data?.title === titleInput.value &&
@@ -85,7 +85,7 @@ export default function EditPage() {
         handler={handleEdit}
         createOrEdit="수정"
         routerPush={() => {
-          router.push(`/${debateId}`);
+          router.push(`/debate?debateId=${debateId}`);
         }}
       />
     </div>

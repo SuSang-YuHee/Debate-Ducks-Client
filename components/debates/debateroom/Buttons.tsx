@@ -287,6 +287,6 @@ export default function Buttons({
     });
     peerRef.current?.destroy();
     socketRef.current.disconnect();
-    router.push(`/${debateId}`);
+    router.push(`/debate/debateId=${debateId}`);
   }
 }

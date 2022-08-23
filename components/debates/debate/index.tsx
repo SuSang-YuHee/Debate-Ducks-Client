@@ -123,7 +123,7 @@ export default function Debate({ debateId }: { debateId: number }) {
             debate.data?.participant?.id === user.data?.id) ? (
           <div
             className={styles.participantOrEnterBtn}
-            onClick={() => router.push(`/debateroom/${debateId}`)}
+            onClick={() => router.push(`/debateroom?debateId=${debateId}`)}
           >
             입장하기
           </div>
