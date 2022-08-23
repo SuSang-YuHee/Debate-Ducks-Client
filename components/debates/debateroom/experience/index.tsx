@@ -279,7 +279,7 @@ export default function ExperienceDebateroom() {
         <ConfirmModal
           title={"체험 토론 시작"}
           content={
-            "체험 토론은 정식 토론과는 다르게 토론 중 넘기기 버튼과 나가기 버튼이 계속 활성화되어 있습니다. 체험 토론을 시작하시겠습니까?"
+            "체험 토론은 토론 중 차례 넘기기와 퇴장이 자유롭게 가능합니다. 중간에 퇴장하지 않고 토론을 마치시면 녹화 영상을 다운로드할 수 있습니다. 체험 토론을 시작하시겠습니까?"
           }
           firstBtn={"아니요"}
           firstFunc={() => {
