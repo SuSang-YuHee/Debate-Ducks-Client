@@ -51,6 +51,7 @@ export interface IDebateroom {
   blobsRef: MutableRefObject<Blob[]>;
   blobRef: MutableRefObject<Blob | undefined>;
   aRef: MutableRefObject<HTMLAnchorElement | null>;
+  startTimeRef: MutableRefObject<number>;
   //> 토론 진행 타입
   curDebate: {
     notice: string;
