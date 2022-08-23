@@ -1,8 +1,6 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { dehydrate, QueryClient } from "react-query";
-import { GetServerSideProps } from "next";
 
 import { CATEGORIES } from "../../utils/common/constant";
 import {
@@ -10,7 +8,6 @@ import {
   useRadio,
   useSelect,
 } from "../../utils/common/useInputSelect";
-import { getDebate } from "../../api/debates";
 import { useGetUser } from "../../utils/queries/users";
 import { useGetDebate, usePatchDebate } from "../../utils/queries/debates";
 import { removeSpace } from "../../utils/common/removeSpace";
@@ -94,19 +91,3 @@ export default function EditPage() {
     </div>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const debateId =
-    typeof context.params?.debateId === "string"
-      ? parseInt(context.params?.debateId)
-      : 0;
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(["debates", `${debateId}`], () =>
-    getDebate(debateId),
-  );
-  return {
-    props: {
-      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
-    },
-  };
-};
