@@ -12,6 +12,10 @@
 
 ## Release
 
+### Debate Ducks 2.1.1 [[PR]](https://github.com/SuSang-YuHee/Debate-Ducks-Client/pull/131)
+(2022.08.23) 
+- 크로스 브라우징 이슈 해결
+
 ### Debate Ducks 2.1.0 [[PR]](https://github.com/SuSang-YuHee/Debate-Ducks-Client/pull/123)
 (2022.08.22) 
 - Q&A 페이지

@@ -24,7 +24,7 @@ export default function DebatesList({
 }) {
   const orderSelect = useSelect(order, refetch, setOrder);
 
-  const debates = useGetDebates(search.value, orderSelect.value);
+  const debates = useGetDebates(search.value.trim(), orderSelect.value);
 
   function refetch() {
     setTimeout(() => debates.refetch(), 1);

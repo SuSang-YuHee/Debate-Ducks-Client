@@ -120,7 +120,7 @@ export default function Debate({ debateId }: { debateId: number }) {
           debate.data?.participant &&
           user.data &&
           (debate.data?.author?.id === user.data?.id ||
-            debate.data?.participant?.id) ? (
+            debate.data?.participant?.id === user.data?.id) ? (
           <div
             className={styles.participantOrEnterBtn}
             onClick={() => router.push(`/debateroom/${debateId}`)}

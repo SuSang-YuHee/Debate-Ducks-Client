@@ -2,7 +2,7 @@
 
 html,
 body {
-  font-family: "Noto Sans", "Noto Sans", sans-serif;
+  font-family: "Noto Sans", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
   background-color: $c-white;
 }
 
@@ -20,4 +20,17 @@ a {
   max-width: 100%; /* 모바일용 */
   margin: 0 auto; /* 가로 가운데 정렬 */
   position: relative;
+}
+
+//^IE
+select::-ms-expand {
+  display: none;
+}
+//# SELECT 기본 스타일 제거
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  //> 화살표 표시
+  background: url("/images/arrow.png") no-repeat 95% 50%/0.7rem auto;
 }
