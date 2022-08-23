@@ -51,7 +51,7 @@ export const drawContents = ({
     drawText(
       { canvasRef },
       COLORS.black,
-      "bold 48px san-serif",
+      "bold 48px Apple SD Gothic Neo",
       "VS",
       640,
       420,
@@ -63,7 +63,7 @@ export const drawContents = ({
     drawText(
       { canvasRef },
       COLORS.pros,
-      "bold 32px san-serif",
+      "bold 32px Apple SD Gothic Neo",
       `${
         debate.author_pros
           ? debate.author?.nickname
@@ -75,7 +75,7 @@ export const drawContents = ({
     drawText(
       { canvasRef },
       COLORS.white,
-      "bold 32px san-serif",
+      "bold 32px Apple SD Gothic Neo",
       peerStream ? "Camera Off" : isPros ? "Camera Off" : "Not connected",
       300,
       380,
@@ -87,7 +87,7 @@ export const drawContents = ({
     drawText(
       { canvasRef },
       COLORS.cons,
-      "bold 32px san-serif",
+      "bold 32px Apple SD Gothic Neo",
       `${
         !debate.author_pros
           ? debate.author?.nickname
@@ -99,7 +99,7 @@ export const drawContents = ({
     drawText(
       { canvasRef },
       COLORS.white,
-      "bold 32px san-serif",
+      "bold 32px Apple SD Gothic Neo",
       peerStream ? "Camera Off" : !isPros ? "Camera Off" : "Not connected",
       980,
       380,
@@ -146,7 +146,7 @@ export const drawNotice = (
   drawText(
     { canvasRef },
     COLORS.white,
-    "normal 28px san-serif",
+    "normal 28px Apple SD Gothic Neo",
     notice,
     640,
     50,
