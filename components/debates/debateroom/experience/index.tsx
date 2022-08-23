@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import Peer from "simple-peer";
 import ysFixWebmDuration from "fix-webm-duration";
+import toast from "react-hot-toast";
 
 import { useGetUser } from "../../../../utils/queries/users";
 import { drawNotice } from "../../../../utils/debates/debateroom/draw";
@@ -10,6 +11,7 @@ import { usePreventBack } from "../../../../utils/debates/debateroom/usePreventB
 import { useAutoOff } from "../../../../utils/debates/debateroom/useAutoOff";
 import { useSetInterval } from "../../../../utils/debates/debateroom/useSetInterval";
 import { toggleReady } from "../../../../utils/debates/debateroom/toggle";
+import styles from "../index.module.scss";
 
 import ConfirmModal from "../../../common/modal/ConfirmModal";
 import Canvas from "./Canvas";
@@ -181,9 +183,20 @@ export default function ExperienceDebateroom() {
           const mergedStream = new MediaStream(mergedTracks);
 
           if (!mergedStream) return;
-          const recorder = new MediaRecorder(mergedStream, {
-            mimeType: "video/webm",
-          });
+          let recorder;
+          try {
+            recorder = new MediaRecorder(mergedStream, {
+              mimeType: "video/webm",
+            });
+          } catch (err1) {
+            try {
+              recorder = new MediaRecorder(mergedStream, {
+                mimeType: "video/mp4",
+              });
+            } catch (err2) {
+              toast.error("녹화 준비에 실패 했습니다.");
+            }
+          }
 
           if (!recorder) return;
           recorderRef.current = recorder;
@@ -292,15 +305,16 @@ export default function ExperienceDebateroom() {
           isVideoOn={isVideoOn}
           isScreenOn={isScreenOn}
         />
-        <video
-          ref={videoRef}
-          muted
-          autoPlay
-          playsInline
-          width={0}
-          height={0}
-          style={{ position: "sticky", top: 0 }}
-        ></video>
+        <div className={styles.video_box}>
+          <video
+            ref={videoRef}
+            muted
+            autoPlay
+            playsInline
+            width={0.1}
+            height={0.1}
+          ></video>
+        </div>
         <Buttons
           peerRef={peerRef}
           streamRef={streamRef}
@@ -321,7 +335,7 @@ export default function ExperienceDebateroom() {
           setCurDebate={setCurDebate}
           handleReady={handleReady}
         />
-        <a ref={aRef} download={DEBATE_INFO.title} />
+        <a ref={aRef} download={`${DEBATE_INFO.title}.webm`} />
       </div>
     </>
   );
