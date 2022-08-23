@@ -15,7 +15,6 @@ import Error from "../../components/common/Error";
 import ChangePasswordModal from "../../components/common/modal/ChangePasswordModal";
 import SignOutModal from "../../components/common/modal/SignOutModal";
 
-// Todo: createObjectURL 에러 해결, 페이지 접근 권한 설정, 프로필 변경 취소 버튼 제작
 export default function MyPagePage() {
   const router = useRouter();
   const [image, setImage] = useState<File>();
@@ -84,6 +83,11 @@ export default function MyPagePage() {
     router.push("/signin");
   };
 
+  const handleCancel = () => {
+    setFormData(undefined);
+    setPreviewImageUrl("");
+  };
+
   const stopEvent = (e: BaseSyntheticEvent) => {
     e.preventDefault();
   };
@@ -147,11 +151,20 @@ export default function MyPagePage() {
                   </div>
                 )}
               </div>
-              {user.data ? (
-                <button className={styles.save_btn} onClick={handleImageSave}>
-                  <FiCheckSquare />
-                  <span>저장</span>
-                </button>
+              {user.data && formData && previewImageUrl ? (
+                <>
+                  <button className={styles.save_btn} onClick={handleImageSave}>
+                    <FiCheckSquare />
+                    <span>저장</span>
+                  </button>
+                  <button
+                    className={`${styles.save_btn} ${styles.save_btn_cons}`}
+                    onClick={handleCancel}
+                  >
+                    <FiXSquare />
+                    <span>취소</span>
+                  </button>
+                </>
               ) : null}
             </div>
             {user.data ? (
