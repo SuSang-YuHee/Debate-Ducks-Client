@@ -85,7 +85,7 @@ export default function EditPage() {
         handler={handleEdit}
         createOrEdit="수정"
         routerPush={() => {
-          router.push(`/${debateId}`);
+          router.push(`/debate?debateId=${debateId}`);
         }}
       />
     </div>
