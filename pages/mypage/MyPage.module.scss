@@ -20,6 +20,7 @@
         justify-content: center;
         align-items: center;
         .image_wrapper {
+          margin-bottom: 2rem;
           position: relative;
           border-radius: 50%;
           border: 5px solid $c-pros;
@@ -69,15 +70,14 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          transition: background-color, color, 0.2s ease-in-out;
-          &:hover {
-            background-color: $c-pros;
-            color: #fff;
-          }
           span {
             font-size: 1rem;
             font-weight: 600;
             margin-left: 5px;
+          }
+          &_cons {
+            margin-top: 0;
+            color: $c-cons;
           }
         }
       }
