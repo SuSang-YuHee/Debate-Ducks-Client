@@ -163,7 +163,7 @@ export default function DebatesCards({
               ? STATUSES[1]
               : STATUSES[0];
             return (
-              <div key={debate.id}>
+              <div key={debate.id} className={styles.card_box}>
                 <DebateCard debateId={debate.id} status={status} />
               </div>
             );
