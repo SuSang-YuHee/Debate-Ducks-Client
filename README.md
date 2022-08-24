@@ -12,6 +12,10 @@
 
 ## Release
 
+### Debate Ducks 2.1.3 [[PR]](https://github.com/SuSang-YuHee/Debate-Ducks-Client/pull/138)
+(2022.08.25)
+- 토론 목록 개선
+
 ### Debate Ducks 2.1.2 [[PR]](https://github.com/SuSang-YuHee/Debate-Ducks-Client/pull/134)
 (2022.08.24) 
 - 정적 배포로 변경 (vercel -> s3)
