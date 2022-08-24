@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { BaseSyntheticEvent, useRef, useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { postUser } from "../../api/users";
+import { removeSpace } from "../../utils/common/removeSpace";
 import styles from "./Signup.module.scss";
 
 import ConfirmModal from "../../components/common/modal/ConfirmModal";
@@ -39,10 +40,16 @@ export default function SignupPage() {
   function handleChange(e: BaseSyntheticEvent) {
     const value = e.target.value;
     const valueType = e.target.name;
+
     if (valueType === "name") {
-      if (value.length >= 2 && value.length <= 15) {
+      const nickname = removeSpace(value);
+      if (
+        nickname.length >= 2 &&
+        nickname.length <= 15 &&
+        !/[^\s\w가-힣]/.test(nickname)
+      ) {
         setIsValidName(true);
-        setUserInfo({ ...userInfo, [valueType]: value });
+        setUserInfo({ ...userInfo, [valueType]: nickname });
       } else {
         setIsValidName(false);
         setUserInfo({ ...userInfo, [valueType]: "" });
@@ -126,7 +133,8 @@ export default function SignupPage() {
               />
               {isValidName ? null : (
                 <div className={styles.vm}>
-                  이름은 2자 이상, 15자 이하여야 합니다.
+                  이름은 낱자를 제외한 한글, 영어, 숫자만 포함 가능하며 2자
+                  이상, 15자 이하여야 합니다.
                 </div>
               )}
             </div>
@@ -178,8 +186,9 @@ export default function SignupPage() {
 
               {isValidPassword ? null : (
                 <div className={styles.vm}>
-                  최소 하나 이상의 영문 대소문자와 숫자, 특수문자(@!%*#?&)를
-                  포함해야 합니다.
+                  {
+                    "최소 하나 이상의 영문 대소문자와 숫자, 특수문자(@!%*#?&)를 포함해야 합니다."
+                  }
                 </div>
               )}
               {isPwIncludesName ? (

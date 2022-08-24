@@ -12,6 +12,11 @@
 
 ## Release
 
+### Debate Ducks 2.1.2 [[PR]](https://github.com/SuSang-YuHee/Debate-Ducks-Client/pull/134)
+(2022.08.24) 
+- 정적 배포로 변경 (vercel -> s3)
+- 마이페이지 개선
+
 ### Debate Ducks 2.1.1 [[PR]](https://github.com/SuSang-YuHee/Debate-Ducks-Client/pull/131)
 (2022.08.23) 
 - 크로스 브라우징 이슈 해결

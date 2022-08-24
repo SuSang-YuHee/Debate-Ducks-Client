@@ -117,7 +117,7 @@ export const usePatchDebate = (
     onSuccess: () => {
       queryClient.invalidateQueries([queryKeys.debates], { exact: true });
       if (/\/edit/.test(router.pathname)) {
-        router.push(`/${debateId}`);
+        router.push(`/debate?debateId=${debateId}`);
       }
     },
     onError: (
