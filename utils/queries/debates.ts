@@ -57,7 +57,7 @@ export const useGetDebate = (
   const query = useQuery<IDebate, AxiosError>(
     [queryKeys.debates, `${debateId}`],
     () => getDebate(debateId),
-    options,
+    { enabled: !!debateId, ...options },
   );
 
   return query;
