@@ -73,9 +73,13 @@
   width: 100%;
 }
 
+.card_box {
+  margin: 1rem 1%;
+}
+
 .empty_message {
-  margin-top: 2rem;
+  margin-top: 7rem;
   font-size: 1.2rem;
   color: darken($c-gray_dark, 20%);
-  margin-bottom: 14rem;
+  margin-bottom: 7rem;
 }
