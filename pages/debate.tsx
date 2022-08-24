@@ -1,8 +1,5 @@
 import { useRouter } from "next/router";
-import { GetServerSideProps } from "next";
-import { QueryClient, dehydrate } from "react-query";
 
-import { getDebate } from "../api/debates";
 import { useGetDebate } from "../utils/queries/debates";
 
 import Error from "../components/common/Error";
@@ -25,19 +22,3 @@ export default function DebatePage() {
     </div>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const debateId =
-    typeof context.params?.debateId === "string"
-      ? parseInt(context.params?.debateId)
-      : 0;
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(["debates", `${debateId}`], () =>
-    getDebate(debateId),
-  );
-  return {
-    props: {
-      dehydratedState: JSON.parse(JSON.stringify(dehydrate(queryClient))),
-    },
-  };
-};
