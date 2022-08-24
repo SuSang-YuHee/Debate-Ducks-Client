@@ -48,6 +48,7 @@ export default function DebatesCards({
   const router = useRouter();
   const { ref, inView } = useInView();
   const [isModalOn, setIsModalOn] = useState<boolean>(false);
+  const [listOfDebate, setListOfDebates] = useState<TDebateOfDebates[]>([]);
 
   const user = useGetUser();
 
@@ -55,27 +56,29 @@ export default function DebatesCards({
     if (inView && debates.hasNextPage) debates.fetchNextPage();
   }, [debates, inView]);
 
-  const checkEmpty = () => {
-    return debates.data
-      ? debates.data?.pages
-          .map((page) =>
-            page.list.filter((debate: TDebateOfDebates) => {
-              const status = debate.video_url
-                ? STATUSES[2]
-                : debate.participant?.id
-                ? STATUSES[1]
-                : STATUSES[0];
-              return checkFilters(
-                statuses,
-                status,
-                categories,
-                debate.category,
-              );
-            }),
-          )
-          .flat().length === 0
-      : true;
-  };
+  useEffect(() => {
+    setListOfDebates(() => {
+      return debates.data
+        ? debates.data?.pages
+            .map((page) =>
+              page.list.filter((debate: TDebateOfDebates) => {
+                const status = debate.video_url
+                  ? STATUSES[2]
+                  : debate.participant?.id
+                  ? STATUSES[1]
+                  : STATUSES[0];
+                return checkFilters(
+                  statuses,
+                  status,
+                  categories,
+                  debate.category,
+                );
+              }),
+            )
+            .flat()
+        : [];
+    });
+  }, [categories, debates.data, statuses]);
 
   return (
     <>
@@ -152,30 +155,25 @@ export default function DebatesCards({
             </div>
           )}
         </div>
-        {debates.data?.pages.map((page, idx) => (
-          <div className={styles.cards} key={idx}>
-            {page.list.map((debate: TDebateOfDebates) => {
-              const status = debate.video_url
-                ? STATUSES[2]
-                : debate.participant?.id
-                ? STATUSES[1]
-                : STATUSES[0];
-              return checkFilters(
-                statuses,
-                status,
-                categories,
-                debate.category,
-              ) ? (
-                <div key={debate.id}>
-                  <DebateCard debateId={debate.id} status={status} />
-                </div>
-              ) : null;
-            })}
-          </div>
-        ))}
-        {checkEmpty() ? (
-          <div className={styles.empty_message}>해당하는 토론이 없습니다.</div>
-        ) : null}
+        <div className={styles.cards}>
+          {listOfDebate.map((debate) => {
+            const status = debate.video_url
+              ? STATUSES[2]
+              : debate.participant?.id
+              ? STATUSES[1]
+              : STATUSES[0];
+            return (
+              <div key={debate.id} className={styles.card_box}>
+                <DebateCard debateId={debate.id} status={status} />
+              </div>
+            );
+          })}
+          {listOfDebate.length === 0 ? (
+            <div className={styles.empty_message}>
+              해당하는 토론이 없습니다.
+            </div>
+          ) : null}
+        </div>
         <div ref={ref}></div>
       </div>
     </>

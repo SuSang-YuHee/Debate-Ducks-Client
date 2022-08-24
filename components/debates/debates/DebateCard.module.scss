@@ -1,16 +1,8 @@
 @import "../../../styles/variable.scss";
 
-@mixin mediaMargin($px, $m, $w: 22rem) {
-  @include media($px) {
-    margin-right: $m;
-    margin-left: $m;
-    width: $w;
-    height: $w * (12 / 11);
-    @content;
-  }
-}
-
 .card {
+  flex-grow: 1;
+  flex-shrink: 1;
   @include disabledText;
   @include center {
     flex-direction: column;
@@ -20,11 +12,10 @@
   min-width: 17rem;
   border: 1px solid $c-gray_dark;
   background-color: $c-white;
-  margin: 1rem;
   border-radius: 18px;
-  width: 22rem;
+  width: 20rem;
   height: 24rem;
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: $c-black;
   &:hover {
     box-shadow: 10px 5px 5px $c-gray_dark;
@@ -32,130 +23,14 @@
     z-index: 1;
   }
   cursor: pointer;
-
-  @include mediaMargin(1185.5px, 0.9rem);
-  @include mediaMargin(1175.5px, 0.8rem);
-  @include mediaMargin(1166.5px, 0.7rem);
-  @include mediaMargin(1158.5px, 0.6rem);
-  @include mediaMargin(1146.5px, 0.5rem);
-  @include mediaMargin(1137.5px, 0.4rem);
-  @include mediaMargin(1128.5px, 0.3rem);
-  @include mediaMargin(1118.5px, 0.2rem);
-  @include mediaMargin(1108.5px, 0.1rem);
-  @include mediaMargin(1099.5px, 1rem, 20rem) {
-    font-size: 0.9rem;
-  }
-  @include mediaMargin(1089.5px, 0.9rem, 20rem);
-  @include mediaMargin(1080.5px, 0.8rem, 20rem);
-  @include mediaMargin(1070.5px, 0.7rem, 20rem);
-  @include mediaMargin(1061.5px, 0.6rem, 20rem);
-  @include mediaMargin(1051.5px, 0.5rem, 20rem);
-  @include mediaMargin(1041.5px, 0.4rem, 20rem);
-  @include mediaMargin(1032.5px, 0.3rem, 20rem);
-  @include mediaMargin(1021.5px, 0.2rem, 20rem);
-  @include mediaMargin(1013.5px, 0.1rem, 20rem);
-  @include mediaMargin(1003.5px, 1rem, 18rem) {
-    font-size: 0.8rem;
-  }
-  @include mediaMargin(993.5px, 0.9rem, 18rem);
-  @include mediaMargin(985.5px, 0.8rem, 18rem);
-  @include mediaMargin(974.5px, 0.7rem, 18rem);
-  @include mediaMargin(965.5px, 0.6rem, 18rem);
-  @include mediaMargin(955.5px, 0.5rem, 18rem);
-  @include mediaMargin(945.5px, 0.4rem, 18rem);
-  @include mediaMargin(937.5px, 0.3rem, 18rem);
-  @include mediaMargin(927.5px, 0.2rem, 18rem);
-  @include mediaMargin(918.5px, 0.1rem, 18rem);
-  @include mediaMargin(908.5px, 1rem, 25rem) {
-    font-size: 1.2rem;
-  }
-  @include mediaMargin(898.5px, 0.9rem, 25rem);
-  @include mediaMargin(892.5px, 0.8rem, 25rem);
-  @include mediaMargin(885.5px, 0.7rem, 25rem);
-  @include mediaMargin(878.5px, 0.6rem, 25rem);
-  @include mediaMargin(873.5px, 0.5rem, 25rem);
-  @include mediaMargin(865.5px, 0.4rem, 25rem);
-  @include mediaMargin(859.5px, 0.3rem, 25rem);
-  @include mediaMargin(854.5px, 0.2rem, 25rem);
-  @include mediaMargin(846.5px, 0.1rem, 25rem);
-  @include mediaMargin(841.5px, 1rem, 23rem) {
-    font-size: 1.1rem;
-  }
-  @include mediaMargin(834.5px, 0.9rem, 23rem);
-  @include mediaMargin(828.5px, 0.8rem, 23rem);
-  @include mediaMargin(822.5px, 0.7rem, 23rem);
-  @include mediaMargin(815.5px, 0.6rem, 23rem);
-  @include mediaMargin(808.5px, 0.5rem, 23rem);
-  @include mediaMargin(800.5px, 0.4rem, 23rem);
-  @include mediaMargin(795.5px, 0.3rem, 23rem);
-  @include mediaMargin(789.5px, 0.2rem, 23rem);
-  @include mediaMargin(782.5px, 0.1rem, 23rem);
-  @include mediaMargin(775.5px, 1rem, 21rem) {
-    font-size: 1rem;
-  }
-  @include mediaMargin(769.5px, 0.9rem, 21rem);
-  @include mediaMargin(763.5px, 0.8rem, 21rem);
-  @include mediaMargin(757.5px, 0.7rem, 21rem);
-  @include mediaMargin(749.5px, 0.6rem, 21rem);
-  @include mediaMargin(744.5px, 0.5rem, 21rem);
-  @include mediaMargin(737.5px, 0.4rem, 21rem);
-  @include mediaMargin(731.5px, 0.3rem, 21rem);
-  @include mediaMargin(725.5px, 0.2rem, 21rem);
-  @include mediaMargin(719.5px, 0.1rem, 21rem);
-  @include mediaMargin(713.5px, 1rem, 19rem) {
-    font-size: 0.9rem;
-  }
-  @include mediaMargin(705.5px, 0.9rem, 19rem);
-  @include mediaMargin(699.5px, 0.8rem, 19rem);
-  @include mediaMargin(693.5px, 0.7rem, 19rem);
-  @include mediaMargin(686.5px, 0.6rem, 19rem);
-  @include mediaMargin(679.5px, 0.5rem, 19rem);
-  @include mediaMargin(673.5px, 0.4rem, 19rem);
-  @include mediaMargin(667.5px, 0.3rem, 19rem);
-  @include mediaMargin(661.5px, 0.2rem, 19rem);
-  @include mediaMargin(655.5px, 0.1rem, 19rem);
-  @include mediaMargin(649.5px, 1rem, 17rem) {
-    font-size: 0.8rem;
-  }
-  @include mediaMargin(643.5px, 0.9rem, 17rem);
-  @include mediaMargin(637.5px, 0.8rem, 17rem);
-  @include mediaMargin(631.5px, 0.7rem, 17rem);
-  @include mediaMargin(625.5px, 0.6rem, 17rem);
-  @include mediaMargin(619.5px, 0.5rem, 17rem);
-  @include mediaMargin(613.5px, 0.4rem, 17rem);
-  @include mediaMargin(607.5px, 0.3rem, 17rem);
-  @include mediaMargin(601.5px, 0.2rem, 17rem);
-  @include mediaMargin(595.5px, 0.1rem, 17rem);
-  @include mediaMargin(584.5px, 0, 32rem) {
-    font-size: 1.4rem;
-  }
-  @include mediaMargin(563.5px, 0, 30rem) {
-    font-size: 1.4rem;
-  }
-  @include mediaMargin(543.5px, 0, 28rem) {
-    font-size: 1.3rem;
-  }
-  @include mediaMargin(523.5px, 0, 26rem) {
-    font-size: 1.3rem;
-  }
-  @include mediaMargin(503.5px, 0, 24rem) {
-    font-size: 1.2rem;
-  }
-  @include mediaMargin(423.5px, 0, 23rem) {
-    font-size: 1.1rem;
-  }
-  @include mediaMargin(380.5px, 0, 22rem) {
-    font-size: 1rem;
-  }
 }
 
 .category {
   width: 100%;
   height: 40%;
-  border-radius: 12px 12px 0 0;
   position: relative;
   .image {
-    border-radius: 12px 12px 0 0;
+    border-radius: 17px 17px 0 0;
   }
   .status {
     text-align: center;

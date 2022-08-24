@@ -82,6 +82,11 @@ export const usePostHeart = (
         };
       }
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries([queryKeys.debates, queryKeys.hearts], {
+        exact: true,
+      });
+    },
     onError: (
       err: AxiosError<{ message: string }>,
       _,
@@ -146,6 +151,11 @@ export const useDeleteHeart = (
           );
         };
       }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries([queryKeys.debates, queryKeys.hearts], {
+        exact: true,
+      });
     },
     onError: (
       err: AxiosError<{ message: string }>,

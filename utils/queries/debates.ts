@@ -39,7 +39,7 @@ export const useGetDebates = (searchValue: string, order: string) => {
 //# 좋아요한 토론 목록 조회 (무한 스크롤 적용)
 export const useGetDebatesHeart = (userId: string, order: string) => {
   const query = useInfiniteQuery(
-    [queryKeys.debates, "heart"],
+    [queryKeys.debates, queryKeys.hearts],
     ({ pageParam = 0 }) => getDebatesHeart(userId, pageParam, order),
     {
       getNextPageParam: (lastPage) =>
@@ -57,7 +57,7 @@ export const useGetDebate = (
   const query = useQuery<IDebate, AxiosError>(
     [queryKeys.debates, `${debateId}`],
     () => getDebate(debateId),
-    options,
+    { enabled: !!debateId, ...options },
   );
 
   return query;
