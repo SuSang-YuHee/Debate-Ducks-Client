@@ -201,7 +201,6 @@ export default function Debateroom({
         <div className={styles.video_box}>
           <video
             ref={peerVideoRef}
-            muted
             autoPlay
             playsInline
             width={0.1}
