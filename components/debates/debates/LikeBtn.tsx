@@ -38,7 +38,7 @@ export default function LikeBtn({
               }
             }}
           >
-            ♡ 좋아요한 토론만 보기
+            ♥︎ 좋아요한 토론만 보기
           </div>
         )}
       </div>

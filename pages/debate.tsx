@@ -15,7 +15,7 @@ export default function DebatePage() {
     enabled: !!debateId,
   });
 
-  if (debate.isError) return <Error />;
+  if (debate.isError || !debateId) return <Error />;
   return (
     <div className="inner">
       <Debate debateId={debateId} />
