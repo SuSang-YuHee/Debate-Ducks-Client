@@ -12,6 +12,10 @@
 
 ## Release
 
+### Debate Ducks 2.1.4 [[PR]](https://github.com/SuSang-YuHee/Debate-Ducks-Client/pull/143)
+(2022.08.31)
+- 토론 영상 업로드 실패 문제 해결
+
 ### Debate Ducks 2.1.3 [[PR]](https://github.com/SuSang-YuHee/Debate-Ducks-Client/pull/138)
 (2022.08.25)
 - 토론 목록 개선
