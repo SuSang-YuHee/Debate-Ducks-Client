@@ -163,14 +163,15 @@ function setRecorder({
     blobsRef.current.push(ev.data);
   };
   //- 녹화 종료 후
-  recorderRef.current.onstop = () => {
+  recorderRef.current.onstop = async () => {
     const duration = Date.now() - startTimeRef.current;
     const blob = new Blob(blobsRef.current, {
       type: "video/webm",
     });
-    ysFixWebmDuration(blob, duration, { logger: false }).then((fixedBlob) => {
-      blobRef.current = fixedBlob;
+    const fixedBlob = await ysFixWebmDuration(blob, duration, {
+      logger: false,
     });
+    blobRef.current = fixedBlob;
     blobsRef.current = [];
 
     if (isDoneRef.current) {
