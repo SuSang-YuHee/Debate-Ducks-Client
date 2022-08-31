@@ -41,7 +41,10 @@ function MyApp({ Component, pageProps }: AppProps) {
     if (!storage) return;
     const prevPath = storage.getItem("currentPath");
     storage.setItem("prevPath", prevPath || "/");
-    storage.setItem("currentPath", globalThis.location.pathname);
+    storage.setItem(
+      "currentPath",
+      globalThis.location.pathname + globalThis.location.search,
+    );
   };
 
   useEffect(() => storePathValues(), [router.asPath]);
