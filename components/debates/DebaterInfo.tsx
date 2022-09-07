@@ -30,15 +30,14 @@ export default function DebaterInfo({
             debate.data?.author?.profile_image
               ? debate.data?.author?.profile_image !== "temp default image"
                 ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${debate.data?.author.profile_image}`
-                : "/images/profiles/default-green.png"
-              : "/images/profiles/default-gray.png"
+                : "/images/profiles/default-green.webp"
+              : "/images/profiles/default-gray.webp"
           }
           alt={debate.data?.author?.nickname || "탈퇴한 회원"}
           width={`${size}`}
           height={`${size}`}
           objectFit="cover"
           objectPosition="center"
-          unoptimized={true}
           priority={true}
         />
       </div>
@@ -67,15 +66,14 @@ export default function DebaterInfo({
             debate.data?.participant?.profile_image
               ? debate.data?.participant?.profile_image !== "temp default image"
                 ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${debate.data?.participant.profile_image}`
-                : "/images/profiles/default-green.png"
-              : "/images/profiles/default-gray.png"
+                : "/images/profiles/default-green.webp"
+              : "/images/profiles/default-gray.webp"
           }
           alt={debate.data?.participant?.nickname || "탈퇴한 회원"}
           width={`${size}`}
           height={`${size}`}
           objectFit="cover"
           objectPosition="center"
-          unoptimized={true}
           priority={true}
         />
       </div>
