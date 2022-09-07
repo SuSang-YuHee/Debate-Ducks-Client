@@ -199,8 +199,8 @@ export default function Comments({ debateId }: { debateId: number }) {
                                   ? comment.target_user.profile_image !==
                                     "temp default image"
                                     ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${comment.target_user.profile_image}`
-                                    : "/images/profiles/default-green.png"
-                                  : "/images/profiles/default-gray.png"
+                                    : "/images/profiles/default-green.webp"
+                                  : "/images/profiles/default-gray.webp"
                               }
                               alt={
                                 comment.target_user?.nickname || "탈퇴한 회원"
@@ -209,7 +209,6 @@ export default function Comments({ debateId }: { debateId: number }) {
                               height="50"
                               objectFit="cover"
                               objectPosition="center"
-                              unoptimized={true}
                             />
                           </div>
                           <div className={styles.name}>

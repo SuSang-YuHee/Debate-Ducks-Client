@@ -118,16 +118,15 @@ export default function MyPagePage() {
                   alt="profile_image"
                   src={
                     !user.data
-                      ? "/images/profiles/default-gray.png"
+                      ? "/images/profiles/default-gray.webp"
                       : previewImageUrl
                       ? previewImageUrl
                       : user.data?.profile_image !== "temp default image"
                       ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${user.data?.profile_image}`
-                      : "/images/profiles/default-green.png"
+                      : "/images/profiles/default-green.webp"
                   }
                   width="300"
                   height="300"
-                  unoptimized={true}
                 />
                 {user.data ? (
                   <form

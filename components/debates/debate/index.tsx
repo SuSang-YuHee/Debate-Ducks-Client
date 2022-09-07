@@ -74,9 +74,9 @@ export default function Debate({ debateId }: { debateId: number }) {
             <Image
               src={`/images/categories/${CATEGORIES.indexOf(
                 debate.data?.category || "기타",
-              )}.jpg`}
-              alt={`${debate.data?.category || "기타"}`}
+              )}.webp`}
               layout="fill"
+              alt={`${debate.data?.category || "기타"}`}
               objectFit="cover"
               objectPosition="center"
               priority={true}

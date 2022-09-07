@@ -18,10 +18,11 @@ export default function Footer() {
           >
             <div>
               <Image
-                src="/images/logo/debate-ducks-logo-white.png"
+                src="/images/logo/debate-ducks-logo-white.webp"
                 alt="logo_image"
                 width="18"
-                height="18"
+                height="16"
+                priority={true}
               />
             </div>
             <div className={styles.desc}>Debate Ducks</div>

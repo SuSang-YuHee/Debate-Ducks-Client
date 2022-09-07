@@ -22,11 +22,10 @@ export default function Error() {
           {"Go to homepage"}
         </div>
         <Image
-          src={"/images/duckling.png"}
+          src={"/images/duckling.webp"}
           alt={"duckling"}
           width={400}
           height={400}
-          unoptimized={true}
           priority={true}
         />
       </div>

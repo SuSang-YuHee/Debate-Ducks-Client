@@ -12,6 +12,10 @@
 
 ## Release
 
+### Debate Ducks 2.1.5 [[PR]](https://github.com/SuSang-YuHee/Debate-Ducks-Client/pull/145)
+(2022.09.07)
+- 이미지 최적화
+
 ### Debate Ducks 2.1.4 [[PR]](https://github.com/SuSang-YuHee/Debate-Ducks-Client/pull/143)
 (2022.08.31)
 - 토론 영상 업로드 실패 문제 해결
