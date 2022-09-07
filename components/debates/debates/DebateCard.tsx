@@ -37,9 +37,11 @@ export default function DebateCard({
           className={styles.image}
           src={`/images/categories/${CATEGORIES.indexOf(
             debate.data?.category || "기타",
-          )}.jpg`}
+          )}.webp`}
           alt={`${debate.data?.category}`}
-          layout="fill"
+          sizes="20"
+          width="20"
+          height="9.6"
           objectFit="cover"
           objectPosition="center"
           priority={true}

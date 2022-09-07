@@ -90,12 +90,11 @@ export default function Header() {
                 src={
                   user.data?.profile_image !== "temp default image"
                     ? `${process.env.NEXT_PUBLIC_API_URL}/uploads/${user.data?.profile_image}`
-                    : "/images/profiles/default-green.png"
+                    : "/images/profiles/default-green.webp"
                 }
                 alt="profile_image"
                 width="30"
                 height="30"
-                unoptimized={true}
                 onClick={handleProfileClick}
               />
             </div>
