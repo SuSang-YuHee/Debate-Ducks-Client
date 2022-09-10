@@ -209,6 +209,7 @@ export default function Comments({ debateId }: { debateId: number }) {
                               height="50"
                               objectFit="cover"
                               objectPosition="center"
+                              unoptimized
                             />
                           </div>
                           <div className={styles.name}>

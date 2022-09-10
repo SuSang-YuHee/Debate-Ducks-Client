@@ -127,6 +127,7 @@ export default function MyPagePage() {
                   }
                   width="300"
                   height="300"
+                  unoptimized
                 />
                 {user.data ? (
                   <form
