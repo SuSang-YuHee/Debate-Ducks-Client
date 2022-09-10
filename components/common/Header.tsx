@@ -95,6 +95,7 @@ export default function Header() {
                 alt="profile_image"
                 width="30"
                 height="30"
+                unoptimized
                 onClick={handleProfileClick}
               />
             </div>
