@@ -316,6 +316,6 @@ export default function Buttons({
     });
     peerRef.current?.destroy();
     socketRef.current.disconnect();
-    router.push(`/debate/debateId=${debateId}`);
+    router.push(`/debate?debateId=${debateId}`);
   }
 }
