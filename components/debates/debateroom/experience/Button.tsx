@@ -126,49 +126,69 @@ export default function Buttons({
             <div className={styles.name}>음소거 해제</div>
           </div>
         ) : (
-          <div
-            onClick={() =>
-              toggleMic({ streamRef, isMicOn: !isMicOn, setIsMicOn })
-            }
-          >
+          <>
             {isMicOn ? (
               <div className={styles.box}>
-                <div className={`${styles.btn} ${styles.btn_pros}`}>
+                <div
+                  className={`${styles.btn} ${styles.btn_pros}`}
+                  onClick={() =>
+                    toggleMic({ streamRef, isMicOn: !isMicOn, setIsMicOn })
+                  }
+                >
                   <IoMic />
                 </div>
                 <div className={styles.name}>음소거</div>
               </div>
             ) : (
               <div className={styles.box}>
-                <div className={`${styles.btn} ${styles.btn_cons}`}>
+                <div
+                  className={`${styles.btn} ${styles.btn_cons}`}
+                  onClick={() =>
+                    toggleMic({ streamRef, isMicOn: !isMicOn, setIsMicOn })
+                  }
+                >
                   <IoMicOff />
                 </div>
                 <div className={styles.name}>음소거 해제</div>
               </div>
             )}
-          </div>
+          </>
         )}
-        <div
-          onClick={() =>
-            toggleVideo({ streamRef, isVideoOn: !isVideoOn, setIsVideoOn })
-          }
-        >
+        <>
           {isVideoOn ? (
             <div className={styles.box}>
-              <div className={`${styles.btn} ${styles.btn_pros}`}>
+              <div
+                className={`${styles.btn} ${styles.btn_pros}`}
+                onClick={() =>
+                  toggleVideo({
+                    streamRef,
+                    isVideoOn: !isVideoOn,
+                    setIsVideoOn,
+                  })
+                }
+              >
                 <IoVideocam />
               </div>
               <div className={styles.name}>비디오 중지</div>
             </div>
           ) : (
             <div className={styles.box}>
-              <div className={`${styles.btn} ${styles.btn_cons}`}>
+              <div
+                className={`${styles.btn} ${styles.btn_cons}`}
+                onClick={() =>
+                  toggleVideo({
+                    streamRef,
+                    isVideoOn: !isVideoOn,
+                    setIsVideoOn,
+                  })
+                }
+              >
                 <IoVideocamOff />
               </div>
               <div className={styles.name}>비디오 시작</div>
             </div>
           )}
-        </div>
+        </>
         {checkScreenShareDisable() ? (
           <div className={styles.box}>
             <div className={`${styles.btn} ${styles.btn_disabled}`}>
@@ -230,31 +250,41 @@ export default function Buttons({
             <div className={styles.name}>넘기기</div>
           </div>
         ) : (
-          <div
-            onClick={() => {
-              toggleReady({ isReady: !isReady, setIsReady });
-              handleReady();
-            }}
-          >
+          <>
             {isReady ? (
               <div className={styles.box}>
-                <div className={`${styles.btn} ${styles.btn_black}`}>
+                <div
+                  className={`${styles.btn} ${styles.btn_black}`}
+                  onClick={() => {
+                    toggleReady({ isReady: !isReady, setIsReady });
+                    handleReady();
+                  }}
+                >
                   <MdStop />
                 </div>
                 <div className={styles.name}>준비 취소</div>
               </div>
             ) : (
               <div className={styles.box}>
-                <div className={`${styles.btn} ${styles.btn_black}`}>
+                <div
+                  className={`${styles.btn} ${styles.btn_black}`}
+                  onClick={() => {
+                    toggleReady({ isReady: !isReady, setIsReady });
+                    handleReady();
+                  }}
+                >
                   <IoPlay />
                 </div>
                 <div className={styles.name}>준비</div>
               </div>
             )}
-          </div>
+          </>
         )}
-        <div className={styles.box} onClick={() => setIsExitModalOn(true)}>
-          <div className={`${styles.btn} ${styles.btn_black}`}>
+        <div className={styles.box}>
+          <div
+            className={`${styles.btn} ${styles.btn_black}`}
+            onClick={() => setIsExitModalOn(true)}
+          >
             <TbArrowBarRight />
           </div>
           <div className={styles.name}>나가기</div>
