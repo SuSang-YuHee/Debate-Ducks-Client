@@ -58,6 +58,7 @@
 
 .name {
   color: darken($c-gray_dark, 30%);
+  @include disabledText;
 }
 
 @include mobile {
